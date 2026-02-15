@@ -1,1 +1,1 @@
-export { SelectListStory } from './SelectList.story.js';
+export * as SelectListStory from './SelectList.story.js';

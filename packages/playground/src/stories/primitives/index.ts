@@ -1,7 +1,7 @@
-export { PanelStory } from './Panel.story.js';
-export { DividerStory } from './Divider.story.js';
-export { StatusBadgeStory } from './StatusBadge.story.js';
-export { BreadcrumbStory } from './Breadcrumb.story.js';
-export { HeaderStory } from './Header.story.js';
-export { ShortcutsBarStory } from './ShortcutsBar.story.js';
-export { SplitViewStory } from './SplitView.story.js';
+export * as PanelStory from './Panel.story.js';
+export * as DividerStory from './Divider.story.js';
+export * as StatusBadgeStory from './StatusBadge.story.js';
+export * as BreadcrumbStory from './Breadcrumb.story.js';
+export * as HeaderStory from './Header.story.js';
+export * as ShortcutsBarStory from './ShortcutsBar.story.js';
+export * as SplitViewStory from './SplitView.story.js';

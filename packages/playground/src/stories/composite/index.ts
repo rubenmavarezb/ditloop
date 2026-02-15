@@ -1,3 +1,3 @@
-export { SidebarStory } from './Sidebar.story.js';
-export { TaskItemStory } from './TaskItem.story.js';
-export { WorkspaceItemStory } from './WorkspaceItem.story.js';
+export * as SidebarStory from './Sidebar.story.js';
+export * as TaskItemStory from './TaskItem.story.js';
+export * as WorkspaceItemStory from './WorkspaceItem.story.js';

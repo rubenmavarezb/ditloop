@@ -1,6 +1,12 @@
 import { ShortcutsBar, ThemeProvider } from '@ditloop/ui';
+import type { StoryMeta } from '../story.types.js';
 
-export function ShortcutsBarStory() {
+export const meta: StoryMeta = {
+  title: 'ShortcutsBar',
+  category: 'primitives',
+};
+
+export function Default() {
   return (
     <ThemeProvider>
       <ShortcutsBar shortcuts={[

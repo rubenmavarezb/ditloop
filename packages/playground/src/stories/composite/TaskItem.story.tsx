@@ -1,6 +1,12 @@
 import { Box } from 'ink';
 import { ThemeProvider, TaskItem } from '@ditloop/ui';
 import type { TaskItemData } from '@ditloop/ui';
+import type { StoryMeta } from '../story.types.js';
+
+export const meta: StoryMeta = {
+  title: 'TaskItem',
+  category: 'composite',
+};
 
 const now = new Date();
 
@@ -11,7 +17,7 @@ const tasks: TaskItemData[] = [
   { title: 'Update documentation', status: 'pending', updatedAt: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000) },
 ];
 
-export function TaskItemStory() {
+export function Default() {
   return (
     <ThemeProvider>
       <Box flexDirection="column">
@@ -19,6 +25,14 @@ export function TaskItemStory() {
           <TaskItem key={i} task={task} isSelected={i === 0} />
         ))}
       </Box>
+    </ThemeProvider>
+  );
+}
+
+export function SingleActive() {
+  return (
+    <ThemeProvider>
+      <TaskItem task={tasks[0]} isSelected />
     </ThemeProvider>
   );
 }
