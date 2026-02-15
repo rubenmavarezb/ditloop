@@ -1,4 +1,4 @@
-# PLAN: v0.1 MVP — Overview
+# PLAN: v0.1 MVP — Overview ✅ COMPLETED
 
 ## Overview
 
@@ -23,15 +23,15 @@ Build the foundation of DitLoop: a working terminal IDE with workspace managemen
 ## Phases
 
 - [x] **Phase 1: Foundation** — `completed/PLAN-phase1-foundation.md` — Core infrastructure (EventBus, Config, Workspaces, Profiles, Identity Guard)
-- [ ] **Phase 2: AIDF Integration** — `PLAN-phase2-aidf.md` — Detect and load AIDF context
-- [ ] **Phase 3: UI & TUI** — `PLAN-phase3-ui-tui.md` — Terminal components, sidebar, home view, CLI
-- [ ] **Phase 4: Polish** — `PLAN-phase4-polish.md` — Playground, integration tests, cleanup
+- [x] **Phase 2: AIDF Integration** — `completed/PLAN-phase2-aidf.md` — Detect and load AIDF context
+- [x] **Phase 3: UI & TUI** — `completed/PLAN-phase3-ui-tui.md` — Terminal components, sidebar, home view, CLI
+- [x] **Phase 4: Polish** — `completed/PLAN-phase4-polish.md` — Playground, integration tests, cleanup
 
-## Success Criteria
+## Results
 
-- [ ] `ditloop` launches and shows a sidebar with workspaces
-- [ ] Workspaces load from `~/.ditloop/config.yml` (single + group)
-- [ ] AIDF tasks appear in sidebar when `.ai/` is present
-- [ ] Git profile auto-switches on workspace enter
-- [ ] `ditloop playground` shows all components
-- [ ] All tests pass
+- 200 tests passing (135 core + 51 ui + 14 tui)
+- 32 test files across 3 packages
+- 4 packages: core, ui, tui, playground
+- CLI commands: `ditloop`, `ditloop workspace list`, `ditloop profile list/current`, `ditloop playground`
+- 4 group workspaces auto-discovering 19 repos
+- Completed: February 2026
