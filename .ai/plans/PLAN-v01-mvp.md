@@ -22,7 +22,7 @@ Build the foundation of DitLoop: a working terminal IDE with workspace managemen
 
 ## Phases
 
-- [x] **Phase 1: Foundation** — `PLAN-phase1-foundation.md` — Core infrastructure (EventBus, Config, Workspaces, Profiles, Identity Guard)
+- [x] **Phase 1: Foundation** — `completed/PLAN-phase1-foundation.md` — Core infrastructure (EventBus, Config, Workspaces, Profiles, Identity Guard)
 - [ ] **Phase 2: AIDF Integration** — `PLAN-phase2-aidf.md` — Detect and load AIDF context
 - [ ] **Phase 3: UI & TUI** — `PLAN-phase3-ui-tui.md` — Terminal components, sidebar, home view, CLI
 - [ ] **Phase 4: Polish** — `PLAN-phase4-polish.md` — Playground, integration tests, cleanup

@@ -26,11 +26,11 @@ Implement git identity profile management: CRUD operations, SSH key management, 
 6. Emit events: identity:switched
 
 ## Definition of Done
-- [ ] Profiles load from config
-- [ ] switchTo() updates git config locally
-- [ ] SSH key loading works
-- [ ] Profile resolution follows inheritance (project → group)
-- [ ] Tests cover all CRUD operations
-- [ ] pnpm test passes
+- [x] Profiles load from config
+- [x] switchTo() updates git config locally
+- [x] SSH key loading works
+- [x] Profile resolution follows inheritance (project → group)
+- [x] Tests cover all CRUD operations
+- [x] pnpm test passes
 
-## Status: ⬜ Pending
+## Status: ✅ Done
