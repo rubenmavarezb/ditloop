@@ -7,6 +7,7 @@ import { useAppStore } from './state/app-store.js';
 import { InitWizard } from './commands/init.js';
 import { WorkspaceList } from './commands/workspace.js';
 import { ProfileList, ProfileCurrent } from './commands/profile.js';
+import { ScaffoldWizard } from './commands/scaffold.js';
 
 const args = process.argv.slice(2);
 const command = args[0];
@@ -21,6 +22,7 @@ Usage:
   ditloop workspace list   List configured workspaces
   ditloop profile list     List configured profiles
   ditloop profile current  Show current git identity
+  ditloop scaffold [type]  Scaffold AIDF file (task, role, skill, plan)
   ditloop --version        Print version
   ditloop --help           Show this help
 `.trim();
@@ -84,6 +86,19 @@ async function main() {
 
     console.error(`Unknown profile subcommand: ${subcommand}`);
     process.exit(1);
+  }
+
+  // scaffold command
+  if (command === 'scaffold') {
+    const type = subcommand as 'task' | 'role' | 'skill' | 'plan' | undefined;
+    const validTypes = ['task', 'role', 'skill', 'plan'];
+    render(
+      <ScaffoldWizard
+        workspacePath={process.cwd()}
+        preselectedType={type && validTypes.includes(type) ? type : undefined}
+      />,
+    );
+    return;
   }
 
   // Unknown command

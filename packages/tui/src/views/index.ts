@@ -5,3 +5,9 @@ export { WorkspaceDetail } from './WorkspaceDetail/index.js';
 export type { WorkspaceDetailProps } from './WorkspaceDetail/index.js';
 export { DiffReviewView, assessRisk } from './DiffReview/index.js';
 export type { DiffReviewViewProps, ReviewableAction, RiskLevel } from './DiffReview/index.js';
+
+export { LauncherView } from './Launcher/index.js';
+export type { LauncherViewProps } from './Launcher/index.js';
+
+export { TaskEditorView } from './TaskEditor/index.js';
+export type { TaskEditorViewProps, TaskFieldValues } from './TaskEditor/index.js';

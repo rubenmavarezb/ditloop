@@ -29,3 +29,6 @@ export * from './executor/index.js';
 
 // Safety (task 026, 028)
 export * from './safety/index.js';
+
+// Launcher (task 029, 030)
+export * from './launcher/index.js';
