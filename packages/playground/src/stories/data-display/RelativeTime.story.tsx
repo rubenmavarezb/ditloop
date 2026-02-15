@@ -1,5 +1,11 @@
 import { Box, Text } from 'ink';
 import { ThemeProvider, RelativeTime } from '@ditloop/ui';
+import type { StoryMeta } from '../story.types.js';
+
+export const meta: StoryMeta = {
+  title: 'RelativeTime',
+  category: 'data-display',
+};
 
 const now = new Date();
 const fiveMinAgo = new Date(now.getTime() - 5 * 60 * 1000);
@@ -7,7 +13,7 @@ const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
 const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 const threeWeeksAgo = new Date(now.getTime() - 21 * 24 * 60 * 60 * 1000);
 
-export function RelativeTimeStory() {
+export function Default() {
   return (
     <ThemeProvider>
       <Box flexDirection="column" gap={1}>

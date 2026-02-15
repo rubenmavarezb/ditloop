@@ -1,6 +1,12 @@
 import { Box } from 'ink';
 import { ThemeProvider, WorkspaceItem } from '@ditloop/ui';
 import type { WorkspaceItemData } from '@ditloop/ui';
+import type { StoryMeta } from '../story.types.js';
+
+export const meta: StoryMeta = {
+  title: 'WorkspaceItem',
+  category: 'composite',
+};
 
 const workspaces: WorkspaceItemData[] = [
   { name: 'Pivotree', type: 'group', projectCount: 5, status: 'active' },
@@ -10,7 +16,7 @@ const workspaces: WorkspaceItemData[] = [
   { name: 'Sandbox', type: 'single', projectCount: 0, status: 'idle' },
 ];
 
-export function WorkspaceItemStory() {
+export function Default() {
   return (
     <ThemeProvider>
       <Box flexDirection="column">
@@ -23,6 +29,18 @@ export function WorkspaceItemStory() {
           />
         ))}
       </Box>
+    </ThemeProvider>
+  );
+}
+
+export function GroupExpanded() {
+  return (
+    <ThemeProvider>
+      <WorkspaceItem
+        workspace={workspaces[0]}
+        isSelected
+        isExpanded
+      />
     </ThemeProvider>
   );
 }

@@ -1,1 +1,1 @@
-export { RelativeTimeStory } from './RelativeTime.story.js';
+export * as RelativeTimeStory from './RelativeTime.story.js';

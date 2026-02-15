@@ -29,4 +29,4 @@ Build the component catalog TUI that lets developers browse and preview all @dit
 - [ ] At least one story per UI component built in v0.1
 - [ ] pnpm playground works
 
-## Status: ⬜ Pending
+## Status: ✅ Done

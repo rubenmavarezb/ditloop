@@ -28,4 +28,4 @@ Verify the complete v0.1 flow works: load config → resolve workspaces → dete
 - [ ] pnpm test passes (all unit + integration)
 - [ ] No regressions in existing tests
 
-## Status: ⬜ Pending
+## Status: ✅ Done
