@@ -3,11 +3,15 @@
 
 export const version = '0.1.0';
 
-// Modules will be exported as they are built:
-// - config (task 002)
+// Events (task 006)
+export * from './events/index.js';
+
+// Config (task 002)
+export * from './config/index.js';
+
+// Future modules:
 // - workspace (task 003)
 // - profile (task 004, 005)
-// - events (task 006)
 // - aidf (task 007, 008)
 // - git
 // - chat
