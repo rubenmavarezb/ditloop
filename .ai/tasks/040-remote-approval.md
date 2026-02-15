@@ -1,7 +1,7 @@
 # TASK: Remote Approval
 
 ## Goal
-Create remote approval endpoint that broadcasts approval requests via WebSocket and accepts the first response with timeout handling.
+Create remote approval endpoints that broadcast approval requests via WebSocket and accept responses with first-response-wins semantics.
 
 ## Scope
 
@@ -10,21 +10,23 @@ Create remote approval endpoint that broadcasts approval requests via WebSocket 
 - packages/server/src/api/approvals.test.ts
 
 ### Forbidden
-- packages/core/** (import Safety types only)
+- packages/core/** (import ApprovalEngine types only)
 
 ## Requirements
-1. POST /api/approvals/:id endpoint for submitting approval responses
-2. Broadcast safety:review-requested to WebSocket clients
-3. First response wins (approve/reject)
-4. Timeout after 5 minutes with auto-rejection
-5. Return approval status with reviewer info
-6. Handle concurrent approval attempts
+1. GET /api/approvals — list pending approval requests
+2. POST /api/approvals/:id — submit approval response (approve/reject/edit)
+3. Bridge `approval:requested` events to WebSocket clients automatically
+4. First-response-wins: once an approval is answered, reject duplicate responses with 409
+5. Timeout after 5 minutes with auto-rejection
+6. Response body includes action details (type, path, diff preview) for informed decisions
+7. Support `edit` response that modifies the action before approval
 
 ## Definition of Done
-- [ ] Approval endpoint functional
-- [ ] WebSocket broadcast working
-- [ ] First-response-wins logic correct
+- [ ] Approval listing endpoint functional
+- [ ] Submit endpoint with approve/reject/edit working
+- [ ] WebSocket broadcast of approval:requested events
+- [ ] First-response-wins logic prevents race conditions
 - [ ] Timeout auto-rejects after 5min
-- [ ] Integration tests with WebSocket clients
+- [ ] Integration tests with mock ApprovalEngine
 
 ## Status: 📋 Planned
