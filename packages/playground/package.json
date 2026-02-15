@@ -1,0 +1,27 @@
+{
+  "name": "@hitloop/playground",
+  "version": "0.1.0",
+  "description": "HitLoop Playground — component catalog for terminal UI (Storybook for TUI)",
+  "type": "module",
+  "bin": {
+    "hitloop-playground": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@hitloop/ui": "workspace:*",
+    "ink": "^5.1.0",
+    "react": "^18.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.7.0"
+  }
+}

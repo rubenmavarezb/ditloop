@@ -1,0 +1,14 @@
+provider: claude-cli
+
+execution:
+  max_iterations: 10
+  scope_mode: strict
+  auto_commit: true
+
+validation:
+  - pnpm typecheck
+  - pnpm test
+
+git:
+  conventional_commits: true
+  auto_pr: false

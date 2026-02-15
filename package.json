@@ -1,0 +1,22 @@
+{
+  "name": "hitloop",
+  "private": true,
+  "description": "Terminal IDE centered on Human-in-the-Loop for multi-project developers",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "clean": "turbo clean",
+    "playground": "pnpm --filter @hitloop/playground start"
+  },
+  "devDependencies": {
+    "turbo": "^2.8.9"
+  }
+}
