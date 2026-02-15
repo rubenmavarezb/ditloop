@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import type { WorkspaceItemData } from '@ditloop/ui';
 
 /** Available views in the TUI application. */
-export type ViewName = 'home' | 'workspace-detail' | 'task-detail';
+export type ViewName = 'home' | 'workspace-detail' | 'task-detail' | 'diff-review';
 
 /** Application state managed by Zustand. */
 export interface AppState {

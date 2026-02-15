@@ -29,4 +29,4 @@ Manage multi-turn execution sessions with history, action tracking, and persiste
 - [ ] Events emitted on state changes
 - [ ] Tests pass
 
-## Status: ⏳ Pending
+## Status: ✅ Done

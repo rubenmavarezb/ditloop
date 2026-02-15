@@ -18,9 +18,14 @@ export * from './profile/index.js';
 // AIDF (task 007, 008)
 export * from './aidf/index.js';
 
-// Future modules:
-// - git
-// - chat
-// - provider
-// - executor
-// - safety
+// Git (task 015, 016, 017)
+export * from './git/index.js';
+
+// Provider (task 020, 021, 022)
+export * from './provider/index.js';
+
+// Executor (task 023, 024, 025)
+export * from './executor/index.js';
+
+// Safety (task 026, 028)
+export * from './safety/index.js';

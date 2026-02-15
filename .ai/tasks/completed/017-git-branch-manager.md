@@ -28,4 +28,4 @@ Manage branches including creation, switching, deletion, and remote operations.
 - [ ] Events emitted on branch changes
 - [ ] Tests pass
 
-## Status: ⏳ Pending
+## Status: ✅ Done

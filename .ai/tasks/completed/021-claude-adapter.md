@@ -30,4 +30,4 @@ Implement ClaudeAdapter using @anthropic-ai/sdk with streaming and tool use supp
 - [ ] Error handling for rate limits
 - [ ] Tests with mocks pass
 
-## Status: ⏳ Pending
+## Status: ✅ Done

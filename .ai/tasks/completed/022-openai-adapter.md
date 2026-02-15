@@ -28,4 +28,4 @@ Implement OpenAIAdapter using openai SDK to validate the adapter abstraction.
 - [ ] API key loaded from config or env
 - [ ] Tests with mocks pass
 
-## Status: ⏳ Pending
+## Status: ✅ Done

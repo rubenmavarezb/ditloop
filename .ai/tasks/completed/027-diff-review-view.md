@@ -29,4 +29,4 @@ TUI component for reviewing proposed changes with diffs, risk badges, and approv
 - [ ] Focus management works
 - [ ] Tests pass
 
-## Status: ⏳ Pending
+## Status: ✅ Done

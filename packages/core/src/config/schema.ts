@@ -66,6 +66,17 @@ export const DefaultsSchema = z.object({
 
 export type Defaults = z.infer<typeof DefaultsSchema>;
 
+// --- Provider config ---
+
+export const ProviderConfigSchema = z.object({
+  type: z.enum(['claude', 'openai']),
+  apiKey: z.string().optional().describe('API key. Falls back to env variable if not set.'),
+  model: z.string().optional().describe('Default model to use'),
+  baseURL: z.string().url().optional().describe('Custom API endpoint'),
+});
+
+export type ProviderConfig = z.infer<typeof ProviderConfigSchema>;
+
 // --- Root config ---
 
 export const DitLoopConfigSchema = z.object({
@@ -73,6 +84,7 @@ export const DitLoopConfigSchema = z.object({
   workspaces: z.array(WorkspaceSchema).default([]),
   defaults: DefaultsSchema.default({}),
   server: ServerSchema.default({}),
+  providers: z.record(z.string(), ProviderConfigSchema).default({}),
 });
 
 export type DitLoopConfig = z.infer<typeof DitLoopConfigSchema>;

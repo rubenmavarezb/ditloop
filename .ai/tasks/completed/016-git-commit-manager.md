@@ -29,4 +29,4 @@ Handle staging files and creating commits with conventional commit format and id
 - [ ] Dry-run mode works
 - [ ] Tests pass
 
-## Status: ⏳ Pending
+## Status: ✅ Done
