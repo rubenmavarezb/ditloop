@@ -49,6 +49,15 @@ export interface AidfEvents {
   'aidf:detected': { workspace: string; path: string };
   'aidf:context-loaded': { workspace: string; tasks: number; roles: number };
   'aidf:task-selected': { workspace: string; taskId: string; title: string };
+  'aidf:created': { workspace: string; type: string; id: string; filePath: string };
+  'aidf:updated': { workspace: string; type: string; id: string; filePath: string };
+  'aidf:deleted': { workspace: string; type: string; id: string; filePath: string };
+}
+
+export interface LauncherEvents {
+  'launcher:context-built': { workspace: string; sections: string[]; totalSize: number };
+  'launcher:started': { workspace: string; cli: string; pid: number };
+  'launcher:exited': { workspace: string; cli: string; exitCode: number | null };
 }
 
 export interface ActionEvents {
@@ -72,6 +81,7 @@ export type DitLoopEventMap =
   & ActionEvents
   & ChatEvents
   & AidfEvents
+  & LauncherEvents
   & ProviderEvents;
 
 export type DitLoopEventName = keyof DitLoopEventMap;

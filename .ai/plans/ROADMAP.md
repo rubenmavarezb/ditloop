@@ -29,10 +29,10 @@ Built the foundational architecture and core features for workspace management, 
 
 ---
 
-### v0.2 — Execution Engine 🔜 NEXT
-**Timeline:** Q2 2026 (Apr-Jun) | **Status:** PLANNED
+### v0.2 — Execution Engine ✅ COMPLETED
+**Timeline:** Feb 2026 | **Status:** SHIPPED
 
-Transform DitLoop from a dashboard into an execution tool. Git operations, AI task execution, and human approval workflow.
+Transformed DitLoop from a dashboard into an execution tool. Git operations, AI task execution, and human approval workflow.
 
 **Key Features:**
 - Git operations (status, commit, push, branch)
@@ -41,33 +41,35 @@ Transform DitLoop from a dashboard into an execution tool. Git operations, AI ta
 - AI-driven task execution with streaming output
 - Human approval workflow for all changes
 
-**Tasks:** 015-028 — Git (015-017), Workspace Detail (018-019), Providers (020-022), Executor (023-025), Safety (026-028)
+**Tasks:** 015-028 (in `tasks/completed/`)
+
+**Completion Date:** February 2026
 
 **Details:** [`PLAN-v02-execution.md`](./PLAN-v02-execution.md)
 
 ---
 
-### v0.3 — Chat & AIDF Authoring
-**Timeline:** Q3 2026 (Jul-Sep) | **Status:** PLANNED
+### v0.3 — AI Launcher & AIDF Authoring 🔜 NEXT
+**Timeline:** Q2 2026 (Mar-Apr) | **Status:** PLANNED
 
-Add conversational AI and AIDF creation capabilities. Chat with AI to refine requirements, then generate AIDF tasks from conversations.
+Instead of building a custom chat engine, DitLoop orchestrates existing AI CLI tools (Claude Code, Aider, etc.) with auto-injected workspace and AIDF context. Additionally, AIDF authoring enables creating structured development artifacts from within DitLoop.
 
 **Key Features:**
-- Full-featured chat interface with streaming
-- Session management and conversation history
-- AIDF file creation wizard
-- AI-assisted AIDF generation
-- Template library for common task types
-- Export chat conversations to AIDF
+- Detect and launch AI CLI tools with context injection
+- Build rich context from AIDF roles, tasks, git status, project structure
+- TUI launcher for selecting AI tool + AIDF task
+- AIDF file creation/editing from TUI
+- Template-based scaffolding with variable interpolation
+- `ditloop scaffold` CLI wizard
 
-**Tasks:** 029-037 — Chat (029-031), Sessions (032-033), AIDF Authoring (034-037)
+**Tasks:** 029-035 — AI Launcher (029-031), AIDF Authoring (032-035)
 
 **Details:** [`PLAN-v03-chat-authoring.md`](./PLAN-v03-chat-authoring.md)
 
 ---
 
 ### v0.4 — Server & API
-**Timeline:** Q4 2026 (Oct-Dec) | **Status:** PLANNED
+**Timeline:** Q3 2026 (May-Jul) | **Status:** PLANNED
 
 Run DitLoop as a server with HTTP/WebSocket API. Enable remote execution, IDE integrations, and CI/CD pipelines.
 
@@ -85,7 +87,7 @@ Run DitLoop as a server with HTTP/WebSocket API. Enable remote execution, IDE in
 ---
 
 ### v0.5 — Mobile Integration
-**Timeline:** Q1 2027 (Jan-Mar) | **Status:** PLANNED
+**Timeline:** Q4 2026 (Aug-Oct) | **Status:** PLANNED
 
 Progressive Web App for mobile devices. Review and approve AI changes from your phone, receive push notifications.
 
@@ -109,7 +111,7 @@ Progressive Web App for mobile devices. Review and approve AI changes from your 
 |---------|----------|-----------------|
 | v0.1 | `core`, `ui`, `tui`, `playground` | Config, workspaces, profiles, AIDF detection, TUI dashboard |
 | v0.2 | +`git` module in core | Git operations, AI providers, task execution, approval workflow |
-| v0.3 | +`chat`, `session` modules | Conversational AI, AIDF authoring, templates |
+| v0.3 | +`launcher` module in core | AI CLI orchestration, context injection, AIDF authoring, templates |
 | v0.4 | +`server` package | HTTP/WS API, remote execution, client SDK, IDE plugins |
 | v0.5 | +`mobile` package | PWA, push notifications, mobile approval, offline sync |
 
@@ -131,29 +133,27 @@ Progressive Web App for mobile devices. Review and approve AI changes from your 
 | 012 | CLI Entrypoint | v0.1 | ✅ |
 | 013 | Playground Setup | v0.1 | ✅ |
 | 014 | Integration Test | v0.1 | ✅ |
-| 015 | Git Status Reader | v0.2 | ⏳ |
-| 016 | Git Commit Manager | v0.2 | ⏳ |
-| 017 | Git Branch Manager | v0.2 | ⏳ |
-| 018 | Workspace Detail View | v0.2 | ⏳ |
-| 019 | Workspace Navigation | v0.2 | ⏳ |
-| 020 | Provider Interface | v0.2 | ⏳ |
-| 021 | Claude Adapter | v0.2 | ⏳ |
-| 022 | OpenAI Adapter | v0.2 | ⏳ |
-| 023 | Execution Engine | v0.2 | ⏳ |
-| 024 | Action Parser | v0.2 | ⏳ |
-| 025 | Execution Session | v0.2 | ⏳ |
-| 026 | Approval Engine | v0.2 | ⏳ |
-| 027 | Diff Review View | v0.2 | ⏳ |
-| 028 | Action Executor | v0.2 | ⏳ |
-| 029 | Chat Engine | v0.3 | 📋 |
-| 030 | Chat View | v0.3 | 📋 |
-| 031 | Context Injector | v0.3 | 📋 |
-| 032 | Session Store | v0.3 | 📋 |
-| 033 | Session Picker View | v0.3 | 📋 |
-| 034 | AIDF Writer | v0.3 | 📋 |
-| 035 | Task Editor View | v0.3 | 📋 |
-| 036 | Template Engine | v0.3 | 📋 |
-| 037 | Scaffold Command | v0.3 | 📋 |
+| 015 | Git Status Reader | v0.2 | ✅ |
+| 016 | Git Commit Manager | v0.2 | ✅ |
+| 017 | Git Branch Manager | v0.2 | ✅ |
+| 018 | Workspace Detail View | v0.2 | ✅ |
+| 019 | Workspace Navigation | v0.2 | ✅ |
+| 020 | Provider Interface | v0.2 | ✅ |
+| 021 | Claude Adapter | v0.2 | ✅ |
+| 022 | OpenAI Adapter | v0.2 | ✅ |
+| 023 | Execution Engine | v0.2 | ✅ |
+| 024 | Action Parser | v0.2 | ✅ |
+| 025 | Execution Session | v0.2 | ✅ |
+| 026 | Approval Engine | v0.2 | ✅ |
+| 027 | Diff Review View | v0.2 | ✅ |
+| 028 | Action Executor | v0.2 | ✅ |
+| 029 | Context Builder | v0.3 | 📋 |
+| 030 | AI Launcher | v0.3 | 📋 |
+| 031 | Launcher View | v0.3 | 📋 |
+| 032 | AIDF Writer | v0.3 | 📋 |
+| 033 | Template Engine | v0.3 | 📋 |
+| 034 | Task Editor View | v0.3 | 📋 |
+| 035 | Scaffold Command | v0.3 | 📋 |
 | 038 | Server Package | v0.4 | 📋 |
 | 039 | WebSocket Bridge | v0.4 | 📋 |
 | 040 | Remote Approval | v0.4 | 📋 |
@@ -175,6 +175,8 @@ Progressive Web App for mobile devices. Review and approve AI changes from your 
 - ⏳ In Progress / Next Up
 - 📋 Planned / Not Started
 
+**Note:** Tasks 036-037 intentionally skipped (v0.3 reduced from 9 to 7 tasks after architectural pivot from custom chat to AI CLI orchestration).
+
 ## Technology Stack
 
 ### Core
@@ -188,10 +190,10 @@ Progressive Web App for mobile devices. Review and approve AI changes from your 
 - **UI Components:** React
 - **Styling:** Tailwind CSS (for web components)
 
-### AI Providers
-- **Claude:** Anthropic API
-- **OpenAI:** OpenAI API
-- **Local:** Ollama integration (future)
+### AI Integration
+- **Strategy:** Orchestrate existing AI CLIs (Claude Code, Aider, etc.)
+- **Context injection:** Generate CLAUDE.md / system-prompt files from AIDF
+- **Fallback:** Direct provider API via ProviderAdapter (v0.2)
 
 ### Server (v0.4+)
 - **Framework:** Express or Fastify
@@ -220,10 +222,11 @@ Progressive Web App for mobile devices. Review and approve AI changes from your 
 - Provider support: 2+ (Claude, OpenAI)
 
 ### v0.3 Targets
-- Chat response latency: < 2s first token
-- Session load time (1000 messages): < 1s
-- AIDF template library: 10+ templates
-- Chat-to-AIDF conversion accuracy: > 90%
+- AI CLI detection time: < 500ms
+- Context build time: < 200ms
+- CLI launch to first prompt: < 1s
+- AIDF template library: 6+ built-in templates
+- Scaffold command: < 30s to create artifact
 
 ### v0.4 Targets
 - API request latency (p95): < 100ms
@@ -259,7 +262,7 @@ Progressive Web App for mobile devices. Review and approve AI changes from your 
 ## Contributing
 
 DitLoop is designed to be extensible. Key extension points:
-- **Provider adapters:** Add new AI providers
+- **AI CLI adapters:** Add new AI tool integrations
 - **AIDF templates:** Create task templates
 - **UI themes:** Customize TUI appearance
 - **IDE plugins:** Integrate with your editor
@@ -274,5 +277,5 @@ MIT License — See `LICENSE` for details.
 ---
 
 **Last Updated:** February 15, 2026
-**Current Version:** v0.1 (MVP Foundation) ✅
-**Next Version:** v0.2 (Execution Engine) 🔜
+**Current Version:** v0.2 (Execution Engine) ✅
+**Next Version:** v0.3 (AI Launcher & AIDF Authoring) 🔜

@@ -9,6 +9,7 @@ Create AidfWriter service for creating, updating, and deleting AIDF files (tasks
 - packages/core/src/aidf/writer/aidf-writer.ts
 - packages/core/src/aidf/writer/aidf-writer.test.ts
 - packages/core/src/aidf/writer/index.ts
+- packages/core/src/aidf/index.ts (add export)
 
 ### Forbidden
 - packages/ui/**
@@ -19,7 +20,7 @@ Create AidfWriter service for creating, updating, and deleting AIDF files (tasks
 2. Validate against AIDF format using Zod schemas
 3. Emit events: aidf:created, aidf:updated, aidf:deleted
 4. Support all AIDF types: task, role, skill, plan
-5. Preserve file metadata and formatting
+5. Preserve file metadata and formatting (frontmatter + markdown body)
 6. Atomic file writes with backups
 
 ## Definition of Done

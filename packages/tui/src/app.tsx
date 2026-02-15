@@ -13,6 +13,8 @@ import { Home } from './views/Home/Home.js';
 import { TaskDetail } from './views/TaskDetail/TaskDetail.js';
 import { WorkspaceDetail } from './views/WorkspaceDetail/WorkspaceDetail.js';
 import { DiffReviewView } from './views/DiffReview/DiffReviewView.js';
+import { LauncherView } from './views/Launcher/LauncherView.js';
+import { TaskEditorView } from './views/TaskEditor/TaskEditorView.js';
 
 const SHORTCUTS = [
   { key: '↑↓', label: 'navigate' },
@@ -29,6 +31,8 @@ function MainContent() {
   const currentView = useAppStore((s) => s.currentView);
   const workspaces = useAppStore((s) => s.workspaces);
   const activeIndex = useAppStore((s) => s.activeWorkspaceIndex);
+  const navigate = useAppStore((s) => s.navigate);
+  const ws = activeIndex !== null ? workspaces[activeIndex] : undefined;
 
   switch (currentView) {
     case 'home':
@@ -36,7 +40,6 @@ function MainContent() {
     case 'task-detail':
       return <TaskDetail />;
     case 'workspace-detail': {
-      const ws = activeIndex !== null ? workspaces[activeIndex] : undefined;
       if (!ws) return <Home />;
       return (
         <WorkspaceDetail
@@ -47,6 +50,26 @@ function MainContent() {
     }
     case 'diff-review':
       return <DiffReviewView actions={[]} />;
+    case 'launcher':
+      return (
+        <LauncherView
+          detectedClis={[]}
+          allCliIds={[]}
+          cliDefinitions={new Map()}
+          tasks={[]}
+          workspaceName={ws?.name ?? 'Workspace'}
+          onLaunch={() => {}}
+          onBack={() => navigate('home')}
+        />
+      );
+    case 'task-editor':
+      return (
+        <TaskEditorView
+          templates={[]}
+          onSave={() => {}}
+          onCancel={() => navigate('home')}
+        />
+      );
     default:
       return <Home />;
   }
