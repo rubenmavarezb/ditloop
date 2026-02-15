@@ -11,3 +11,6 @@ export type { LauncherViewProps } from './Launcher/index.js';
 
 export { TaskEditorView } from './TaskEditor/index.js';
 export type { TaskEditorViewProps, TaskFieldValues } from './TaskEditor/index.js';
+
+export { ExecutionDashboard } from './ExecutionDashboard/index.js';
+export type { ExecutionDashboardProps, ExecutionRow } from './ExecutionDashboard/index.js';

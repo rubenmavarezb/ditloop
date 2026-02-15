@@ -15,6 +15,7 @@ import { WorkspaceDetail } from './views/WorkspaceDetail/WorkspaceDetail.js';
 import { DiffReviewView } from './views/DiffReview/DiffReviewView.js';
 import { LauncherView } from './views/Launcher/LauncherView.js';
 import { TaskEditorView } from './views/TaskEditor/TaskEditorView.js';
+import { ExecutionDashboard } from './views/ExecutionDashboard/ExecutionDashboard.js';
 
 const SHORTCUTS = [
   { key: '↑↓', label: 'navigate' },
@@ -68,6 +69,14 @@ function MainContent() {
           templates={[]}
           onSave={() => {}}
           onCancel={() => navigate('home')}
+        />
+      );
+    case 'execution-dashboard':
+      return (
+        <ExecutionDashboard
+          executions={[]}
+          serverConnected={false}
+          onBack={() => navigate('home')}
         />
       );
     default:

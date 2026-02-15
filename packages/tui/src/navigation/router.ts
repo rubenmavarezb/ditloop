@@ -47,5 +47,7 @@ export function getViewTitle(view: ViewName): string {
       return 'AI Launcher';
     case 'task-editor':
       return 'Task Editor';
+    case 'execution-dashboard':
+      return 'Executions';
   }
 }

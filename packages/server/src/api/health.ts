@@ -1,0 +1,13 @@
+import { Hono } from 'hono';
+
+/** Health check route. */
+export const healthRoutes = new Hono();
+
+healthRoutes.get('/health', (c) => {
+  return c.json({
+    status: 'ok',
+    version: '0.1.0',
+    uptime: process.uptime(),
+    timestamp: Date.now(),
+  });
+});
