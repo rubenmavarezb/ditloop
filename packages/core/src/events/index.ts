@@ -1,7 +1,7 @@
 export { EventBus, getEventBus, resetEventBus } from './event-bus.js';
 export type {
-  HitLoopEventMap,
-  HitLoopEventName,
+  DitLoopEventMap,
+  DitLoopEventName,
   WorkspaceEvents,
   ProfileEvents,
   ExecutionEvents,

@@ -51,7 +51,7 @@ importers:
 
   packages/playground:
     dependencies:
-      '@hitloop/ui':
+      '@ditloop/ui':
         specifier: workspace:*
         version: link:../ui
       ink:
@@ -73,10 +73,10 @@ importers:
 
   packages/tui:
     dependencies:
-      '@hitloop/core':
+      '@ditloop/core':
         specifier: workspace:*
         version: link:../core
-      '@hitloop/ui':
+      '@ditloop/ui':
         specifier: workspace:*
         version: link:../ui
       ink:
@@ -104,7 +104,7 @@ importers:
 
   packages/ui:
     dependencies:
-      '@hitloop/core':
+      '@ditloop/core':
         specifier: workspace:*
         version: link:../core
       '@inkjs/ui':

@@ -1,7 +1,7 @@
 {
-  "name": "@hitloop/core",
+  "name": "@ditloop/core",
   "version": "0.1.0",
-  "description": "HitLoop core — workspace, profile, provider, and execution engine",
+  "description": "DitLoop core — workspace, profile, provider, and execution engine",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

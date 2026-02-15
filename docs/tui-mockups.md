@@ -1,8 +1,8 @@
-# HitLoop — TUI Mockups v1
+# DitLoop — TUI Mockups v1
 
 ## Concepto
-Terminal IDE centrado en Human-in-the-Loop para developers que trabajan en múltiples proyectos.
-Comando: `hitloop`
+Terminal IDE centrado en Developer In The Loop para developers que trabajan en múltiples proyectos.
+Comando: `ditloop`
 
 ---
 
@@ -11,13 +11,13 @@ Comando: `hitloop`
 El sidebar SIEMPRE está visible (como Codex). Muestra workspaces con sus
 tasks/threads agrupados. El main area muestra el contenido del item seleccionado.
 
-El sidebar es la columna vertebral de hitloop — nunca desaparece.
+El sidebar es la columna vertebral de ditloop — nunca desaparece.
 
 ### 1a. Vista inicial (welcome)
 
 ```
 ╔════════════════════════════╦═════════════════════════════════════════════╗
-║  ◉ hitloop           v0.1 ║                                             ║
+║  ◉ ditloop           v0.1 ║                                             ║
 ╠════════════════════════════╣                                             ║
 ║                            ║                                             ║
 ║  🟢 Pivotree               ║                                             ║
@@ -44,7 +44,7 @@ El sidebar es la columna vertebral de hitloop — nunca desaparece.
 ║                            ║                                             ║
 ║ ─────────────────────────  ║                                             ║
 ║  ⚙ Settings               ║  ▸ pivotree-commerce                  ▾     ║
-║                            ║  Ask hitloop anything, / for commands...  ⏎ ║
+║                            ║  Ask ditloop anything, / for commands...  ⏎ ║
 ╠════════════════════════════╩═════════════════════════════════════════════╣
 ║  ↑↓ navigate  enter select  c chat  g git  f files  m mission ctrl     ║
 ╚═════════════════════════════════════════════════════════════════════════╝
@@ -54,7 +54,7 @@ El sidebar es la columna vertebral de hitloop — nunca desaparece.
 
 ```
 ╔════════════════════════════╦═════════════════════════════════════════════╗
-║  ◉ hitloop           v0.1 ║  #042 — Fix auth token refresh              ║
+║  ◉ ditloop           v0.1 ║  #042 — Fix auth token refresh              ║
 ╠════════════════════════════╣  ─────────────────────────────────────────  ║
 ║                            ║                                             ║
 ║  🟢 Pivotree               ║  Status:    pending                         ║
@@ -80,7 +80,7 @@ El sidebar es la columna vertebral de hitloop — nunca desaparece.
 ║                            ║                                             ║
 ║ ─────────────────────────  ║                                             ║
 ║  ⚙ Settings               ║  ▸ pivotree-commerce                  ▾     ║
-║                            ║  Ask hitloop anything, / for commands...  ⏎ ║
+║                            ║  Ask ditloop anything, / for commands...  ⏎ ║
 ╠════════════════════════════╩═════════════════════════════════════════════╣
 ║  r run  e edit  c chat about this  d delete  ← back                     ║
 ╚═════════════════════════════════════════════════════════════════════════╝
@@ -93,7 +93,7 @@ El sidebar muestra el indicador ● animado junto a la task activa.
 
 ```
 ╔════════════════════════════╦═════════════════════════════════════════════╗
-║  ◉ hitloop           v0.1 ║  #042 Fix auth token             RUNNING ● ║
+║  ◉ ditloop           v0.1 ║  #042 Fix auth token             RUNNING ● ║
 ╠════════════════════════════╣  ─────────────────────────────────────────  ║
 ║                            ║                                             ║
 ║  🟢 Pivotree               ║  ██████████░░░░░░░░  iter 3/10    1m 42s   ║
@@ -116,7 +116,7 @@ El sidebar muestra el indicador ● animado junto a la task activa.
 ║                            ║                                             ║
 ║ ─────────────────────────  ║                                             ║
 ║  ⚙ Settings               ║  ▸ pivotree-commerce                  ▾     ║
-║                            ║  Ask hitloop anything, / for commands...  ⏎ ║
+║                            ║  Ask ditloop anything, / for commands...  ⏎ ║
 ╠════════════════════════════╩═════════════════════════════════════════════╣
 ║  p pause  s stop  d diff  c chat  ← back (runs in bg)                   ║
 ╚═════════════════════════════════════════════════════════════════════════╝
@@ -126,7 +126,7 @@ El sidebar muestra el indicador ● animado junto a la task activa.
 
 ```
 ╔════════════════════════════╦═════════════════════════════════════════════╗
-║  ◉ hitloop           v0.1 ║  💬 Chat · Pivotree                         ║
+║  ◉ ditloop           v0.1 ║  💬 Chat · Pivotree                         ║
 ╠════════════════════════════╣  ─────────────────────────────────────────  ║
 ║                            ║                                             ║
 ║  🟢 Pivotree               ║  you  ¿dónde se maneja el refresh del      ║
@@ -185,7 +185,7 @@ Al seleccionar un workspace. Split vertical: tasks a la izquierda, detalle a la 
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
-║  ◉ hitloop ❯ Pivotree                    ruben.mavarez@pivotree.com    ║
+║  ◉ ditloop ❯ Pivotree                    ruben.mavarez@pivotree.com    ║
 ╠═══════════════════════════╦══════════════════════════════════════════════╣
 ║  TASKS                    ║  TASK DETAIL                               ║
 ║  ─────────────────────    ║  ──────────────────────────────────────     ║
@@ -226,7 +226,7 @@ Cuando se lanza una task. Split: progreso arriba, output en vivo abajo.
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
-║  ◉ hitloop ❯ Pivotree ❯ #042 Fix auth token          RUNNING ●        ║
+║  ◉ ditloop ❯ Pivotree ❯ #042 Fix auth token          RUNNING ●        ║
 ╠══════════════════════════════════════════════════════════════════════════╣
 ║                                                                        ║
 ║  Progress     ████████████░░░░░░░░░░  iteration 3/10   elapsed 1m 42s  ║
@@ -269,13 +269,13 @@ Cuando se lanza una task. Split: progreso arriba, output en vivo abajo.
 
 ---
 
-## 4. APPROVAL PROMPT — Human in the Loop
+## 4. APPROVAL PROMPT — Developer In The Loop
 
 Cuando el agente necesita decisión humana. Overlay modal sobre la execution view.
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
-║  ◉ hitloop ❯ Pivotree ❯ #042 Fix auth token          WAITING ◉        ║
+║  ◉ ditloop ❯ Pivotree ❯ #042 Fix auth token          WAITING ◉        ║
 ╠══════════════════════════════════════════════════════════════════════════╣
 ║                                                                        ║
 ║  Progress     ████████████████░░░░░░  iteration 5/10   elapsed 3m 12s  ║
@@ -319,7 +319,7 @@ Se accede con `m` desde cualquier vista.
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
-║  ◉ hitloop ❯ Mission Control                                   14:45  ║
+║  ◉ ditloop ❯ Mission Control                                   14:45  ║
 ╠══════════════════════════════════════════════════════════════════════════╣
 ║                                                                        ║
 ║  ┌─ Pivotree ──────────────────────────────────────────────────────┐   ║
@@ -354,7 +354,7 @@ Se accede con `m` desde cualquier vista.
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
-║  ◉ hitloop ❯ Pivotree ❯ #042 ❯ Diff                    3 files        ║
+║  ◉ ditloop ❯ Pivotree ❯ #042 ❯ Diff                    3 files        ║
 ╠══════════════════════════════════════════════════════════════════════════╣
 ║                                                                        ║
 ║  src/auth/token-manager.ts                              +12 -3         ║
@@ -396,7 +396,7 @@ en tasks si el developer quiere.
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
-║  ◉ hitloop ❯ Pivotree ❯ Chat                ruben.mavarez@pivotree.com ║
+║  ◉ ditloop ❯ Pivotree ❯ Chat                ruben.mavarez@pivotree.com ║
 ╠══════════════════════════════════════════════════════════════════════════╣
 ║                                                                        ║
 ║  ┊ Context: pivotree-commerce · 342 files · .ai/ loaded                ║
@@ -461,7 +461,7 @@ Split horizontal: execution arriba, chat abajo.
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
-║  ◉ hitloop ❯ Pivotree ❯ #042 Fix auth token    RUNNING ●    + Chat 💬 ║
+║  ◉ ditloop ❯ Pivotree ❯ #042 Fix auth token    RUNNING ●    + Chat 💬 ║
 ╠══════════════════════════════════════════════════════════════════════════╣
 ║                                                                        ║
 ║  Progress     ████████████░░░░░░░░░░  iteration 3/10   elapsed 1m 42s  ║
@@ -500,14 +500,14 @@ Split horizontal: execution arriba, chat abajo.
 
 ## 9. GIT PROFILES — Identity management nativo
 
-HitLoop gestiona identidades git como feature de primera clase. Cada workspace
-tiene un profile asociado. HitLoop verifica SIEMPRE antes de operaciones git.
+DitLoop gestiona identidades git como feature de primera clase. Cada workspace
+tiene un profile asociado. DitLoop verifica SIEMPRE antes de operaciones git.
 
 ### 9a. Configuración de profiles
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
-║  ◉ hitloop ❯ Settings ❯ Git Profiles                                  ║
+║  ◉ ditloop ❯ Settings ❯ Git Profiles                                  ║
 ╠══════════════════════════════════════════════════════════════════════════╣
 ║                                                                        ║
 ║  GIT PROFILES                                                          ║
@@ -543,7 +543,7 @@ tiene un profile asociado. HitLoop verifica SIEMPRE antes de operaciones git.
 ║    SSH key:  ~/.ssh/id_ed25519_personal                                ║
 ║    SSH host: github-personal                                           ║
 ║    Platform: GitHub                                                    ║
-║    Used by:  aidf, hitloop                                             ║
+║    Used by:  aidf, ditloop                                             ║
 ║                                                                        ║
 ║  + Add profile                                                         ║
 ║                                                                        ║
@@ -557,7 +557,7 @@ tiene un profile asociado. HitLoop verifica SIEMPRE antes de operaciones git.
 Cuando creás un workspace, asignás un profile. Esto va en la config global:
 
 ```yaml
-# ~/.hitloop/config.yml
+# ~/.ditloop/config.yml
 
 profiles:
   pivotree:
@@ -608,12 +608,12 @@ workspaces:
 
 ### 9c. Smart verification — Pre-commit guard
 
-HitLoop intercepta TODA operación git y verifica la identidad automáticamente.
+DitLoop intercepta TODA operación git y verifica la identidad automáticamente.
 Si hay mismatch, bloquea y muestra:
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
-║  ◉ hitloop ❯ Pivotree ❯ #042                          RUNNING ●       ║
+║  ◉ ditloop ❯ Pivotree ❯ #042                          RUNNING ●       ║
 ╠══════════════════════════════════════════════════════════════════════════╣
 ║                                                                        ║
 ║  [iter 3] ✓ Tests passing                                              ║
@@ -641,7 +641,7 @@ Si hay mismatch, bloquea y muestra:
 ### 9d. Auto-switch on workspace enter
 
 Cuando el developer entra a un workspace (desde Home o Mission Control),
-hitloop automáticamente:
+ditloop automáticamente:
 
 1. Verifica `git config user.email` del directorio del proyecto
 2. Compara con el profile asignado al workspace
@@ -653,7 +653,7 @@ hitloop automáticamente:
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
-║  ◉ hitloop ❯ Pivotree          ✓ pivotree · ruben.mavarez@pivotree.com ║
+║  ◉ ditloop ❯ Pivotree          ✓ pivotree · ruben.mavarez@pivotree.com ║
 ╠══════════════════════════════════════════════════════════════════════════╣
 ║                                                                        ║
 ║  ┊ Auto-switched git profile: personal → pivotree                      ║
@@ -663,7 +663,7 @@ hitloop automáticamente:
 
 ### 9e. Protecciones automáticas
 
-HitLoop verifica identidad en estos momentos:
+DitLoop verifica identidad en estos momentos:
 - **Workspace enter**: auto-switch al profile correcto
 - **Pre-commit**: verificar antes de cada commit (task o manual)
 - **Pre-push**: verificar antes de push (no pusheás con email incorrecto)
@@ -673,12 +673,12 @@ HitLoop verifica identidad en estos momentos:
 ### 9f. CLI commands
 
 ```bash
-hitloop profile list              # Ver todos los profiles
-hitloop profile add               # Wizard interactivo para crear profile
-hitloop profile edit pivotree     # Editar un profile
-hitloop profile current           # ¿Qué profile está activo?
-hitloop profile switch solu       # Cambiar manualmente (raro, lo normal es automático)
-hitloop workspace set-profile pivotree-commerce pivotree  # Asignar profile a workspace
+ditloop profile list              # Ver todos los profiles
+ditloop profile add               # Wizard interactivo para crear profile
+ditloop profile edit pivotree     # Editar un profile
+ditloop profile current           # ¿Qué profile está activo?
+ditloop profile switch solu       # Cambiar manualmente (raro, lo normal es automático)
+ditloop workspace set-profile pivotree-commerce pivotree  # Asignar profile a workspace
 ```
 
 ---
@@ -695,7 +695,7 @@ Se accede con `g` (git) desde el Workspace View.
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
-║  ◉ hitloop ❯ Pivotree ❯ Source Control       branch: fix/042-auth ↑2  ║
+║  ◉ ditloop ❯ Pivotree ❯ Source Control       branch: fix/042-auth ↑2  ║
 ╠═══════════════════════════════╦══════════════════════════════════════════╣
 ║  CHANGES                      ║  DIFF: token-manager.ts                ║
 ║  ─────────────────────────    ║  ──────────────────────────────────     ║
@@ -774,7 +774,7 @@ pero en terminal. Se accede con `f` desde el Workspace View.
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
-║  ◉ hitloop ❯ Pivotree ❯ Files                    pivotree-commerce/   ║
+║  ◉ ditloop ❯ Pivotree ❯ Files                    pivotree-commerce/   ║
 ╠═══════════════════════════════╦══════════════════════════════════════════╣
 ║  FILE TREE                    ║  PREVIEW: token-manager.ts   lines: 84 ║
 ║  ─────────────────────────    ║  ──────────────────────────────────     ║
@@ -826,7 +826,7 @@ Al presionar `/` en el file explorer:
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
-║  ◉ hitloop ❯ Pivotree ❯ Files ❯ Search                                ║
+║  ◉ ditloop ❯ Pivotree ❯ Files ❯ Search                                ║
 ╠══════════════════════════════════════════════════════════════════════════╣
 ║                                                                        ║
 ║  Find file: token▌                                                     ║
@@ -940,7 +940,7 @@ HOME (workspace selector)
 
 ## Notifications
 
-Cuando hitloop está corriendo y una task necesita aprobación:
+Cuando ditloop está corriendo y una task necesita aprobación:
 - macOS: native notification via terminal-notifier
 - Sound: terminal bell
 - Badge en el tab del terminal (si lo soporta, como Ghostty/iTerm2)

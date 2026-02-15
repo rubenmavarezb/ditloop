@@ -1,4 +1,4 @@
-// @hitloop/ui — HitLoop Design System
+// @ditloop/ui — DitLoop Design System
 // Reusable Ink components for terminal UI
 
 export const uiVersion = '0.1.0';

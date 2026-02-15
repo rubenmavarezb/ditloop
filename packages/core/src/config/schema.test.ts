@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  HitLoopConfigSchema,
+  DitLoopConfigSchema,
   ProfileSchema,
   SingleWorkspaceSchema,
   GroupWorkspaceSchema,
@@ -68,15 +68,15 @@ describe('GroupWorkspaceSchema', () => {
   });
 });
 
-describe('HitLoopConfigSchema', () => {
+describe('DitLoopConfigSchema', () => {
   it('parses a full config', () => {
-    const result = HitLoopConfigSchema.parse({
+    const result = DitLoopConfigSchema.parse({
       profiles: {
         personal: { name: 'Ruben', email: 'rubennmavarezb@gmail.com', sshHost: 'github-personal' },
         solu: { name: 'Ruben', email: 'ruben.mavarez@wearesolu.com', sshHost: 'github-solu' },
       },
       workspaces: [
-        { type: 'single', name: 'HitLoop', path: '/Users/ruben/Documentos/hitloop', profile: 'personal' },
+        { type: 'single', name: 'DitLoop', path: '/Users/ruben/Documentos/hitloop', profile: 'personal' },
         { type: 'group', name: 'Solu', path: '/Users/ruben/Documents/freelance/solu', profile: 'solu' },
       ],
       defaults: { profile: 'personal' },
@@ -90,7 +90,7 @@ describe('HitLoopConfigSchema', () => {
   });
 
   it('applies all defaults for empty config', () => {
-    const result = HitLoopConfigSchema.parse({});
+    const result = DitLoopConfigSchema.parse({});
     expect(result.profiles).toEqual({});
     expect(result.workspaces).toEqual([]);
     expect(result.defaults.aidf).toBe(true);
@@ -102,7 +102,7 @@ describe('HitLoopConfigSchema', () => {
 
   it('rejects workspace with unknown type', () => {
     expect(() =>
-      HitLoopConfigSchema.parse({
+      DitLoopConfigSchema.parse({
         workspaces: [{ type: 'unknown', name: 'x', path: '/x', profile: 'x' }],
       })
     ).toThrow();
@@ -110,7 +110,7 @@ describe('HitLoopConfigSchema', () => {
 
   it('rejects workspace referencing missing fields', () => {
     expect(() =>
-      HitLoopConfigSchema.parse({
+      DitLoopConfigSchema.parse({
         workspaces: [{ type: 'single', path: '/x', profile: 'x' }],
       })
     ).toThrow();
@@ -118,7 +118,7 @@ describe('HitLoopConfigSchema', () => {
 
   it('rejects invalid server port', () => {
     expect(() =>
-      HitLoopConfigSchema.parse({ server: { port: 80 } })
+      DitLoopConfigSchema.parse({ server: { port: 80 } })
     ).toThrow();
   });
 });

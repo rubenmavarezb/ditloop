@@ -1,7 +1,7 @@
 # TASK: Config Schema & Loader
 
 ## Goal
-Implement the Zod-validated configuration system that loads ~/.hitloop/config.yml with profiles, workspaces, and defaults.
+Implement the Zod-validated configuration system that loads ~/.ditloop/config.yml with profiles, workspaces, and defaults.
 
 ## Scope
 
@@ -17,10 +17,10 @@ Implement the Zod-validated configuration system that loads ~/.hitloop/config.ym
 
 ## Requirements
 1. Zod schema for full config (profiles, workspaces single+group, defaults, server)
-2. Config loader that reads ~/.hitloop/config.yml
+2. Config loader that reads ~/.ditloop/config.yml
 3. Validation with clear error messages on invalid config
 4. Default values for optional fields
-5. Type exports for HitLoopConfig and sub-types
+5. Type exports for DitLoopConfig and sub-types
 6. Unit tests for schema validation (valid + invalid configs)
 
 ## Definition of Done

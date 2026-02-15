@@ -1,29 +1,29 @@
 import EventEmitter from 'eventemitter3';
-import type { HitLoopEventMap, HitLoopEventName } from './events.js';
+import type { DitLoopEventMap, DitLoopEventName } from './events.js';
 
-type EventPayload<K extends HitLoopEventName> = HitLoopEventMap[K];
-type EventHandler<K extends HitLoopEventName> = (payload: EventPayload<K>) => void;
+type EventPayload<K extends DitLoopEventName> = DitLoopEventMap[K];
+type EventHandler<K extends DitLoopEventName> = (payload: EventPayload<K>) => void;
 
 export class EventBus {
   private emitter = new EventEmitter();
 
-  emit<K extends HitLoopEventName>(event: K, payload: EventPayload<K>): void {
+  emit<K extends DitLoopEventName>(event: K, payload: EventPayload<K>): void {
     this.emitter.emit(event, payload);
   }
 
-  on<K extends HitLoopEventName>(event: K, handler: EventHandler<K>): void {
+  on<K extends DitLoopEventName>(event: K, handler: EventHandler<K>): void {
     this.emitter.on(event, handler);
   }
 
-  once<K extends HitLoopEventName>(event: K, handler: EventHandler<K>): void {
+  once<K extends DitLoopEventName>(event: K, handler: EventHandler<K>): void {
     this.emitter.once(event, handler);
   }
 
-  off<K extends HitLoopEventName>(event: K, handler: EventHandler<K>): void {
+  off<K extends DitLoopEventName>(event: K, handler: EventHandler<K>): void {
     this.emitter.off(event, handler);
   }
 
-  removeAllListeners(event?: HitLoopEventName): void {
+  removeAllListeners(event?: DitLoopEventName): void {
     this.emitter.removeAllListeners(event);
   }
 }

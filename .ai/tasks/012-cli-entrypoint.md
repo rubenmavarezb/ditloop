@@ -1,7 +1,7 @@
 # TASK: CLI Entrypoint & Commands
 
 ## Goal
-Set up the CLI entrypoint with commands: hitloop (TUI), hitloop init, hitloop workspace, hitloop profile.
+Set up the CLI entrypoint with commands: ditloop (TUI), ditloop init, ditloop workspace, ditloop profile.
 
 ## Scope
 
@@ -15,21 +15,21 @@ Set up the CLI entrypoint with commands: hitloop (TUI), hitloop init, hitloop wo
 
 ## Requirements
 1. Default command (no args): launch the TUI dashboard
-2. hitloop init: interactive wizard to create ~/.hitloop/config.yml
-3. hitloop workspace add: add a workspace (interactive)
-4. hitloop workspace list: list all workspaces
-5. hitloop profile add: add a git profile (interactive)
-6. hitloop profile list: list all profiles
-7. hitloop profile current: show current git identity
-8. hitloop --version: show version
-9. hitloop --help: show available commands
+2. ditloop init: interactive wizard to create ~/.ditloop/config.yml
+3. ditloop workspace add: add a workspace (interactive)
+4. ditloop workspace list: list all workspaces
+5. ditloop profile add: add a git profile (interactive)
+6. ditloop profile list: list all profiles
+7. ditloop profile current: show current git identity
+8. ditloop --version: show version
+9. ditloop --help: show available commands
 
 ## Definition of Done
-- [ ] hitloop launches TUI
-- [ ] hitloop init creates config file
-- [ ] hitloop workspace add/list works
-- [ ] hitloop profile add/list/current works
+- [ ] ditloop launches TUI
+- [ ] ditloop init creates config file
+- [ ] ditloop workspace add/list works
+- [ ] ditloop profile add/list/current works
 - [ ] --version and --help work
-- [ ] pnpm build && hitloop --help works
+- [ ] pnpm build && ditloop --help works
 
 ## Status: ⬜ Pending

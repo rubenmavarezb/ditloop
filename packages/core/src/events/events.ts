@@ -1,4 +1,4 @@
-// Event type definitions for HitLoop's typed event bus
+// Event type definitions for DitLoop's typed event bus
 
 export interface WorkspaceEvents {
   'workspace:activated': { id: string; name: string; path: string };
@@ -54,7 +54,7 @@ export interface ProviderEvents {
   'provider:error': { name: string; error: string };
 }
 
-export type HitLoopEventMap =
+export type DitLoopEventMap =
   & WorkspaceEvents
   & ProfileEvents
   & ExecutionEvents
@@ -64,4 +64,4 @@ export type HitLoopEventMap =
   & AidfEvents
   & ProviderEvents;
 
-export type HitLoopEventName = keyof HitLoopEventMap;
+export type DitLoopEventName = keyof DitLoopEventMap;

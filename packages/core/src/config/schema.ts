@@ -68,11 +68,11 @@ export type Defaults = z.infer<typeof DefaultsSchema>;
 
 // --- Root config ---
 
-export const HitLoopConfigSchema = z.object({
+export const DitLoopConfigSchema = z.object({
   profiles: z.record(z.string(), ProfileSchema).default({}),
   workspaces: z.array(WorkspaceSchema).default([]),
   defaults: DefaultsSchema.default({}),
   server: ServerSchema.default({}),
 });
 
-export type HitLoopConfig = z.infer<typeof HitLoopConfigSchema>;
+export type DitLoopConfig = z.infer<typeof DitLoopConfigSchema>;

@@ -21,7 +21,7 @@ Build the base building blocks of the design system: Panel, SplitView, Header, B
 1. Panel: bordered box with optional title and status badge
 2. SplitView: horizontal or vertical split with configurable ratio
 3. Header: top bar with breadcrumb path and right-aligned info
-4. Breadcrumb: ◉ hitloop ❯ Pivotree ❯ #042 style navigation
+4. Breadcrumb: ◉ ditloop ❯ Pivotree ❯ #042 style navigation
 5. StatusBadge: colored indicators (active, warning, error, idle)
 6. ShortcutsBar: bottom bar showing available keyboard shortcuts
 7. Divider: horizontal line separator

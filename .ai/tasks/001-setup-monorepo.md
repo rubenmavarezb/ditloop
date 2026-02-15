@@ -1,7 +1,7 @@
 # TASK: Setup Monorepo
 
 ## Goal
-Initialize the hitloop monorepo with pnpm workspaces, Turborepo, TypeScript, and all 4 packages with proper dependency wiring.
+Initialize the ditloop monorepo with pnpm workspaces, Turborepo, TypeScript, and all 4 packages with proper dependency wiring.
 
 ## Scope
 
@@ -26,7 +26,7 @@ Initialize the hitloop monorepo with pnpm workspaces, Turborepo, TypeScript, and
 3. Turborepo config with build, test, typecheck, lint tasks
 4. Base tsconfig.json with strict mode, ESM, bundler resolution
 5. Each package has: package.json, tsconfig.json, tsup.config.ts, src/index.ts
-6. @hitloop/tui and @hitloop/playground have bin entries
+6. @ditloop/tui and @ditloop/playground have bin entries
 7. Cross-package dependencies use workspace:* protocol
 8. pnpm install runs without errors
 

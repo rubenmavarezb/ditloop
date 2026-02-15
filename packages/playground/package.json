@@ -1,10 +1,10 @@
 {
-  "name": "@hitloop/playground",
+  "name": "@ditloop/playground",
   "version": "0.1.0",
-  "description": "HitLoop Playground — component catalog for terminal UI (Storybook for TUI)",
+  "description": "DitLoop Playground — component catalog for terminal UI (Storybook for TUI)",
   "type": "module",
   "bin": {
-    "hitloop-playground": "dist/index.js"
+    "ditloop-playground": "dist/index.js"
   },
   "main": "dist/index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@hitloop/ui": "workspace:*",
+    "@ditloop/ui": "workspace:*",
     "ink": "^5.1.0",
     "react": "^18.3.0"
   },
