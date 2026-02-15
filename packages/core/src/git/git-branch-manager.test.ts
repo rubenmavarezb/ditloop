@@ -58,19 +58,29 @@ describe('GitBranchManager', () => {
       expect(current).toBe('feature/test');
     });
 
-    it('emits status-changed event on branch creation', async () => {
+    it('emits git:branch-created event on branch creation', async () => {
       const handler = vi.fn();
-      eventBus.on('git:status-changed', handler);
+      eventBus.on('git:branch-created', handler);
 
       const manager = createManager();
       await manager.createBranch('feature/new');
 
-      expect(handler).toHaveBeenCalledWith(
-        expect.objectContaining({
-          workspace: 'test-ws',
-          branch: 'feature/new',
-        }),
-      );
+      expect(handler).toHaveBeenCalledWith({
+        workspace: 'test-ws',
+        branch: 'feature/new',
+      });
+    });
+
+    it('creates a branch from a specific start point', async () => {
+      const git = simpleGit(tempDir);
+      const log = await git.log();
+      const commitHash = log.latest!.hash;
+
+      const manager = createManager();
+      await manager.createBranch('feature/from-commit', commitHash);
+
+      const current = await manager.getCurrentBranch();
+      expect(current).toBe('feature/from-commit');
     });
   });
 
@@ -86,6 +96,23 @@ describe('GitBranchManager', () => {
       const current = await manager.getCurrentBranch();
       expect(current).toBe('develop');
     });
+
+    it('emits git:branch-switched event', async () => {
+      const git = simpleGit(tempDir);
+      await git.checkoutLocalBranch('develop');
+      await git.checkout('master');
+
+      const handler = vi.fn();
+      eventBus.on('git:branch-switched', handler);
+
+      const manager = createManager();
+      await manager.switchBranch('develop');
+
+      expect(handler).toHaveBeenCalledWith({
+        workspace: 'test-ws',
+        branch: 'develop',
+      });
+    });
   });
 
   describe('deleteBranch', () => {
@@ -99,6 +126,23 @@ describe('GitBranchManager', () => {
 
       const branches = await manager.listBranches();
       expect(branches.find((b) => b.name === 'to-delete')).toBeUndefined();
+    });
+
+    it('emits git:branch-deleted event', async () => {
+      const git = simpleGit(tempDir);
+      await git.checkoutLocalBranch('to-delete-event');
+      await git.checkout('master');
+
+      const handler = vi.fn();
+      eventBus.on('git:branch-deleted', handler);
+
+      const manager = createManager();
+      await manager.deleteBranch('to-delete-event');
+
+      expect(handler).toHaveBeenCalledWith({
+        workspace: 'test-ws',
+        branch: 'to-delete-event',
+      });
     });
 
     it('force deletes an unmerged branch', async () => {

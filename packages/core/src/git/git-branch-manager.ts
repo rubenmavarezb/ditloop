@@ -60,16 +60,19 @@ export class GitBranchManager {
    * @param startPoint - Optional commit/branch to start from
    */
   async createBranch(name: string, startPoint?: string): Promise<void> {
-    const args = startPoint ? [name, startPoint] : [name];
-    await this.git.checkoutLocalBranch(args[0]);
-
     if (startPoint) {
-      // checkoutLocalBranch doesn't support start point, use branch + checkout
       await this.git.branch([name, startPoint]);
       await this.git.checkout(name);
+    } else {
+      await this.git.checkoutLocalBranch(name);
     }
 
-    this.emitBranchEvent(name);
+    if (this.eventBus) {
+      this.eventBus.emit('git:branch-created', {
+        workspace: this.workspace,
+        branch: name,
+      });
+    }
   }
 
   /**
@@ -79,7 +82,13 @@ export class GitBranchManager {
    */
   async switchBranch(name: string): Promise<void> {
     await this.git.checkout(name);
-    this.emitBranchEvent(name);
+
+    if (this.eventBus) {
+      this.eventBus.emit('git:branch-switched', {
+        workspace: this.workspace,
+        branch: name,
+      });
+    }
   }
 
   /**
@@ -93,6 +102,13 @@ export class GitBranchManager {
       await this.git.branch(['-D', name]);
     } else {
       await this.git.branch(['-d', name]);
+    }
+
+    if (this.eventBus) {
+      this.eventBus.emit('git:branch-deleted', {
+        workspace: this.workspace,
+        branch: name,
+      });
     }
   }
 
@@ -198,18 +214,6 @@ export class GitBranchManager {
   async getCurrentBranch(): Promise<string> {
     const result = await this.git.branch();
     return result.current;
-  }
-
-  private emitBranchEvent(branch: string): void {
-    if (!this.eventBus) return;
-    // Use status-changed since there's no specific git:branch event in the event map
-    this.eventBus.emit('git:status-changed', {
-      workspace: this.workspace,
-      branch,
-      modified: 0,
-      staged: 0,
-      untracked: 0,
-    });
   }
 
   private async validateIdentity(): Promise<void> {

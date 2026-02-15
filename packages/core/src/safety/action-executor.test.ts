@@ -1,22 +1,28 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { join } from 'node:path';
 import { mkdtemp, rm, writeFile, readFile, mkdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { ActionExecutor } from './action-executor.js';
+import { EventBus } from '../events/index.js';
 
 describe('ActionExecutor', () => {
   let tempDir: string;
+  let eventBus: EventBus;
 
   beforeEach(async () => {
     tempDir = await mkdtemp(join(tmpdir(), 'ditloop-executor-test-'));
+    eventBus = new EventBus();
   });
 
   afterEach(async () => {
     await rm(tempDir, { recursive: true, force: true });
   });
 
-  function createExecutor() {
-    return new ActionExecutor({ workspacePath: tempDir });
+  function createExecutor(opts?: { withEventBus?: boolean }) {
+    return new ActionExecutor({
+      workspacePath: tempDir,
+      eventBus: opts?.withEventBus ? eventBus : undefined,
+    });
   }
 
   describe('file_create', () => {
@@ -181,6 +187,71 @@ describe('ActionExecutor', () => {
     it('blocks sudo', () => {
       const executor = createExecutor();
       expect(() => executor.validateCommand('sudo npm install')).toThrow('Blocked');
+    });
+  });
+
+  describe('event emission', () => {
+    it('emits action:executed on success', async () => {
+      const handler = vi.fn();
+      eventBus.on('action:executed', handler);
+
+      const executor = createExecutor({ withEventBus: true });
+      await executor.execute({
+        type: 'file_create',
+        path: 'event-test.ts',
+        content: 'test',
+      });
+
+      expect(handler).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'file_create',
+          path: 'event-test.ts',
+          workspace: tempDir,
+        }),
+      );
+    });
+
+    it('emits action:failed on error', async () => {
+      const handler = vi.fn();
+      eventBus.on('action:failed', handler);
+
+      const executor = createExecutor({ withEventBus: true });
+      await executor.execute({
+        type: 'shell_command',
+        command: 'sudo rm -rf /',
+      });
+
+      expect(handler).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'shell_command',
+          workspace: tempDir,
+        }),
+      );
+      expect(handler.mock.calls[0][0].error).toContain('Blocked');
+    });
+
+    it('emits action:rolled-back on rollback', async () => {
+      const handler = vi.fn();
+      eventBus.on('action:rolled-back', handler);
+
+      await writeFile(join(tempDir, 'rb-event.ts'), 'original');
+
+      const executor = createExecutor({ withEventBus: true });
+      const result = await executor.execute({
+        type: 'file_edit',
+        path: 'rb-event.ts',
+        oldContent: 'original',
+        newContent: 'changed',
+      });
+
+      await executor.rollback(result.id);
+
+      expect(handler).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: result.id,
+          workspace: tempDir,
+        }),
+      );
     });
   });
 });

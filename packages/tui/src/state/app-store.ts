@@ -4,6 +4,13 @@ import type { WorkspaceItemData } from '@ditloop/ui';
 /** Available views in the TUI application. */
 export type ViewName = 'home' | 'workspace-detail' | 'task-detail' | 'diff-review';
 
+/** Workspace detail data loaded on activation. */
+export interface WorkspaceDetailState {
+  gitStatus: { branch: string; modified: number; staged: number; untracked: number } | null;
+  identityMatch: boolean | null;
+  tasks: Array<{ id: string; title: string; status: string }>;
+}
+
 /** Application state managed by Zustand. */
 export interface AppState {
   /** All resolved workspaces for display. */
@@ -18,6 +25,8 @@ export interface AppState {
   initialized: boolean;
   /** Whether the sidebar is visible. */
   sidebarVisible: boolean;
+  /** Workspace detail data, loaded after activation. */
+  workspaceDetailData: WorkspaceDetailState | null;
 
   /** Initialize the app with workspace data. */
   init: (workspaces: WorkspaceItemData[], profile?: string) => void;
@@ -29,6 +38,10 @@ export interface AppState {
   toggleSidebar: () => void;
   /** Set current profile. */
   setProfile: (profile: string) => void;
+  /** Set workspace detail data after loading. */
+  setWorkspaceDetailData: (data: WorkspaceDetailState) => void;
+  /** Clear workspace detail data when leaving. */
+  clearWorkspaceDetailData: () => void;
 }
 
 /**
@@ -42,6 +55,7 @@ export const useAppStore = create<AppState>((set) => ({
   currentView: 'home',
   initialized: false,
   sidebarVisible: true,
+  workspaceDetailData: null,
 
   init: (workspaces, profile) =>
     set({
@@ -54,6 +68,7 @@ export const useAppStore = create<AppState>((set) => ({
     set({
       activeWorkspaceIndex: index,
       currentView: 'workspace-detail',
+      workspaceDetailData: null,
     }),
 
   navigate: (view) => set({ currentView: view }),
@@ -62,4 +77,8 @@ export const useAppStore = create<AppState>((set) => ({
     set((state) => ({ sidebarVisible: !state.sidebarVisible })),
 
   setProfile: (profile) => set({ currentProfile: profile }),
+
+  setWorkspaceDetailData: (data) => set({ workspaceDetailData: data }),
+
+  clearWorkspaceDetailData: () => set({ workspaceDetailData: null }),
 }));

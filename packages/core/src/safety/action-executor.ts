@@ -77,9 +77,28 @@ export class ActionExecutor {
           break;
       }
 
+      if (this.eventBus) {
+        this.eventBus.emit('action:executed', {
+          id,
+          type: action.type,
+          path: 'path' in action ? action.path : undefined,
+          workspace: this.workspacePath,
+        });
+      }
+
       return { id, success: true, output };
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
+
+      if (this.eventBus) {
+        this.eventBus.emit('action:failed', {
+          id,
+          type: action.type,
+          error: errorMsg,
+          workspace: this.workspacePath,
+        });
+      }
+
       return { id, success: false, error: errorMsg };
     }
   }
@@ -98,6 +117,14 @@ export class ActionExecutor {
       await copyFile(backup.backupPath, backup.originalPath);
       await unlink(backup.backupPath);
       this.backups.delete(executionId);
+
+      if (this.eventBus) {
+        this.eventBus.emit('action:rolled-back', {
+          id: executionId,
+          workspace: this.workspacePath,
+        });
+      }
+
       return true;
     } catch {
       return false;
