@@ -37,4 +37,4 @@ Load .ai/ context (AGENTS.md, tasks, roles, skills) and merge group-level with p
 - [ ] Tests with sample .ai/ structures
 - [ ] pnpm test passes
 
-## Status: ⬜ Pending
+## Status: ✅ Done
