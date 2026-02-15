@@ -1,3 +1,4 @@
+import { homedir } from 'node:os';
 import type { DitLoopConfig, Workspace, SingleWorkspace, GroupWorkspace } from '../config/index.js';
 import type { EventBus } from '../events/index.js';
 import { GroupResolver, type SubProject } from './group-resolver.js';
@@ -62,17 +63,18 @@ export class WorkspaceManager {
 
     if (ws.type === 'single' || ws.type === undefined) {
       const single = ws as SingleWorkspace;
+      const resolvedPath = expandTilde(single.path);
       return {
         id,
         name: single.name,
         type: 'single',
-        path: single.path,
+        path: resolvedPath,
         profile: single.profile,
         aidf: single.aidf,
         projects: [{
           id,
           name: single.name,
-          path: single.path,
+          path: resolvedPath,
         }],
         config: ws,
       };
@@ -80,15 +82,16 @@ export class WorkspaceManager {
 
     // Group workspace
     const group = ws as GroupWorkspace;
-    const projects = group.autoDiscover
-      ? this.groupResolver.resolve(group)
+    const resolvedGroup = { ...group, path: expandTilde(group.path) };
+    const projects = resolvedGroup.autoDiscover
+      ? this.groupResolver.resolve(resolvedGroup)
       : [];
 
     return {
       id,
       name: group.name,
       type: 'group',
-      path: group.path,
+      path: resolvedGroup.path,
       profile: group.profile,
       aidf: group.aidf,
       projects,
@@ -141,6 +144,14 @@ export class WorkspaceManager {
     if (!this.activeId) return null;
     return this.workspaces.get(this.activeId) ?? null;
   }
+}
+
+/** Expand leading `~` to the user's home directory. */
+function expandTilde(p: string): string {
+  if (p.startsWith('~/') || p === '~') {
+    return p.replace('~', homedir());
+  }
+  return p;
 }
 
 /** Convert a name to a URL-safe slug. */

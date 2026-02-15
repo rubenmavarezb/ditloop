@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mkdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { mkdtempSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { tmpdir, homedir } from 'node:os';
 import { WorkspaceManager } from './workspace-manager.js';
 import { EventBus } from '../events/index.js';
 import type { DitLoopConfig, SingleWorkspace, GroupWorkspace } from '../config/index.js';
@@ -255,6 +255,59 @@ describe('WorkspaceManager', () => {
         id: 'ghost',
         error: 'Workspace "ghost" not found',
       });
+    });
+  });
+
+  describe('tilde expansion', () => {
+    it('expands ~ to home directory in single workspace path', () => {
+      const config = makeConfig([{
+        type: 'single',
+        name: 'Tilde Single',
+        path: '~/some/project',
+        profile: 'personal',
+        aidf: true,
+      }]);
+
+      const manager = new WorkspaceManager(config, eventBus);
+      const ws = manager.get('tilde-single');
+
+      expect(ws).toBeDefined();
+      expect(ws!.path).toBe(join(homedir(), 'some/project'));
+      expect(ws!.projects[0].path).toBe(join(homedir(), 'some/project'));
+    });
+
+    it('expands ~ to home directory in group workspace path', () => {
+      const config = makeConfig([{
+        type: 'group',
+        name: 'Tilde Group',
+        path: '~/work/projects',
+        profile: 'work',
+        aidf: true,
+        autoDiscover: false,
+        exclude: [],
+      }]);
+
+      const manager = new WorkspaceManager(config, eventBus);
+      const ws = manager.get('tilde-group');
+
+      expect(ws).toBeDefined();
+      expect(ws!.path).toBe(join(homedir(), 'work/projects'));
+    });
+
+    it('does not modify paths without tilde', () => {
+      const projectPath = createRepo('no-tilde');
+      const config = makeConfig([{
+        type: 'single',
+        name: 'No Tilde',
+        path: projectPath,
+        profile: 'personal',
+        aidf: true,
+      }]);
+
+      const manager = new WorkspaceManager(config, eventBus);
+      const ws = manager.get('no-tilde');
+
+      expect(ws!.path).toBe(projectPath);
     });
   });
 
