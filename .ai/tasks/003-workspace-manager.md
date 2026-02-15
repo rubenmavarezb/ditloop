@@ -25,12 +25,12 @@ Implement workspace management: single projects, groups with sub-projects, and a
 8. Emit events: workspace:entered, workspace:discovered
 
 ## Definition of Done
-- [ ] Single workspaces load correctly
-- [ ] Group workspaces discover sub-projects
-- [ ] Auto-discover finds .git directories
-- [ ] Project overrides work (profile, provider)
-- [ ] Events emitted on workspace enter
-- [ ] Tests with temp directory structures
-- [ ] pnpm test passes
+- [x] Single workspaces load correctly
+- [x] Group workspaces discover sub-projects
+- [x] Auto-discover finds .git directories
+- [x] Project overrides work (profile, provider)
+- [x] Events emitted on workspace enter
+- [x] Tests with temp directory structures
+- [x] pnpm test passes
 
-## Status: ⬜ Pending
+## Status: ✅ Done
