@@ -9,8 +9,10 @@ export * from './events/index.js';
 // Config (task 002)
 export * from './config/index.js';
 
+// Workspace (task 003)
+export * from './workspace/index.js';
+
 // Future modules:
-// - workspace (task 003)
 // - profile (task 004, 005)
 // - aidf (task 007, 008)
 // - git
