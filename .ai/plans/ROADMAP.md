@@ -49,8 +49,8 @@ Transformed DitLoop from a dashboard into an execution tool. Git operations, AI 
 
 ---
 
-### v0.3 — AI Launcher & AIDF Authoring 🔜 NEXT
-**Timeline:** Q2 2026 (Mar-Apr) | **Status:** PLANNED
+### v0.3 — AI Launcher & AIDF Authoring ✅ COMPLETED
+**Timeline:** Feb 2026 | **Status:** SHIPPED
 
 Instead of building a custom chat engine, DitLoop orchestrates existing AI CLI tools (Claude Code, Aider, etc.) with auto-injected workspace and AIDF context. Additionally, AIDF authoring enables creating structured development artifacts from within DitLoop.
 
@@ -62,14 +62,33 @@ Instead of building a custom chat engine, DitLoop orchestrates existing AI CLI t
 - Template-based scaffolding with variable interpolation
 - `ditloop scaffold` CLI wizard
 
-**Tasks:** 029-035 — AI Launcher (029-031), AIDF Authoring (032-035)
+**Tasks:** 029-035 (in `tasks/completed/`)
+
+**Completion Date:** February 2026
 
 **Details:** [`PLAN-v03-chat-authoring.md`](./PLAN-v03-chat-authoring.md)
 
 ---
 
-### v0.4 — Server & API
-**Timeline:** Q3 2026 (May-Jul) | **Status:** PLANNED
+### v0.3.1 — Documentation, Dogfooding & GitHub Pages 🔜 PARALLEL
+**Timeline:** Feb 2026 | **Status:** IN PROGRESS
+
+Prepare DitLoop for real-world usage and public visibility. OSS documentation, local CLI setup, updated AIDF context, and GitHub Pages site.
+
+**Key Features:**
+- README.md, LICENSE, CONTRIBUTING.md
+- CLI installable locally via `pnpm link`
+- Updated .ai/ context files
+- GitHub Pages with landing page + docs (VitePress)
+
+**Tasks:** D01-D06 — OSS Readiness (D01-D03), AIDF Update (D04), GitHub Pages (D05-D06)
+
+**Details:** [`PLAN-v03.1-docs-publishing.md`](./PLAN-v03.1-docs-publishing.md)
+
+---
+
+### v0.4 — Server & API 🔜 NEXT
+**Timeline:** Q2 2026 (Mar-Apr) | **Status:** IN PROGRESS
 
 Turn DitLoop into a service with HTTP/WebSocket API. Remote access to workspaces, AI CLI launching, approval workflow, and real-time event streaming. Prepares infrastructure for mobile (v0.5).
 
@@ -149,20 +168,26 @@ Progressive Web App for mobile devices. Review and approve AI changes from your 
 | 026 | Approval Engine | v0.2 | ✅ |
 | 027 | Diff Review View | v0.2 | ✅ |
 | 028 | Action Executor | v0.2 | ✅ |
-| 029 | Context Builder | v0.3 | 📋 |
-| 030 | AI Launcher | v0.3 | 📋 |
-| 031 | Launcher View | v0.3 | 📋 |
-| 032 | AIDF Writer | v0.3 | 📋 |
-| 033 | Template Engine | v0.3 | 📋 |
-| 034 | Task Editor View | v0.3 | 📋 |
-| 035 | Scaffold Command | v0.3 | 📋 |
-| 038 | Server Package | v0.4 | 📋 |
+| 029 | Context Builder | v0.3 | ✅ |
+| 030 | AI Launcher | v0.3 | ✅ |
+| 031 | Launcher View | v0.3 | ✅ |
+| 032 | AIDF Writer | v0.3 | ✅ |
+| 033 | Template Engine | v0.3 | ✅ |
+| 034 | Task Editor View | v0.3 | ✅ |
+| 035 | Scaffold Command | v0.3 | ✅ |
+| D01 | README & License | v0.3.1 | 📋 |
+| D02 | Contributing Guide | v0.3.1 | 📋 |
+| D03 | Dogfooding Setup | v0.3.1 | 📋 |
+| D04 | Update AIDF Context | v0.3.1 | 📋 |
+| D05 | Docs Site Setup | v0.3.1 | 📋 |
+| D06 | Landing & Docs | v0.3.1 | 📋 |
+| 038 | Server Package | v0.4 | ⏳ |
 | 039 | WebSocket Bridge | v0.4 | 📋 |
-| 040 | Remote Approval | v0.4 | 📋 |
-| 041 | Server CLI | v0.4 | 📋 |
-| 042 | Execution API | v0.4 | 📋 |
-| 043 | Execution Monitor | v0.4 | 📋 |
-| 044 | Execution Dashboard View | v0.4 | 📋 |
+| 040 | Remote Approval | v0.4 | ⏳ |
+| 041 | Server CLI | v0.4 | ⏳ |
+| 042 | Execution API | v0.4 | ⏳ |
+| 043 | Execution Monitor | v0.4 | ⏳ |
+| 044 | Execution Dashboard View | v0.4 | ⏳ |
 | 045 | Mobile Package | v0.5 | 📋 |
 | 046 | Mobile Workspace View | v0.5 | 📋 |
 | 047 | Mobile Chat View | v0.5 | 📋 |
@@ -279,5 +304,5 @@ MIT License — See `LICENSE` for details.
 ---
 
 **Last Updated:** February 15, 2026
-**Current Version:** v0.2 (Execution Engine) ✅
-**Next Version:** v0.3 (AI Launcher & AIDF Authoring) 🔜
+**Current Version:** v0.3 (AI Launcher & AIDF Authoring) ✅
+**In Progress:** v0.4 (Server & API) ⏳ | v0.3.1 (Docs & Dogfooding) ⏳
