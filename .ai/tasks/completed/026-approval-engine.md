@@ -28,4 +28,4 @@ Core approval workflow that queues AI-proposed actions for human review.
 - [ ] Promise resolves with correct results
 - [ ] Tests pass
 
-## Status: ⏳ Pending
+## Status: ✅ Done

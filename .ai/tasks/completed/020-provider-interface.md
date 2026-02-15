@@ -29,4 +29,4 @@ Define the ProviderAdapter interface, ProviderRegistry, and extend config schema
 - [ ] Types exported from index
 - [ ] Tests pass
 
-## Status: ⏳ Pending
+## Status: ✅ Done

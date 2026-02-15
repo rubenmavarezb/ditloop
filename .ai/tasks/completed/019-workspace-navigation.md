@@ -29,4 +29,4 @@ Wire workspace selection in sidebar to navigate to WorkspaceDetail with proper s
 - [ ] Identity context loaded
 - [ ] Tests pass
 
-## Status: ⏳ Pending
+## Status: ✅ Done

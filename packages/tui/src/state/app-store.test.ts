@@ -11,6 +11,7 @@ describe('AppStore', () => {
       currentView: 'home',
       initialized: false,
       sidebarVisible: true,
+      workspaceDetailData: null,
     });
   });
 
@@ -63,5 +64,31 @@ describe('AppStore', () => {
   it('sets profile', () => {
     useAppStore.getState().setProfile('pivotree');
     expect(useAppStore.getState().currentProfile).toBe('pivotree');
+  });
+
+  it('clears workspaceDetailData on activate', () => {
+    useAppStore.getState().setWorkspaceDetailData({
+      gitStatus: { branch: 'main', modified: 1, staged: 0, untracked: 0 },
+      identityMatch: true,
+      tasks: [],
+    });
+    expect(useAppStore.getState().workspaceDetailData).not.toBeNull();
+
+    useAppStore.getState().activateWorkspace(0);
+    expect(useAppStore.getState().workspaceDetailData).toBeNull();
+  });
+
+  it('sets and clears workspace detail data', () => {
+    const data = {
+      gitStatus: { branch: 'main', modified: 2, staged: 1, untracked: 3 },
+      identityMatch: true,
+      tasks: [{ id: '1', title: 'Task 1', status: 'pending' }],
+    };
+
+    useAppStore.getState().setWorkspaceDetailData(data);
+    expect(useAppStore.getState().workspaceDetailData).toEqual(data);
+
+    useAppStore.getState().clearWorkspaceDetailData();
+    expect(useAppStore.getState().workspaceDetailData).toBeNull();
   });
 });

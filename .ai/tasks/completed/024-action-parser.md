@@ -29,4 +29,4 @@ Extract structured actions (file edits, shell commands, git ops) from AI respons
 - [ ] All action types supported
 - [ ] Tests pass
 
-## Status: ⏳ Pending
+## Status: ✅ Done

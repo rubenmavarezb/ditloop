@@ -41,5 +41,7 @@ export function getViewTitle(view: ViewName): string {
       return 'Workspace';
     case 'task-detail':
       return 'Task';
+    case 'diff-review':
+      return 'Review';
   }
 }

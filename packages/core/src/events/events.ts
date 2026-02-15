@@ -33,6 +33,9 @@ export interface GitEvents {
   'git:commit': { workspace: string; hash: string; message: string };
   'git:push': { workspace: string; branch: string; remote: string };
   'git:pull': { workspace: string; branch: string };
+  'git:branch-created': { workspace: string; branch: string };
+  'git:branch-switched': { workspace: string; branch: string };
+  'git:branch-deleted': { workspace: string; branch: string };
 }
 
 export interface ChatEvents {
@@ -48,6 +51,12 @@ export interface AidfEvents {
   'aidf:task-selected': { workspace: string; taskId: string; title: string };
 }
 
+export interface ActionEvents {
+  'action:executed': { id: string; type: string; path?: string; workspace: string };
+  'action:failed': { id: string; type: string; error: string; workspace: string };
+  'action:rolled-back': { id: string; workspace: string };
+}
+
 export interface ProviderEvents {
   'provider:connected': { name: string };
   'provider:disconnected': { name: string; reason?: string };
@@ -60,6 +69,7 @@ export type DitLoopEventMap =
   & ExecutionEvents
   & ApprovalEvents
   & GitEvents
+  & ActionEvents
   & ChatEvents
   & AidfEvents
   & ProviderEvents;

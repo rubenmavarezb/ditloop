@@ -28,4 +28,4 @@ Build the workspace detail view — a developer context dashboard with git statu
 - [ ] Quick action shortcuts work
 - [ ] Tests pass
 
-## Status: ⏳ Pending
+## Status: ✅ Done

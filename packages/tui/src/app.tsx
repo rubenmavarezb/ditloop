@@ -11,6 +11,8 @@ import { useAppStore } from './state/app-store.js';
 import { getViewTitle } from './navigation/router.js';
 import { Home } from './views/Home/Home.js';
 import { TaskDetail } from './views/TaskDetail/TaskDetail.js';
+import { WorkspaceDetail } from './views/WorkspaceDetail/WorkspaceDetail.js';
+import { DiffReviewView } from './views/DiffReview/DiffReviewView.js';
 
 const SHORTCUTS = [
   { key: '↑↓', label: 'navigate' },
@@ -25,14 +27,26 @@ const SHORTCUTS = [
  */
 function MainContent() {
   const currentView = useAppStore((s) => s.currentView);
+  const workspaces = useAppStore((s) => s.workspaces);
+  const activeIndex = useAppStore((s) => s.activeWorkspaceIndex);
 
   switch (currentView) {
     case 'home':
       return <Home />;
     case 'task-detail':
       return <TaskDetail />;
-    case 'workspace-detail':
-      return <Home />;
+    case 'workspace-detail': {
+      const ws = activeIndex !== null ? workspaces[activeIndex] : undefined;
+      if (!ws) return <Home />;
+      return (
+        <WorkspaceDetail
+          workspace={ws}
+          profileName={useAppStore.getState().currentProfile ?? undefined}
+        />
+      );
+    }
+    case 'diff-review':
+      return <DiffReviewView actions={[]} />;
     default:
       return <Home />;
   }
@@ -48,6 +62,7 @@ export function App() {
   const sidebarVisible = useAppStore((s) => s.sidebarVisible);
   const currentView = useAppStore((s) => s.currentView);
   const currentProfile = useAppStore((s) => s.currentProfile);
+  const activeIndex = useAppStore((s) => s.activeWorkspaceIndex);
   const toggleSidebar = useAppStore((s) => s.toggleSidebar);
   const activateWorkspace = useAppStore((s) => s.activateWorkspace);
   const navigate = useAppStore((s) => s.navigate);
@@ -81,7 +96,13 @@ export function App() {
     activateWorkspace(index);
   };
 
-  const breadcrumbs = ['ditloop', getViewTitle(currentView)];
+  // Build breadcrumb segments
+  const breadcrumbs = ['ditloop'];
+  if (currentView === 'workspace-detail' && activeIndex !== null) {
+    breadcrumbs.push(workspaces[activeIndex]?.name ?? 'Workspace');
+  } else {
+    breadcrumbs.push(getViewTitle(currentView));
+  }
 
   const sidebar = (
     <Sidebar
