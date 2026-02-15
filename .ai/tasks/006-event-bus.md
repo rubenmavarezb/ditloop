@@ -20,9 +20,9 @@ Implement the central event bus that enables communication between core modules 
 5. Methods: emit(), on(), off(), once()
 
 ## Definition of Done
-- [ ] EventBus is fully typed — wrong event names or payloads cause TS errors
-- [ ] All event types defined for v0.1 scope
-- [ ] Tests verify type safety and event delivery
-- [ ] pnpm test passes
+- [x] EventBus is fully typed — wrong event names or payloads cause TS errors
+- [x] All event types defined for v0.1 scope
+- [x] Tests verify type safety and event delivery
+- [x] pnpm test passes
 
-## Status: ⬜ Pending
+## Status: ✅ Done

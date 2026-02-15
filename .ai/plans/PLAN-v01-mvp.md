@@ -1,36 +1,37 @@
-# PLAN: v0.1 MVP
+# PLAN: v0.1 MVP — Overview
 
-## Objective
-Build the foundation of DitLoop: monorepo, config system, workspace management, git profiles, AIDF detection, basic TUI with sidebar, and component playground.
+## Overview
 
-## Tasks (in order)
+Build the foundation of DitLoop: a working terminal IDE with workspace management, git identity automation, AIDF integration, and a TUI dashboard. This plan is split into 4 phases, each with its own detailed plan.
 
-### Phase 1: Foundation (Core)
-1. [001] Setup Monorepo — pnpm, turbo, tsconfig, packages
-2. [006] Typed Event Bus — central communication system
-3. [002] Config Schema & Loader — Zod-validated config
-4. [003] Workspace Manager — single, group, auto-discover
-5. [004] Profile Manager — git identity CRUD
-6. [005] Identity Guard — pre-commit verification
+## Goals
 
-### Phase 2: AIDF Integration (Core)
-7. [007] AIDF Detector — detect .ai/ folders
-8. [008] Context Loader & Merger — load and merge AIDF context
+- Deliver a functional `ditloop` CLI that launches a TUI with workspace sidebar
+- Support single and group workspaces with auto-discovery
+- Automate git identity switching per workspace/project
+- Detect and load AIDF context from `.ai/` folders
+- Provide a component playground for UI development
 
-### Phase 3: UI & TUI
-9. [009] UI Primitives — Panel, SplitView, Header, etc.
-10. [010] Sidebar Component — persistent workspace tree
-11. [011] Home View & App Layout — main app shell
-12. [012] CLI Entrypoint & Commands — ditloop command
+## Non-Goals
 
-### Phase 4: Polish
-13. [013] Playground Setup — component catalog
-14. [014] Integration Test — end-to-end verification
+- Chat mode / AI provider integration (v0.2)
+- Execution engine / task runner (v0.2)
+- Approval workflow (v0.2)
+- Mobile PWA / server (v0.4)
+- Desktop app (v0.5)
+
+## Phases
+
+- [x] **Phase 1: Foundation** — `PLAN-phase1-foundation.md` — Core infrastructure (EventBus, Config, Workspaces, Profiles, Identity Guard)
+- [ ] **Phase 2: AIDF Integration** — `PLAN-phase2-aidf.md` — Detect and load AIDF context
+- [ ] **Phase 3: UI & TUI** — `PLAN-phase3-ui-tui.md` — Terminal components, sidebar, home view, CLI
+- [ ] **Phase 4: Polish** — `PLAN-phase4-polish.md` — Playground, integration tests, cleanup
 
 ## Success Criteria
-- `ditloop` launches and shows a sidebar with workspaces
-- Workspaces load from config (single + group)
-- AIDF tasks appear in the sidebar when .ai/ is present
-- Git profile auto-switches on workspace enter
-- `ditloop playground` shows all components
-- All tests pass
+
+- [ ] `ditloop` launches and shows a sidebar with workspaces
+- [ ] Workspaces load from `~/.ditloop/config.yml` (single + group)
+- [ ] AIDF tasks appear in sidebar when `.ai/` is present
+- [ ] Git profile auto-switches on workspace enter
+- [ ] `ditloop playground` shows all components
+- [ ] All tests pass
