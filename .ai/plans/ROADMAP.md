@@ -71,14 +71,16 @@ Instead of building a custom chat engine, DitLoop orchestrates existing AI CLI t
 ### v0.4 — Server & API
 **Timeline:** Q3 2026 (May-Jul) | **Status:** PLANNED
 
-Run DitLoop as a server with HTTP/WebSocket API. Enable remote execution, IDE integrations, and CI/CD pipelines.
+Turn DitLoop into a service with HTTP/WebSocket API. Remote access to workspaces, AI CLI launching, approval workflow, and real-time event streaming. Prepares infrastructure for mobile (v0.5).
 
 **Key Features:**
-- HTTP/WebSocket server with RESTful API
+- Hono HTTP server with REST API (workspaces, profiles, AIDF, launcher)
+- WebSocket bridge for real-time EventBus events
+- Remote AI CLI launch and execution with SSE streaming
+- Remote approval workflow (first-response-wins)
 - Token-based authentication
-- Remote task execution with SSE streaming
-- Remote approval workflow
-- Execution monitoring with concurrency control
+- Execution monitoring with rate limiting and FIFO queue
+- TUI execution dashboard
 
 **Tasks:** 038-044 — Server (038-041), Remote Execution (042-044)
 
