@@ -12,8 +12,11 @@ export * from './config/index.js';
 // Workspace (task 003)
 export * from './workspace/index.js';
 
+// Profile (task 004)
+export * from './profile/index.js';
+
 // Future modules:
-// - profile (task 004, 005)
+// - profile identity-guard (task 005)
 // - aidf (task 007, 008)
 // - git
 // - chat
