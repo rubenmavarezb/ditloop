@@ -24,11 +24,11 @@ Implement the Zod-validated configuration system that loads ~/.ditloop/config.ym
 6. Unit tests for schema validation (valid + invalid configs)
 
 ## Definition of Done
-- [ ] ConfigSchema validates all workspace types (single, group)
-- [ ] Config loader reads YAML and validates with Zod
-- [ ] Defaults are applied for optional fields
-- [ ] Type-safe config object exported
-- [ ] Tests cover: valid config, missing fields, invalid values, defaults
-- [ ] pnpm test passes
+- [x] ConfigSchema validates all workspace types (single, group)
+- [x] Config loader reads YAML and validates with Zod
+- [x] Defaults are applied for optional fields
+- [x] Type-safe config object exported
+- [x] Tests cover: valid config, missing fields, invalid values, defaults
+- [x] pnpm test passes
 
-## Status: ⬜ Pending
+## Status: ✅ Done
