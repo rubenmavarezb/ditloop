@@ -1,7 +1,7 @@
 # PLAN: v0.1 MVP
 
 ## Objective
-Build the foundation of HitLoop: monorepo, config system, workspace management, git profiles, AIDF detection, basic TUI with sidebar, and component playground.
+Build the foundation of DitLoop: monorepo, config system, workspace management, git profiles, AIDF detection, basic TUI with sidebar, and component playground.
 
 ## Tasks (in order)
 
@@ -21,16 +21,16 @@ Build the foundation of HitLoop: monorepo, config system, workspace management, 
 9. [009] UI Primitives — Panel, SplitView, Header, etc.
 10. [010] Sidebar Component — persistent workspace tree
 11. [011] Home View & App Layout — main app shell
-12. [012] CLI Entrypoint & Commands — hitloop command
+12. [012] CLI Entrypoint & Commands — ditloop command
 
 ### Phase 4: Polish
 13. [013] Playground Setup — component catalog
 14. [014] Integration Test — end-to-end verification
 
 ## Success Criteria
-- `hitloop` launches and shows a sidebar with workspaces
+- `ditloop` launches and shows a sidebar with workspaces
 - Workspaces load from config (single + group)
 - AIDF tasks appear in the sidebar when .ai/ is present
 - Git profile auto-switches on workspace enter
-- `hitloop playground` shows all components
+- `ditloop playground` shows all components
 - All tests pass

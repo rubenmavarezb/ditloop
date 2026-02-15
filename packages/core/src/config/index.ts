@@ -1,7 +1,7 @@
 export { loadConfig, DEFAULT_CONFIG_DIR, DEFAULT_CONFIG_PATH } from './loader.js';
 export type { LoadConfigOptions } from './loader.js';
 export {
-  HitLoopConfigSchema,
+  DitLoopConfigSchema,
   ProfileSchema,
   SingleWorkspaceSchema,
   GroupWorkspaceSchema,
@@ -10,7 +10,7 @@ export {
   DefaultsSchema,
 } from './schema.js';
 export type {
-  HitLoopConfig,
+  DitLoopConfig,
   Profile,
   SingleWorkspace,
   GroupWorkspace,

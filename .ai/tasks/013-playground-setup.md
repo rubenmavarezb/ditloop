@@ -1,7 +1,7 @@
 # TASK: Playground Setup
 
 ## Goal
-Build the component catalog TUI that lets developers browse and preview all @hitloop/ui components with their variants.
+Build the component catalog TUI that lets developers browse and preview all @ditloop/ui components with their variants.
 
 ## Scope
 
@@ -14,7 +14,7 @@ Build the component catalog TUI that lets developers browse and preview all @hit
 - packages/tui/**
 
 ## Requirements
-1. Entry point: hitloop-playground or hitloop playground
+1. Entry point: ditloop-playground or ditloop playground
 2. Catalog view: sidebar with component categories, main area with preview
 3. Story format: each .story.tsx exports meta + named story variants
 4. Navigate components with ↑↓, see preview on the right

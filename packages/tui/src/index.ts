@@ -1,8 +1,8 @@
-// @hitloop/tui — HitLoop Terminal IDE
-// Main entry point for the `hitloop` command
+// @ditloop/tui — DitLoop Terminal IDE
+// Main entry point for the `ditloop` command
 
-import { version } from '@hitloop/core';
+import { version } from '@ditloop/core';
 
-console.log(`◉ hitloop v${version} — coming soon`);
-console.log('  Terminal IDE centered on Human-in-the-Loop');
-console.log('  https://github.com/rubenmavarezb/hitloop');
+console.log(`◉ ditloop v${version} — coming soon`);
+console.log('  Terminal IDE centered on Developer In The Loop');
+console.log('  https://github.com/rubenmavarezb/ditloop');

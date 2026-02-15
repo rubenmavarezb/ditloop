@@ -1,16 +1,16 @@
-# CLAUDE.md — HitLoop
+# CLAUDE.md — DitLoop
 
 ## Project Overview
 
-HitLoop is a terminal IDE centered on Human-in-the-Loop for developers who work across multiple projects. It provides workspace management, git identity automation, AI-driven task execution, and a TUI dashboard — all from a single terminal window.
+DitLoop is a terminal IDE centered on Developer In The Loop for developers who work across multiple projects. It provides workspace management, git identity automation, AI-driven task execution, and a TUI dashboard — all from a single terminal window.
 
 ## Architecture
 
 Monorepo with 4 packages:
-- `@hitloop/core` — Business logic, zero UI deps (workspace, profiles, providers, AIDF, git, events)
-- `@hitloop/ui` — Ink/React component library (design system for terminal)
-- `@hitloop/tui` — Terminal app that composes core + ui
-- `@hitloop/playground` — Component catalog (Storybook for TUI)
+- `@ditloop/core` — Business logic, zero UI deps (workspace, profiles, providers, AIDF, git, events)
+- `@ditloop/ui` — Ink/React component library (design system for terminal)
+- `@ditloop/tui` — Terminal app that composes core + ui
+- `@ditloop/playground` — Component catalog (Storybook for TUI)
 
 ## Tech Stack
 
@@ -27,7 +27,7 @@ Monorepo with 4 packages:
 
 ### Imports
 - Use relative imports within a package
-- Use `@hitloop/core`, `@hitloop/ui` for cross-package imports
+- Use `@ditloop/core`, `@ditloop/ui` for cross-package imports
 - Always use `.js` extension in import paths (ESM requirement)
 
 ### File naming
@@ -41,8 +41,8 @@ Monorepo with 4 packages:
 - User-facing strings in the TUI: English
 
 ### Components
-- All UI components live in `@hitloop/ui`, NOT in `@hitloop/tui`
-- Views (full-screen layouts) live in `@hitloop/tui/src/views/`
+- All UI components live in `@ditloop/ui`, NOT in `@ditloop/tui`
+- Views (full-screen layouts) live in `@ditloop/tui/src/views/`
 - Every UI component should have a `.story.tsx` in the playground
 - Components receive data via props, connect to core via hooks in the view layer
 

@@ -1,4 +1,4 @@
-// @hitloop/core — HitLoop Core Engine
+// @ditloop/core — DitLoop Core Engine
 // Workspace management, git profiles, AI providers, execution, and AIDF integration
 
 export const version = '0.1.0';

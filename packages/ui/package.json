@@ -1,7 +1,7 @@
 {
-  "name": "@hitloop/ui",
+  "name": "@ditloop/ui",
   "version": "0.1.0",
-  "description": "HitLoop UI — reusable Ink terminal components (design system)",
+  "description": "DitLoop UI — reusable Ink terminal components (design system)",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -34,6 +34,6 @@
     "vitest": "^3.0.0"
   },
   "peerDependencies": {
-    "@hitloop/core": "workspace:*"
+    "@ditloop/core": "workspace:*"
   }
 }

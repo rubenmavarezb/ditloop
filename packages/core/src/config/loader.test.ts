@@ -8,7 +8,7 @@ describe('loadConfig', () => {
   let tempDir: string;
 
   beforeEach(async () => {
-    tempDir = join(tmpdir(), `hitloop-test-${Date.now()}`);
+    tempDir = join(tmpdir(), `ditloop-test-${Date.now()}`);
     await mkdir(tempDir, { recursive: true });
   });
 
@@ -33,7 +33,7 @@ profiles:
 
 workspaces:
   - type: single
-    name: HitLoop
+    name: DitLoop
     path: /Users/ruben/Documentos/hitloop
     profile: personal
 
@@ -44,7 +44,7 @@ defaults:
     const config = await loadConfig({ path: configPath });
     expect(config.profiles.personal.email).toBe('rubennmavarezb@gmail.com');
     expect(config.workspaces).toHaveLength(1);
-    expect(config.workspaces[0].name).toBe('HitLoop');
+    expect(config.workspaces[0].name).toBe('DitLoop');
   });
 
   it('throws on invalid config', async () => {

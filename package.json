@@ -1,7 +1,7 @@
 {
-  "name": "hitloop",
+  "name": "ditloop",
   "private": true,
-  "description": "Terminal IDE centered on Human-in-the-Loop for multi-project developers",
+  "description": "Terminal IDE centered on Developer In The Loop for multi-project developers",
   "license": "MIT",
   "engines": {
     "node": ">=20.0.0"
@@ -14,7 +14,7 @@
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "clean": "turbo clean",
-    "playground": "pnpm --filter @hitloop/playground start"
+    "playground": "pnpm --filter @ditloop/playground start"
   },
   "devDependencies": {
     "turbo": "^2.8.9"

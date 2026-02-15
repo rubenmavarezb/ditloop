@@ -1,10 +1,10 @@
 {
-  "name": "@hitloop/tui",
+  "name": "@ditloop/tui",
   "version": "0.1.0",
-  "description": "HitLoop TUI — terminal IDE application",
+  "description": "DitLoop TUI — terminal IDE application",
   "type": "module",
   "bin": {
-    "hitloop": "dist/index.js"
+    "ditloop": "dist/index.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,8 +18,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@hitloop/core": "workspace:*",
-    "@hitloop/ui": "workspace:*",
+    "@ditloop/core": "workspace:*",
+    "@ditloop/ui": "workspace:*",
     "ink": "^5.1.0",
     "react": "^18.3.0"
   },

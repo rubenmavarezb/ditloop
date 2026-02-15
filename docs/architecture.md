@@ -1,9 +1,9 @@
-# HitLoop — Technical Architecture v0.1
+# DitLoop — Technical Architecture v0.1
 
 ## Principios
 
-1. **Core sin UI** — Toda lógica de negocio en `@hitloop/core`, sin dependencia de Ink/React
-2. **UI reutilizable** — Componentes en `@hitloop/ui`, usables en TUI y futuros frontends
+1. **Core sin UI** — Toda lógica de negocio en `@ditloop/core`, sin dependencia de Ink/React
+2. **UI reutilizable** — Componentes en `@ditloop/ui`, usables en TUI y futuros frontends
 3. **Playground** — Catálogo de componentes para desarrollo y testing visual
 4. **Provider agnostic** — Adaptadores para cualquier AI provider
 5. **Local first** — Todo corre en tu máquina, nada en la nube por defecto
@@ -14,7 +14,7 @@
 ## Monorepo Structure
 
 ```
-hitloop/
+ditloop/
 ├── package.json                    # Workspace root
 ├── pnpm-workspace.yaml
 ├── tsconfig.base.json              # Shared TS config
@@ -22,7 +22,7 @@ hitloop/
 │
 ├── packages/
 │   │
-│   ├── core/                       # @hitloop/core — CEREBRO (zero UI deps)
+│   ├── core/                       # @ditloop/core — CEREBRO (zero UI deps)
 │   │   ├── package.json
 │   │   ├── tsconfig.json
 │   │   ├── tsup.config.ts
@@ -106,7 +106,7 @@ hitloop/
 │   │       │   └── slash-commands.ts       # /task, /diff, /files, etc
 │   │       │
 │   │       ├── config/             # Configuration management
-│   │       │   ├── config-loader.ts        # Load ~/.hitloop/config.yml
+│   │       │   ├── config-loader.ts        # Load ~/.ditloop/config.yml
 │   │       │   ├── config-loader.test.ts
 │   │       │   ├── config-schema.ts        # Zod schema for validation
 │   │       │   └── defaults.ts             # Default config values
@@ -123,7 +123,7 @@ hitloop/
 │   │           ├── approval.ts
 │   │           └── index.ts
 │   │
-│   ├── ui/                         # @hitloop/ui — DESIGN SYSTEM (Ink components)
+│   ├── ui/                         # @ditloop/ui — DESIGN SYSTEM (Ink components)
 │   │   ├── package.json
 │   │   ├── tsconfig.json
 │   │   ├── tsup.config.ts
@@ -138,7 +138,7 @@ hitloop/
 │   │       │   ├── Shortcut.tsx            # Keyboard shortcut display
 │   │       │   ├── ShortcutsBar.tsx        # Bottom bar with shortcuts
 │   │       │   ├── Header.tsx              # Top bar with breadcrumb
-│   │       │   ├── Breadcrumb.tsx          # ◉ hitloop ❯ Pivotree ❯ #042
+│   │       │   ├── Breadcrumb.tsx          # ◉ ditloop ❯ Pivotree ❯ #042
 │   │       │   ├── Divider.tsx             # Horizontal separator
 │   │       │   └── Truncate.tsx            # Text truncation with ellipsis
 │   │       │
@@ -187,7 +187,7 @@ hitloop/
 │   │               ├── light.ts
 │   │               └── solarized.ts
 │   │
-│   ├── tui/                        # @hitloop/tui — TERMINAL APP
+│   ├── tui/                        # @ditloop/tui — TERMINAL APP
 │   │   ├── package.json
 │   │   ├── tsconfig.json
 │   │   ├── tsup.config.ts
@@ -218,17 +218,17 @@ hitloop/
 │   │       │   └── useProfiles.ts          # Git profile state
 │   │       │
 │   │       └── commands/           # CLI commands (non-TUI)
-│   │           ├── start.ts                # hitloop (default, launches TUI)
-│   │           ├── workspace.ts            # hitloop workspace add/list/remove
-│   │           ├── profile.ts              # hitloop profile add/list/switch
-│   │           ├── run.ts                  # hitloop run (headless execution)
-│   │           └── init.ts                 # hitloop init (setup wizard)
+│   │           ├── start.ts                # ditloop (default, launches TUI)
+│   │           ├── workspace.ts            # ditloop workspace add/list/remove
+│   │           ├── profile.ts              # ditloop profile add/list/switch
+│   │           ├── run.ts                  # ditloop run (headless execution)
+│   │           └── init.ts                 # ditloop init (setup wizard)
 │   │
-│   └── playground/                 # @hitloop/playground — COMPONENT CATALOG
+│   └── playground/                 # @ditloop/playground — COMPONENT CATALOG
 │       ├── package.json
 │       ├── tsconfig.json
 │       └── src/
-│           ├── index.ts                    # Entry: hitloop playground
+│           ├── index.ts                    # Entry: ditloop playground
 │           ├── catalog.tsx                 # Main catalog view
 │           │
 │           └── stories/            # Component stories (like Storybook)
@@ -253,9 +253,9 @@ hitloop/
 │                   └── CommitDialog.story.tsx
 │
 ├── apps/                           # Future frontends (v0.4+)
-│   ├── server/                     # @hitloop/server (v0.4)
-│   ├── web/                        # @hitloop/web — PWA (v0.4)
-│   └── desktop/                    # @hitloop/desktop — Tauri (v0.5)
+│   ├── server/                     # @ditloop/server (v0.4)
+│   ├── web/                        # @ditloop/web — PWA (v0.4)
+│   └── desktop/                    # @ditloop/desktop — Tauri (v0.5)
 │
 └── config/                         # Shared tooling config
     ├── eslint/
@@ -282,14 +282,14 @@ hitloop/
 | Vitest       | Testing                    | Fast, native TS, compatible with Jest API    |
 | ESLint       | Linting                    | Code quality                                |
 | Changesets   | Versioning & publishing    | Independent package versions in monorepo    |
-| **AIDF**     | **AI-driven development**  | **hitloop eats its own dog food**            |
+| **AIDF**     | **AI-driven development**  | **ditloop eats its own dog food**            |
 
-### AIDF for hitloop's own development
+### AIDF for ditloop's own development
 
-hitloop uses AIDF to build itself. The `.ai/` folder at the repo root contains:
+ditloop uses AIDF to build itself. The `.ai/` folder at the repo root contains:
 
 ```
-hitloop/
+ditloop/
 ├── .ai/
 │   ├── AGENTS.md                   # Project architecture & conventions
 │   ├── config.yml                  # AIDF execution settings
@@ -326,7 +326,7 @@ hitloop/
 
 This serves a dual purpose:
 1. **Structured development** — each task has clear scope, DoD, and boundaries
-2. **Dogfooding** — hitloop's first real AIDF integration test is building itself
+2. **Dogfooding** — ditloop's first real AIDF integration test is building itself
 
 ### Core (packages/core)
 
@@ -363,12 +363,12 @@ This serves a dual purpose:
 No Storybook traditional (no es web). En su lugar, un TUI interactivo:
 
 ```bash
-hitloop playground
+ditloop playground
 ```
 
 ```
 ╔══════════════════════════════════════════════════════════════════════╗
-║  ◉ hitloop playground                                               ║
+║  ◉ ditloop playground                                               ║
 ╠═══════════════════════════╦══════════════════════════════════════════╣
 ║  COMPONENTS               ║  PREVIEW                                ║
 ║                           ║                                          ║
@@ -412,7 +412,7 @@ hitloop playground
                     │  └──┬───┘ └──┬───┘ └──┬───┘ └─────┬────┘   │
                     │     │        │        │            │         │
                     │  ┌──┴────────┴────────┴────────────┘         │
-                    │  │         UI Components (@hitloop/ui)       │
+                    │  │         UI Components (@ditloop/ui)       │
                     │  │  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐   │
                     │  │  │Prim. │ │Data  │ │Input │ │Comp. │   │
                     │  │  └──────┘ └──────┘ └──────┘ └──────┘   │
@@ -423,7 +423,7 @@ hitloop playground
                               subscribe to events
                                       │
                     ┌─────────────────┼───────────────────────────┐
-                    │                 │    Core (@hitloop/core)    │
+                    │                 │    Core (@ditloop/core)    │
                     │                 ▼                            │
                     │          ┌──────────────┐                   │
                     │          │  Event Bus   │ ← typed events    │
@@ -457,7 +457,7 @@ Core emite eventos, UI se suscribe. No hay acoplamiento directo.
 ```typescript
 // packages/core/src/events/events.ts
 
-export type HitLoopEvents = {
+export type DitLoopEvents = {
   // Execution
   'execution:started':      { taskId: string; workspaceId: string };
   'execution:iteration':    { taskId: string; iteration: number; total: number };
@@ -517,8 +517,8 @@ function ExecutionView({ taskId }: { taskId: string }) {
 ```typescript
 // packages/playground/src/stories/data-display/ProgressBar.story.tsx
 
-import { ProgressBar } from '@hitloop/ui';
-import type { Story } from '@hitloop/playground';
+import { ProgressBar } from '@ditloop/ui';
+import type { Story } from '@ditloop/playground';
 
 export const meta = {
   title: 'ProgressBar',
@@ -630,7 +630,7 @@ export const ConfigSchema = z.object({
   }).default({}),
 });
 
-export type HitLoopConfig = z.infer<typeof ConfigSchema>;
+export type DitLoopConfig = z.infer<typeof ConfigSchema>;
 ```
 
 ---
@@ -681,11 +681,11 @@ export interface ProviderAdapter {
 
 ---
 
-## AIDF Integration — How hitloop + AIDF work together
+## AIDF Integration — How ditloop + AIDF work together
 
 ### Detection & Modes
 
-hitloop works with ANY project, but unlocks more features when AIDF is present:
+ditloop works with ANY project, but unlocks more features when AIDF is present:
 
 ```
 Project WITHOUT .ai/          Project WITH .ai/ (AIDF)
@@ -704,10 +704,10 @@ Project WITHOUT .ai/          Project WITH .ai/ (AIDF)
 
 ### Context Loading Flow
 
-When entering a workspace/project, hitloop loads context in layers:
+When entering a workspace/project, ditloop loads context in layers:
 
 ```
-Layer 1: hitloop config         ~/.hitloop/config.yml
+Layer 1: ditloop config         ~/.ditloop/config.yml
          (workspace, profile,    → workspace settings
           provider settings)     → which profile, which provider
 
@@ -750,7 +750,7 @@ export function mergeContext(
 }
 ```
 
-### Task Lifecycle in hitloop
+### Task Lifecycle in ditloop
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -758,7 +758,7 @@ export function mergeContext(
 │  CREATE          READY           RUNNING         DONE           │
 │  ──────          ─────           ───────         ────           │
 │                                                                 │
-│  Via chat:       Visible in      hitloop runs    Approval:      │
+│  Via chat:       Visible in      ditloop runs    Approval:      │
 │  "create task"   sidebar &       executor loop   - View diff    │
 │  → writes .md    task list       with provider   - Approve PR   │
 │                                                  - Reject       │
@@ -767,7 +767,7 @@ export function mergeContext(
 │  → template      the provider                                   │
 │                                  Identity guard                 │
 │  Via CLI:        DoD visible     checks before                  │
-│  hitloop task    in UI           every commit                   │
+│  ditloop task    in UI           every commit                   │
 │  create                                                         │
 │                                                                 │
 │  .ai/tasks/      Sidebar shows   Execution view  Notification   │
@@ -822,22 +822,22 @@ Chat can:                        Chat can:
 
 ### aidf CLI Passthrough
 
-For projects with AIDF, hitloop can proxy `aidf` commands:
+For projects with AIDF, ditloop can proxy `aidf` commands:
 
 ```bash
-# These work from within hitloop's command bar:
+# These work from within ditloop's command bar:
 /aidf init                  # Initialize AIDF in current project
 /aidf task create           # Create task via AIDF template wizard
 /aidf status                # Show AIDF status
-/aidf run                   # Run via AIDF directly (bypasses hitloop executor)
+/aidf run                   # Run via AIDF directly (bypasses ditloop executor)
 ```
 
-Or hitloop detects AIDF and uses it natively — no passthrough needed.
+Or ditloop detects AIDF and uses it natively — no passthrough needed.
 
 ### Config: AIDF settings per workspace
 
 ```yaml
-# ~/.hitloop/config.yml
+# ~/.ditloop/config.yml
 
 workspaces:
   solu:
@@ -881,15 +881,15 @@ workspaces:
 ```
 
 Or, if we want to keep it decoupled, we reimplement the parsers (they're just
-markdown + YAML parsing). This avoids a hard dependency and lets hitloop work
+markdown + YAML parsing). This avoids a hard dependency and lets ditloop work
 even if AIDF isn't installed globally.
 
-**Recommendation: Reimplement parsers in @hitloop/core.** The .ai/ format is
+**Recommendation: Reimplement parsers in @ditloop/core.** The .ai/ format is
 simple (markdown + YAML frontmatter). This way:
-- hitloop works standalone without `npm install -g aidf`
+- ditloop works standalone without `npm install -g aidf`
 - No version coupling issues
-- hitloop can extend the format if needed
-- AIDF and hitloop evolve independently
+- ditloop can extend the format if needed
+- AIDF and ditloop evolve independently
 
 ```typescript
 // packages/core/src/aidf/task-parser.ts
@@ -914,12 +914,12 @@ export interface ParsedTask {
 ## v0.1 Scope — What we build first
 
 ### Included in v0.1
-- [ ] `@hitloop/core`: config loader + Zod schema, workspaces (single + group), profiles, git client, event bus
-- [ ] `@hitloop/core`: AIDF detector, context loader, task parser, context merger (group + project)
-- [ ] `@hitloop/ui`: primitives (Panel, SplitView, Header, ShortcutsBar), Sidebar, TaskItem, WorkspaceItem, StatusBadge, SelectList
-- [ ] `@hitloop/tui`: HomeView with persistent sidebar, workspace navigation, task list (from AIDF), profile auto-switch
-- [ ] `@hitloop/playground`: basic component catalog with stories for all v0.1 components
-- [ ] CLI: `hitloop` (TUI), `hitloop init` (setup wizard), `hitloop workspace add/list`, `hitloop profile add/list`
+- [ ] `@ditloop/core`: config loader + Zod schema, workspaces (single + group), profiles, git client, event bus
+- [ ] `@ditloop/core`: AIDF detector, context loader, task parser, context merger (group + project)
+- [ ] `@ditloop/ui`: primitives (Panel, SplitView, Header, ShortcutsBar), Sidebar, TaskItem, WorkspaceItem, StatusBadge, SelectList
+- [ ] `@ditloop/tui`: HomeView with persistent sidebar, workspace navigation, task list (from AIDF), profile auto-switch
+- [ ] `@ditloop/playground`: basic component catalog with stories for all v0.1 components
+- [ ] CLI: `ditloop` (TUI), `ditloop init` (setup wizard), `ditloop workspace add/list`, `ditloop profile add/list`
 - [ ] Git identity: auto-switch on workspace enter, pre-commit guard
 - [ ] AIDF: detect .ai/ folders, load and display tasks in sidebar, show task detail in main area, badge indicator
 
@@ -937,33 +937,33 @@ export interface ParsedTask {
 - [ ] Security (redaction, mobile permissions, network detection)
 
 ### Deferred to v0.5
-- [ ] Desktop app (Tauri, reusing @hitloop/core + new UI)
+- [ ] Desktop app (Tauri, reusing @ditloop/core + new UI)
 
 ---
 
 ## Package Dependencies
 
 ```
-@hitloop/tui
-  ├── @hitloop/ui
+@ditloop/tui
+  ├── @ditloop/ui
   │   └── ink, react, @inkjs/ui
-  └── @hitloop/core
+  └── @ditloop/core
       └── zod, yaml, execa, simple-git, eventemitter3, chokidar
 
-@hitloop/playground
-  ├── @hitloop/ui
+@ditloop/playground
+  ├── @ditloop/ui
   └── ink, react
 
 (future)
-@hitloop/server
-  ├── @hitloop/core
+@ditloop/server
+  ├── @ditloop/core
   └── fastify, ws
 
-@hitloop/web (PWA)
-  └── react, tailwind (talks to @hitloop/server via API)
+@ditloop/web (PWA)
+  └── react, tailwind (talks to @ditloop/server via API)
 
-@hitloop/desktop (Tauri)
-  ├── @hitloop/core (embedded)
+@ditloop/desktop (Tauri)
+  ├── @ditloop/core (embedded)
   └── react, tailwind, tauri
 ```
 
@@ -981,7 +981,7 @@ export interface ParsedTask {
 ```typescript
 // Example UI component test
 import { render } from 'ink-testing-library';
-import { ProgressBar } from '@hitloop/ui';
+import { ProgressBar } from '@ditloop/ui';
 
 test('renders progress bar with correct percentage', () => {
   const { lastFrame } = render(
