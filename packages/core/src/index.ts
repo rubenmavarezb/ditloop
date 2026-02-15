@@ -15,8 +15,10 @@ export * from './workspace/index.js';
 // Profile + Identity Guard (task 004, 005)
 export * from './profile/index.js';
 
+// AIDF (task 007, 008)
+export * from './aidf/index.js';
+
 // Future modules:
-// - aidf (task 007, 008)
 // - git
 // - chat
 // - provider

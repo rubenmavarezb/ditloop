@@ -28,4 +28,4 @@ Implement detection of AIDF (.ai/ folder) in projects, determining what features
 - [ ] Tests with temp directories
 - [ ] pnpm test passes
 
-## Status: ⬜ Pending
+## Status: ✅ Done
