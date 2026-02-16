@@ -42,6 +42,25 @@ export type { SelectListProps } from './input/index.js';
 export { RelativeTime, formatRelativeTime } from './data-display/index.js';
 export type { RelativeTimeProps } from './data-display/index.js';
 
+// Layout
+export {
+  resolveLayout,
+  adjustSplit,
+  DEFAULT_WORKSPACE_LAYOUT,
+  PanelContainer,
+  FocusablePanel,
+} from './layout/index.js';
+export type {
+  LayoutConfig,
+  LayoutRow,
+  LayoutColumn,
+  ResolvedPanel,
+  PanelSlot,
+  PanelConstraints,
+  PanelContainerProps,
+  FocusablePanelProps,
+} from './layout/index.js';
+
 // Composite
 export { WorkspaceItem, TaskItem, Sidebar } from './composite/index.js';
 export type {

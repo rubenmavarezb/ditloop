@@ -1,4 +1,4 @@
-import { Box, useApp, useInput } from 'ink';
+import { Box, useApp } from 'ink';
 import {
   ThemeProvider,
   SplitView,
@@ -8,6 +8,7 @@ import {
 } from '@ditloop/ui';
 import type { WorkspaceItemData } from '@ditloop/ui';
 import { useAppStore } from './state/app-store.js';
+import { useKeyboardManager } from './hooks/useKeyboardManager.js';
 import { getViewTitle } from './navigation/router.js';
 import { Home } from './views/Home/Home.js';
 import { TaskDetail } from './views/TaskDetail/TaskDetail.js';
@@ -18,10 +19,11 @@ import { TaskEditorView } from './views/TaskEditor/TaskEditorView.js';
 import { ExecutionDashboard } from './views/ExecutionDashboard/ExecutionDashboard.js';
 
 const SHORTCUTS = [
-  { key: '↑↓', label: 'navigate' },
-  { key: '→←', label: 'expand/collapse' },
-  { key: '⏎', label: 'select' },
+  { key: 'h/j/k/l', label: 'navigate' },
+  { key: 'Tab', label: 'cycle panels' },
+  { key: '/', label: 'search' },
   { key: 'ctrl+b', label: 'sidebar' },
+  { key: '?', label: 'help' },
   { key: 'q', label: 'quit' },
 ];
 
@@ -99,29 +101,20 @@ export function App() {
   const activateWorkspace = useAppStore((s) => s.activateWorkspace);
   const navigate = useAppStore((s) => s.navigate);
 
-  useInput((input, key) => {
-    if (input === 'q') {
-      exit();
-      return;
-    }
-
-    // ctrl+b toggles sidebar
-    if (input === 'b' && key.ctrl) {
-      toggleSidebar();
-      return;
-    }
-
-    // Number keys 1-9 for workspace shortcuts
-    const num = parseInt(input, 10);
-    if (num >= 1 && num <= 9 && num <= workspaces.length) {
-      activateWorkspace(num - 1);
-      return;
-    }
-
-    // Escape goes back to home
-    if (key.escape) {
-      navigate('home');
-    }
+  useKeyboardManager({
+    onQuit: () => exit(),
+    onAction: (action, _panelId) => {
+      if (action === 'toggle-sidebar') {
+        toggleSidebar();
+        return;
+      }
+      if (action === 'navigate-home') {
+        navigate('home');
+        return;
+      }
+      // Number-key workspace activation handled by keyboard store (1-6 -> panel focus).
+      // Workspace activation from sidebar uses handleWorkspaceSelect below.
+    },
   });
 
   const handleWorkspaceSelect = (_ws: WorkspaceItemData, index: number) => {
