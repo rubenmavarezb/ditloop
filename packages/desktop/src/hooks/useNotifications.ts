@@ -37,35 +37,24 @@ export function useNotifications(enabled: boolean) {
   useEffect(() => {
     if (!enabled) return;
 
-    const ws = ditloopWs;
-    const handler = (event: MessageEvent) => {
-      try {
-        const data = JSON.parse(event.data);
-        switch (data.type) {
-          case 'approval:requested':
-            notify('approval_requested', 'Approval Needed', data.payload?.name ?? 'New approval request');
-            break;
-          case 'execution:completed':
-            notify('execution_completed', 'Execution Complete', data.payload?.name ?? 'Task completed');
-            break;
-          case 'execution:failed':
-            notify('execution_failed', 'Execution Failed', data.payload?.name ?? 'Task failed');
-            break;
-          case 'execution:started':
-            notify('execution_started', 'Execution Started', data.payload?.name ?? 'Task started');
-            break;
-        }
-      } catch {
-        // Ignore non-JSON messages
+    const unsubscribe = ditloopWs.onMessage((message) => {
+      switch (message.event) {
+        case 'approval:requested':
+          notify('approval_requested', 'Approval Needed', (message.data as Record<string, string>)?.name ?? 'New approval request');
+          break;
+        case 'execution:completed':
+          notify('execution_completed', 'Execution Complete', (message.data as Record<string, string>)?.name ?? 'Task completed');
+          break;
+        case 'execution:failed':
+          notify('execution_failed', 'Execution Failed', (message.data as Record<string, string>)?.name ?? 'Task failed');
+          break;
+        case 'execution:started':
+          notify('execution_started', 'Execution Started', (message.data as Record<string, string>)?.name ?? 'Task started');
+          break;
       }
-    };
+    });
 
-    ws.onMessage(handler);
-
-    return () => {
-      // DitLoopWebSocket doesn't expose removeListener, so this is a no-op
-      // In a real implementation, we'd add removeListener support
-    };
+    return unsubscribe;
   }, [enabled, notify]);
 
   return { notify };
