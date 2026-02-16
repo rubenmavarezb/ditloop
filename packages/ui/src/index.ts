@@ -71,3 +71,30 @@ export type {
   TaskStatus,
   SidebarProps,
 } from './composite/index.js';
+
+// Panels
+export {
+  GitStatusPanel,
+  TasksPanel,
+  BranchesPanel,
+  CommitsPanel,
+  FileTreePanel,
+  PreviewPanel,
+  CommandLogPanel,
+} from './panels/index.js';
+export type {
+  GitStatusPanelProps,
+  StatusFileEntry,
+  TasksPanelProps,
+  PanelTaskEntry,
+  PanelTaskStatus,
+  BranchesPanelProps,
+  PanelBranchEntry,
+  CommitsPanelProps,
+  PanelCommitEntry,
+  FileTreePanelProps,
+  TreeNodeEntry,
+  PreviewPanelProps,
+  CommandLogPanelProps,
+  CommandLogEntry,
+} from './panels/index.js';

@@ -74,6 +74,13 @@ export interface ProviderEvents {
   'provider:error': { name: string; error: string };
 }
 
+export interface TuiEvents {
+  'tui:panel-focused': { panelId: string };
+  'tui:layout-changed': { layout: string };
+  'tui:fuzzy-opened': { query: string };
+  'tui:fuzzy-selected': { category: string; label: string };
+}
+
 export type DitLoopEventMap =
   & WorkspaceEvents
   & ProfileEvents
@@ -84,7 +91,8 @@ export type DitLoopEventMap =
   & ChatEvents
   & AidfEvents
   & LauncherEvents
-  & ProviderEvents;
+  & ProviderEvents
+  & TuiEvents;
 
 export type DitLoopEventName = keyof DitLoopEventMap;
 
@@ -100,4 +108,5 @@ export const ALL_EVENT_NAMES: DitLoopEventName[] = [
   'aidf:detected', 'aidf:context-loaded', 'aidf:task-selected', 'aidf:created', 'aidf:updated', 'aidf:deleted',
   'launcher:context-built', 'launcher:started', 'launcher:exited',
   'provider:connected', 'provider:disconnected', 'provider:error',
+  'tui:panel-focused', 'tui:layout-changed', 'tui:fuzzy-opened', 'tui:fuzzy-selected',
 ] as const;
