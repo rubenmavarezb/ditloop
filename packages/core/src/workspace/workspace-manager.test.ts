@@ -5,6 +5,7 @@ import { mkdtempSync } from 'node:fs';
 import { tmpdir, homedir } from 'node:os';
 import { WorkspaceManager } from './workspace-manager.js';
 import { EventBus } from '../events/index.js';
+import { DitLoopConfigSchema } from '../config/index.js';
 import type { DitLoopConfig, SingleWorkspace, GroupWorkspace } from '../config/index.js';
 
 describe('WorkspaceManager', () => {
@@ -28,12 +29,12 @@ describe('WorkspaceManager', () => {
   }
 
   function makeConfig(workspaces: (SingleWorkspace | GroupWorkspace)[]): DitLoopConfig {
-    return {
+    return DitLoopConfigSchema.parse({
       profiles: {},
       workspaces,
       defaults: { editor: '$EDITOR', aidf: true },
       server: { enabled: false, port: 9847, host: '127.0.0.1' },
-    };
+    });
   }
 
   describe('single workspace', () => {

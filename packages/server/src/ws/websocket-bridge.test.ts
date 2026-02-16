@@ -23,4 +23,12 @@ describe('WebSocketBridge', () => {
   it('should be constructable with valid EventBus and token', () => {
     expect(bridge).toBeDefined();
   });
+
+  it('should not remove other EventBus listeners on close', () => {
+    const otherHandler = vi.fn();
+    eventBus.on('workspace:activated', otherHandler);
+    bridge.close();
+    eventBus.emit('workspace:activated', { id: '1', name: 'test', path: '/test' });
+    expect(otherHandler).toHaveBeenCalled();
+  });
 });

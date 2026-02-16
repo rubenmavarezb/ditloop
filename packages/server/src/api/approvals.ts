@@ -1,15 +1,6 @@
 import { Hono } from 'hono';
 import type { ApprovalEngine, Action } from '@ditloop/core';
 
-/** Pending approval tracking entry. */
-export interface PendingApproval {
-  id: string;
-  action: string;
-  detail: string;
-  workspace: string;
-  receivedAt: number;
-}
-
 /** Options for creating approval routes. */
 export interface ApprovalRouteDeps {
   getApprovalEngine: () => ApprovalEngine | undefined;
@@ -19,7 +10,8 @@ export interface ApprovalRouteDeps {
 const APPROVAL_TIMEOUT_MS = 5 * 60 * 1000;
 
 /**
- * Create approval API routes with first-response-wins semantics.
+ * Create approval API routes with first-response-wins semantics
+ * and auto-rejection after timeout.
  *
  * @param deps - Injected dependencies (ApprovalEngine getter)
  * @returns Hono router with approval endpoints
@@ -27,9 +19,41 @@ const APPROVAL_TIMEOUT_MS = 5 * 60 * 1000;
 export function createApprovalRoutes(deps: ApprovalRouteDeps) {
   const app = new Hono();
   const answeredIds = new Set<string>();
+  const firstSeenAt = new Map<string, number>();
+
+  /** Auto-reject approvals older than APPROVAL_TIMEOUT_MS. */
+  function rejectStaleApprovals(): void {
+    const engine = deps.getApprovalEngine();
+    if (!engine) return;
+
+    const now = Date.now();
+    const pending = engine.pendingActions.filter((a) => a.status === 'pending');
+
+    for (const action of pending) {
+      if (!firstSeenAt.has(action.id)) {
+        firstSeenAt.set(action.id, now);
+      }
+
+      const age = now - (firstSeenAt.get(action.id) ?? now);
+      if (age >= APPROVAL_TIMEOUT_MS && !answeredIds.has(action.id)) {
+        try {
+          engine.reject(action.id, 'Auto-rejected: approval timeout (5 minutes)');
+          answeredIds.add(action.id);
+          setTimeout(() => {
+            answeredIds.delete(action.id);
+            firstSeenAt.delete(action.id);
+          }, APPROVAL_TIMEOUT_MS);
+        } catch {
+          // Approval may have been answered between check and reject
+        }
+      }
+    }
+  }
 
   /** GET /approvals — list pending approvals. */
   app.get('/approvals', (c) => {
+    rejectStaleApprovals();
+
     const engine = deps.getApprovalEngine();
     if (!engine) {
       return c.json({ approvals: [] });
@@ -75,7 +99,10 @@ export function createApprovalRoutes(deps: ApprovalRouteDeps) {
       answeredIds.add(id);
 
       // Auto-cleanup after timeout
-      setTimeout(() => answeredIds.delete(id), APPROVAL_TIMEOUT_MS);
+      setTimeout(() => {
+        answeredIds.delete(id);
+        firstSeenAt.delete(id);
+      }, APPROVAL_TIMEOUT_MS);
 
       switch (body.response) {
         case 'approve':

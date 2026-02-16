@@ -1,12 +1,11 @@
 import { Hono } from 'hono';
 import { streamSSE } from 'hono/streaming';
-import type { EventBus, ExecutionEngine, AiLauncher, WorkspaceManager } from '@ditloop/core';
+import type { EventBus, ExecutionEngine, WorkspaceManager } from '@ditloop/core';
 import type { ExecutionMonitor } from '../execution/execution-monitor.js';
 
 /** Options for creating execution routes. */
 export interface ExecutionRouteDeps {
   executionEngine: ExecutionEngine;
-  aiLauncher: AiLauncher;
   workspaceManager: WorkspaceManager;
   executionMonitor: ExecutionMonitor;
   eventBus: EventBus;
@@ -163,46 +162,6 @@ export function createExecutionRoutes(deps: ExecutionRouteDeps) {
       });
 
       return c.json({ id: executionId, status: 'queued' }, 202);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      return c.json({ error: message }, 500);
-    }
-  });
-
-  /** POST /launch — launch AI CLI non-interactively. */
-  app.post('/launch', async (c) => {
-    const body = await c.req.json<{
-      cliId: string;
-      workspaceId: string;
-      taskId?: string;
-      roleId?: string;
-      extraArgs?: string[];
-    }>();
-
-    if (!body.cliId || !body.workspaceId) {
-      return c.json({ error: 'cliId and workspaceId are required' }, 400);
-    }
-
-    const ws = deps.workspaceManager.get(body.workspaceId);
-    if (!ws) {
-      return c.json({ error: 'Workspace not found' }, 404);
-    }
-
-    try {
-      const result = await deps.aiLauncher.launch(body.cliId, {
-        workspacePath: ws.path,
-        workspaceName: ws.name,
-        taskId: body.taskId,
-        roleId: body.roleId,
-        interactive: false,
-        extraArgs: body.extraArgs,
-      });
-
-      return c.json({
-        exitCode: result.exitCode,
-        stdout: result.stdout,
-        stderr: result.stderr,
-      });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       return c.json({ error: message }, 500);

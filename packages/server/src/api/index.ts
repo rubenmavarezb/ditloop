@@ -9,3 +9,7 @@ export { createApprovalRoutes } from './approvals.js';
 export type { ApprovalRouteDeps } from './approvals.js';
 export { createExecutionRoutes } from './executions.js';
 export type { ExecutionRouteDeps } from './executions.js';
+export { createNotificationRoutes } from './notifications.js';
+export type { NotificationRouteDeps } from './notifications.js';
+export { createSyncRoutes } from './sync.js';
+export type { SyncRouteDeps } from './sync.js';

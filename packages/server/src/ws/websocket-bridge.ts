@@ -1,5 +1,6 @@
 import { WebSocketServer, WebSocket } from 'ws';
 import type { IncomingMessage } from 'node:http';
+import { ALL_EVENT_NAMES } from '@ditloop/core';
 import type { EventBus, DitLoopEventName } from '@ditloop/core';
 
 /** Maximum concurrent WebSocket clients. */
@@ -43,7 +44,7 @@ export class WebSocketBridge {
   private pingTimer: ReturnType<typeof setInterval> | null = null;
   private eventBus: EventBus;
   private token: string;
-  private boundHandler: ((event: string, payload: unknown) => void) | null = null;
+  private handlers: Array<{ event: DitLoopEventName; handler: (payload: unknown) => void }> = [];
 
   /**
    * @param eventBus - EventBus to subscribe to
@@ -200,46 +201,20 @@ export class WebSocketBridge {
   }
 
   private subscribeToEventBus(): void {
-    // Subscribe to all known event categories
-    const eventPrefixes = [
-      'workspace', 'profile', 'execution', 'approval',
-      'git', 'action', 'chat', 'aidf', 'launcher', 'provider',
-    ];
-
-    this.boundHandler = (event: string, payload: unknown) => {
-      this.broadcast(event, payload);
-    };
-
-    // Use the EventBus's internal emitter to capture all events
-    // We subscribe to each known event name pattern
-    for (const prefix of eventPrefixes) {
-      const events = this.getEventsForPrefix(prefix);
-      for (const eventName of events) {
-        this.eventBus.on(eventName as DitLoopEventName, (payload: unknown) => {
-          this.broadcast(eventName, payload);
-        });
-      }
+    for (const eventName of ALL_EVENT_NAMES) {
+      const handler = (payload: unknown) => {
+        this.broadcast(eventName, payload);
+      };
+      this.handlers.push({ event: eventName, handler });
+      this.eventBus.on(eventName, handler);
     }
   }
 
   private unsubscribeFromEventBus(): void {
-    this.eventBus.removeAllListeners();
-  }
-
-  private getEventsForPrefix(prefix: string): string[] {
-    const eventMap: Record<string, string[]> = {
-      workspace: ['workspace:activated', 'workspace:deactivated', 'workspace:created', 'workspace:removed', 'workspace:error'],
-      profile: ['profile:switched', 'profile:mismatch', 'profile:guard-blocked'],
-      execution: ['execution:started', 'execution:progress', 'execution:output', 'execution:completed', 'execution:error'],
-      approval: ['approval:requested', 'approval:granted', 'approval:denied'],
-      git: ['git:status-changed', 'git:commit', 'git:push', 'git:pull', 'git:branch-created', 'git:branch-switched', 'git:branch-deleted'],
-      action: ['action:executed', 'action:failed', 'action:rolled-back'],
-      chat: ['chat:message-sent', 'chat:message-received', 'chat:stream-chunk', 'chat:error'],
-      aidf: ['aidf:detected', 'aidf:context-loaded', 'aidf:task-selected', 'aidf:created', 'aidf:updated', 'aidf:deleted'],
-      launcher: ['launcher:context-built', 'launcher:started', 'launcher:exited'],
-      provider: ['provider:connected', 'provider:disconnected', 'provider:error'],
-    };
-    return eventMap[prefix] ?? [];
+    for (const { event, handler } of this.handlers) {
+      this.eventBus.off(event, handler);
+    }
+    this.handlers = [];
   }
 
   private broadcast(event: string, data: unknown): void {
@@ -261,14 +236,12 @@ export class WebSocketBridge {
   }
 
   private matchesPattern(event: string, patterns: Set<string>): boolean {
-    // If no subscriptions, receive nothing
     if (patterns.size === 0) return false;
 
     for (const pattern of patterns) {
       if (pattern === '*') return true;
       if (pattern === event) return true;
 
-      // Wildcard matching: "workspace:*" matches "workspace:activated"
       if (pattern.endsWith(':*')) {
         const prefix = pattern.slice(0, -2);
         if (event.startsWith(prefix + ':')) return true;

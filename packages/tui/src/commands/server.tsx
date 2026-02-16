@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { readFileSync, writeFileSync, existsSync, unlinkSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, unlinkSync, mkdirSync, openSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { homedir } from 'node:os';
 import { Box, Text } from 'ink';
@@ -73,11 +73,13 @@ export function startServer(): { success: boolean; message: string } {
     mkdirSync(LOG_DIR, { recursive: true });
   }
 
+  const logFd = openSync(LOG_PATH, 'a');
+
   const serverBin = join(dirname(new URL(import.meta.url).pathname), '..', '..', '..', 'server', 'dist', 'index.js');
 
   const child = spawn('node', [serverBin], {
     detached: true,
-    stdio: ['ignore', 'pipe', 'pipe'],
+    stdio: ['ignore', logFd, logFd],
     env: { ...process.env },
   });
 
@@ -110,40 +112,44 @@ export function stopServer(): { success: boolean; message: string } {
   try {
     process.kill(pid, 'SIGTERM');
 
-    // Wait briefly for graceful shutdown
-    let attempts = 0;
-    const maxAttempts = 30;
-    const checkInterval = 1000;
+    const maxWaitMs = 5000;
+    const pollMs = 100;
+    const start = Date.now();
 
-    const check = (): { success: boolean; message: string } => {
+    while (Date.now() - start < maxWaitMs) {
       if (!isProcessAlive(pid)) {
         if (existsSync(PID_PATH)) unlinkSync(PID_PATH);
         return { success: true, message: `Server stopped (PID ${pid})` };
       }
-
-      attempts++;
-      if (attempts >= maxAttempts) {
-        process.kill(pid, 'SIGKILL');
-        if (existsSync(PID_PATH)) unlinkSync(PID_PATH);
-        return { success: true, message: `Server force-killed (PID ${pid})` };
-      }
-
-      return { success: false, message: 'Waiting...' };
-    };
-
-    // Synchronous check for immediate stop
-    const result = check();
-    if (result.success || result.message !== 'Waiting...') {
-      return result;
+      const waitUntil = Date.now() + pollMs;
+      while (Date.now() < waitUntil) { /* spin */ }
     }
 
-    // If not stopped immediately, clean up PID file and report
+    try {
+      process.kill(pid, 'SIGKILL');
+    } catch {
+      // Process may have died between check and kill
+    }
     if (existsSync(PID_PATH)) unlinkSync(PID_PATH);
-    return { success: true, message: `Sent SIGTERM to server (PID ${pid})` };
+    return { success: true, message: `Server force-killed (PID ${pid})` };
   } catch (error) {
     if (existsSync(PID_PATH)) unlinkSync(PID_PATH);
     return { success: false, message: `Failed to stop server: ${error}` };
   }
+}
+
+/**
+ * Restart the server (stop + start).
+ *
+ * @returns Object with success status and message
+ */
+export function restartServer(): { success: boolean; message: string } {
+  const stopResult = stopServer();
+  const startResult = startServer();
+  if (!startResult.success) {
+    return startResult;
+  }
+  return { success: true, message: `Server restarted — ${startResult.message}` };
 }
 
 /** Server status indicator component. */

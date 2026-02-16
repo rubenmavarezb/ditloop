@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ProfileManager } from './profile-manager.js';
 import { EventBus } from '../events/index.js';
+import { DitLoopConfigSchema } from '../config/index.js';
 import type { DitLoopConfig } from '../config/index.js';
 
 vi.mock('execa', () => ({
@@ -19,7 +20,7 @@ import { execa } from 'execa';
 const mockedExeca = vi.mocked(execa);
 
 function createTestConfig(overrides?: Partial<DitLoopConfig>): DitLoopConfig {
-  return {
+  return DitLoopConfigSchema.parse({
     profiles: {
       personal: {
         name: 'Ruben',
@@ -37,7 +38,7 @@ function createTestConfig(overrides?: Partial<DitLoopConfig>): DitLoopConfig {
     defaults: { editor: '$EDITOR', aidf: true },
     server: { enabled: false, port: 9847, host: '127.0.0.1' },
     ...overrides,
-  };
+  });
 }
 
 describe('ProfileManager', () => {
