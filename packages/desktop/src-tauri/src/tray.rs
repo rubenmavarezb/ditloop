@@ -2,7 +2,7 @@ use tauri::{
     image::Image,
     menu::{Menu, MenuItem, PredefinedMenuItem},
     tray::{TrayIcon, TrayIconBuilder},
-    AppHandle, Manager, Runtime,
+    AppHandle, Emitter, Manager, Runtime,
 };
 
 /// Build and register the system tray icon with context menu.
@@ -85,7 +85,7 @@ pub fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<TrayIcon<R>>
     Ok(tray)
 }
 
-/// Update tray menu counts for active executions and pending approvals.
+/// Update tray menu counts by rebuilding the menu with new values.
 #[tauri::command]
 pub fn update_tray_counts(
     app: AppHandle,
@@ -93,18 +93,27 @@ pub fn update_tray_counts(
     pending_approvals: u32,
 ) -> Result<(), String> {
     if let Some(tray) = app.tray_by_id("ditloop-tray") {
-        if let Some(menu) = tray.menu() {
-            if let Some(item) = menu.get("active_execs") {
-                if let Some(menu_item) = item.as_menuitem() {
-                    let _ = menu_item.set_text(format!("Active Executions: {}", active_executions));
-                }
-            }
-            if let Some(item) = menu.get("pending_approvals") {
-                if let Some(menu_item) = item.as_menuitem() {
-                    let _ = menu_item.set_text(format!("Pending Approvals: {}", pending_approvals));
-                }
-            }
-        }
+        let show_hide = MenuItem::with_id(&app, "show_hide", "Show DitLoop", true, None::<&str>).map_err(|e| e.to_string())?;
+        let separator1 = PredefinedMenuItem::separator(&app).map_err(|e| e.to_string())?;
+        let active_execs = MenuItem::with_id(&app, "active_execs", format!("Active Executions: {}", active_executions), false, None::<&str>).map_err(|e| e.to_string())?;
+        let pending = MenuItem::with_id(&app, "pending_approvals", format!("Pending Approvals: {}", pending_approvals), false, None::<&str>).map_err(|e| e.to_string())?;
+        let separator2 = PredefinedMenuItem::separator(&app).map_err(|e| e.to_string())?;
+        let new_execution = MenuItem::with_id(&app, "new_execution", "New Execution...", true, None::<&str>).map_err(|e| e.to_string())?;
+        let open_workspace = MenuItem::with_id(&app, "open_workspace", "Open Workspace...", true, None::<&str>).map_err(|e| e.to_string())?;
+        let separator3 = PredefinedMenuItem::separator(&app).map_err(|e| e.to_string())?;
+        let preferences = MenuItem::with_id(&app, "preferences", "Preferences...", true, None::<&str>).map_err(|e| e.to_string())?;
+        let quit = MenuItem::with_id(&app, "quit", "Quit DitLoop", true, None::<&str>).map_err(|e| e.to_string())?;
+
+        let menu = Menu::with_items(
+            &app,
+            &[
+                &show_hide, &separator1, &active_execs, &pending,
+                &separator2, &new_execution, &open_workspace,
+                &separator3, &preferences, &quit,
+            ],
+        ).map_err(|e| e.to_string())?;
+
+        let _ = tray.set_menu(Some(menu));
     }
     Ok(())
 }

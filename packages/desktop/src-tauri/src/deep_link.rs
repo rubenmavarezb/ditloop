@@ -1,4 +1,4 @@
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Emitter, Manager};
 
 /// Handle incoming deep link URLs (ditloop:// protocol).
 pub fn handle_deep_link(app: &AppHandle, urls: Vec<url::Url>) {
