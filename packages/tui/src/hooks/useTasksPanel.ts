@@ -1,4 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
+import { readdir, readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import type { PanelTaskEntry, PanelTaskStatus } from '@ditloop/ui';
 
 /** Data returned by the useTasksPanel hook. */
@@ -20,9 +22,12 @@ export interface TasksPanelData {
 /** Filter cycle order. */
 const FILTER_CYCLE: Array<PanelTaskStatus | null> = [null, 'pending', 'in-progress', 'done', 'blocked'];
 
+/** Valid AIDF task statuses. */
+const VALID_STATUSES = new Set<string>(['pending', 'in-progress', 'done', 'blocked']);
+
 /**
- * Hook that manages AIDF tasks panel state.
- * Provides filtering, selection navigation, and live task updates.
+ * Hook that manages AIDF tasks panel state with real task file data.
+ * Reads .ai/tasks/ directory and parses task markdown files.
  *
  * @param workspacePath - Path to the workspace root containing .ai/ folder
  * @returns Panel data with tasks, selection controls, and filter state
@@ -32,17 +37,39 @@ export function useTasksPanel(workspacePath: string | null): TasksPanelData {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [filter, setFilter] = useState<PanelTaskStatus | null>(null);
 
-  // TODO: Wire to AIDF context loader for live task data.
-  // Sample data for visual testing.
   useEffect(() => {
-    if (!workspacePath) { setTasks([]); return; }
-    setTasks([
-      { id: 'TASK-053', title: 'Layout Engine', status: 'done' },
-      { id: 'TASK-054', title: 'Keyboard Manager', status: 'done' },
-      { id: 'TASK-055', title: 'Git Status Panel', status: 'done' },
-      { id: 'TASK-061', title: 'Fuzzy Finder', status: 'in-progress' },
-      { id: 'TASK-062', title: 'Panel Resizing', status: 'pending' },
-    ]);
+    if (!workspacePath) {
+      setTasks([]);
+      return;
+    }
+
+    async function loadTasks() {
+      const tasksDir = join(workspacePath!, '.ai', 'tasks');
+      try {
+        const files = await readdir(tasksDir);
+        const taskFiles = files.filter((f) => f.endsWith('.md'));
+        const loaded: PanelTaskEntry[] = [];
+
+        for (const file of taskFiles.slice(0, 30)) {
+          const content = await readFile(join(tasksDir, file), 'utf-8');
+          const titleMatch = content.match(/^#\s+(.+)/m);
+          const statusMatch = content.match(/status:\s*(\S+)/i);
+          const rawStatus = statusMatch?.[1]?.toLowerCase() ?? 'pending';
+          const status = VALID_STATUSES.has(rawStatus) ? (rawStatus as PanelTaskStatus) : 'pending';
+          loaded.push({
+            id: file.replace('.md', ''),
+            title: titleMatch?.[1] ?? file.replace('.md', ''),
+            status,
+          });
+        }
+        setTasks(loaded);
+        setSelectedIndex(0);
+      } catch {
+        setTasks([]);
+      }
+    }
+
+    loadTasks();
   }, [workspacePath]);
 
   const filtered = filter ? tasks.filter((t) => t.status === filter) : tasks;

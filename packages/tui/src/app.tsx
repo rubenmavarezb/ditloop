@@ -21,6 +21,8 @@ import { ExecutionDashboard } from './views/ExecutionDashboard/ExecutionDashboar
 import { WorkspacePanelsView } from './views/WorkspacePanels/WorkspacePanelsView.js';
 import { useLayoutStore, RESIZE_STEP } from './state/layout-store.js';
 import { useKeyboardStore } from './state/keyboard-store.js';
+import { usePanelActionStore } from './state/panel-actions.js';
+import type { PanelAction } from './state/panel-actions.js';
 
 const SHORTCUTS = [
   { key: 'h/j/k/l', label: 'navigate' },
@@ -151,6 +153,12 @@ export function App() {
         useLayoutStore.getState().resetLayout();
         return;
       }
+      // Dispatch panel-scoped actions (scroll, activate) through the store
+      const panelActions: string[] = ['scroll-down', 'scroll-up', 'activate', 'toggle-expand'];
+      if (panelActions.includes(action)) {
+        usePanelActionStore.getState().dispatch(_panelId, action as PanelAction);
+        return;
+      }
     },
   });
 
@@ -186,7 +194,9 @@ export function App() {
             <MainContent />
           )}
         </Box>
-        <ShortcutsBar shortcuts={SHORTCUTS} />
+        {currentView !== 'workspace-panels' && (
+          <ShortcutsBar shortcuts={SHORTCUTS} />
+        )}
       </Box>
     </ThemeProvider>
   );

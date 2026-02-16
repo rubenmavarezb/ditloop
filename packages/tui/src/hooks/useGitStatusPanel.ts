@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { GitStatusReader } from '@ditloop/core';
 import type { StatusFileEntry } from '@ditloop/ui';
 
 /** Data returned by the useGitStatusPanel hook. */
@@ -31,6 +32,7 @@ export function useGitStatusPanel(repoPath: string | null): GitStatusPanelData {
   const [unstaged, setUnstaged] = useState<StatusFileEntry[]>([]);
   const [untracked, setUntracked] = useState<string[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const readerRef = useRef<GitStatusReader | null>(null);
 
   const totalFiles = staged.length + unstaged.length + untracked.length;
 
@@ -51,15 +53,36 @@ export function useGitStatusPanel(repoPath: string | null): GitStatusPanelData {
       return;
     }
 
-    // TODO: Wire to GitStatusReader.getStatus() and subscribe to git:status-changed events.
-    // Sample data for visual testing until core services are wired.
-    setStaged([{ path: 'src/app.tsx', status: 'M' }]);
-    setUnstaged([
-      { path: 'src/index.ts', status: 'M' },
-      { path: 'README.md', status: 'M' },
-    ]);
-    setUntracked(['src/new-file.ts', 'docs/notes.md']);
-    setSelectedIndex(0);
+    let reader: GitStatusReader;
+    try {
+      reader = new GitStatusReader({ repoPath, workspace: repoPath });
+    } catch {
+      // Directory may not exist or not be a git repo
+      return;
+    }
+    readerRef.current = reader;
+
+    const loadStatus = async () => {
+      try {
+        const status = await reader.getStatus();
+        setStaged(status.staged.map((f) => ({ path: f.path, status: f.index !== ' ' ? f.index : 'M' })));
+        setUnstaged(status.unstaged.map((f) => ({ path: f.path, status: f.working_dir })));
+        setUntracked(status.untracked);
+        setSelectedIndex(0);
+      } catch {
+        setStaged([]);
+        setUnstaged([]);
+        setUntracked([]);
+      }
+    };
+
+    loadStatus();
+    reader.startPolling();
+
+    return () => {
+      reader.stopPolling();
+      readerRef.current = null;
+    };
   }, [repoPath]);
 
   return { staged, unstaged, untracked, selectedIndex, moveUp, moveDown, totalFiles };

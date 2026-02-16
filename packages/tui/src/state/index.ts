@@ -6,3 +6,6 @@ export type { KeyMode, KeyBinding, KeyboardState } from './keyboard-store.js';
 
 export { useLayoutStore, RESIZE_STEP } from './layout-store.js';
 export type { LayoutState } from './layout-store.js';
+
+export { usePanelActionStore } from './panel-actions.js';
+export type { PanelAction, PanelActionEvent, PanelActionState } from './panel-actions.js';

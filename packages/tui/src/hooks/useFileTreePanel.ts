@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
+import { readdir } from 'node:fs/promises';
+import { join } from 'node:path';
 import type { TreeNodeEntry } from '@ditloop/ui';
 
 /** Data returned by the useFileTreePanel hook. */
@@ -18,10 +20,10 @@ export interface FileTreePanelData {
 }
 
 /**
- * Hook that manages file tree panel state and connects to core FileTreeBuilder.
- * Provides selection navigation, expand/collapse, and live directory updates.
+ * Hook that manages file tree panel state with real filesystem data.
+ * Reads directory contents and supports expand/collapse navigation.
  *
- * @param rootPath - Path to the directory to display (typically .ai/)
+ * @param rootPath - Path to the directory to display
  * @returns Panel data with tree nodes and interaction controls
  */
 export function useFileTreePanel(rootPath: string | null): FileTreePanelData {
@@ -40,7 +42,33 @@ export function useFileTreePanel(rootPath: string | null): FileTreePanelData {
     setNodes((prev) => {
       const node = prev[selectedIndex];
       if (!node || !node.isDirectory) return prev;
-      return prev.map((n, i) => i === selectedIndex ? { ...n, expanded: !n.expanded } : n);
+
+      const isExpanding = !node.expanded;
+      const updated = [...prev];
+      updated[selectedIndex] = { ...node, expanded: isExpanding };
+
+      if (!isExpanding) {
+        // Collapse: remove all children at deeper depth
+        let removeCount = 0;
+        for (let i = selectedIndex + 1; i < updated.length; i++) {
+          if (updated[i].depth > node.depth) removeCount++;
+          else break;
+        }
+        if (removeCount > 0) updated.splice(selectedIndex + 1, removeCount);
+      } else {
+        // Expand: load children asynchronously
+        loadChildren(node.path, node.depth + 1).then((children) => {
+          setNodes((current) => {
+            const idx = current.findIndex((n) => n.path === node.path);
+            if (idx === -1) return current;
+            const result = [...current];
+            result.splice(idx + 1, 0, ...children);
+            return result;
+          });
+        });
+      }
+
+      return updated;
     });
   }, [selectedIndex]);
 
@@ -53,18 +81,40 @@ export function useFileTreePanel(rootPath: string | null): FileTreePanelData {
       return;
     }
 
-    // TODO: Wire to FileTreeBuilder.build() for initial tree
-    // and watch for file system changes.
-    // Sample data for visual testing.
-    setNodes([
-      { path: 'src', name: 'src', isDirectory: true, expanded: true, depth: 0 },
-      { path: 'src/app.tsx', name: 'app.tsx', isDirectory: false, expanded: false, depth: 1 },
-      { path: 'src/index.ts', name: 'index.ts', isDirectory: false, expanded: false, depth: 1 },
-      { path: 'src/hooks', name: 'hooks', isDirectory: true, expanded: false, depth: 1 },
-      { path: 'README.md', name: 'README.md', isDirectory: false, expanded: false, depth: 0 },
-    ]);
-    setSelectedIndex(0);
+    loadChildren(rootPath, 0).then((entries) => {
+      setNodes(entries);
+      setSelectedIndex(0);
+    });
   }, [rootPath]);
 
   return { nodes, selectedIndex, moveUp, moveDown, toggleExpand, selectedPath };
+}
+
+/**
+ * Load directory children as tree nodes.
+ *
+ * @param dirPath - Directory path to read
+ * @param depth - Nesting depth for indentation
+ * @returns Array of tree node entries
+ */
+async function loadChildren(dirPath: string, depth: number): Promise<TreeNodeEntry[]> {
+  try {
+    const entries = await readdir(dirPath, { withFileTypes: true });
+    return entries
+      .filter((e) => !e.name.startsWith('.') || e.name === '.ai')
+      .sort((a, b) => {
+        if (a.isDirectory() && !b.isDirectory()) return -1;
+        if (!a.isDirectory() && b.isDirectory()) return 1;
+        return a.name.localeCompare(b.name);
+      })
+      .map((e) => ({
+        name: e.name,
+        path: join(dirPath, e.name),
+        isDirectory: e.isDirectory(),
+        depth,
+        expanded: false,
+      }));
+  } catch {
+    return [];
+  }
 }
