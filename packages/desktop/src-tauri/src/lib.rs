@@ -1,4 +1,5 @@
 mod commands;
+mod notifications;
 mod tray;
 
 /// Run the Tauri application with all plugins registered.
@@ -18,6 +19,9 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::greet,
             tray::update_tray_counts,
+            notifications::send_notification,
+            notifications::check_notification_permission,
+            notifications::request_notification_permission,
         ])
         .run(tauri::generate_context!())
         .expect("error while running DitLoop desktop");
