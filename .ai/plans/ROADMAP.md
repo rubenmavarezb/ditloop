@@ -107,22 +107,89 @@ Turn DitLoop into a service with HTTP/WebSocket API. Remote access to workspaces
 
 ---
 
-### v0.5 — Mobile Integration
-**Timeline:** Q4 2026 (Aug-Oct) | **Status:** PLANNED
+### v0.5 — Mobile Integration ✅ COMPLETED
+**Timeline:** Feb 2026 | **Status:** SHIPPED
 
 Progressive Web App for mobile devices. Review and approve AI changes from your phone, receive push notifications.
 
 **Key Features:**
-- Progressive Web App (PWA)
+- Progressive Web App (PWA) with Vite + React + Tailwind
 - Mobile-optimized diff viewer
-- Push notifications for task completion
-- Real-time sync with desktop/server
-- Offline support with background sync
+- Push notifications with VAPID + Web Push API
+- Delta-based state sync with offline queue
 - Swipe gestures for approve/reject
+- Connection setup with token auth
 
 **Tasks:** 045-052 — Mobile PWA (045-049), Notifications & Sync (050-052)
 
+**Completion Date:** February 2026
+
 **Details:** [`PLAN-v05-mobile.md`](./PLAN-v05-mobile.md)
+
+---
+
+### v0.6 — TUI Overhaul (LazyGit-inspired) 🔜 NEXT
+**Timeline:** Q2 2026 (Mar-Apr) | **Status:** PLANNED
+
+Transform DitLoop's TUI from a simple dashboard into a dense, panel-based terminal IDE inspired by LazyGit and Yazi. Multi-panel layouts, vim-style navigation, and deep git/AIDF integration in a single screen.
+
+**Inspiration:**
+- **LazyGit:** Multi-panel layout (status + files + branches + commits + stash), keyboard-driven navigation, worktree support, command log
+- **Yazi:** Terminal file manager with vim keys, file tree with icons, file previews
+
+**Key Features:**
+- Multi-panel workspace view (git status | AIDF tasks | branches | recent commits)
+- Vim-style navigation (h/j/k/l) across all views
+- File tree browser for `.ai/` context with preview pane
+- Command log panel showing git ops, AI launches, events
+- Git worktree detection and display
+- Panel resizing and layout customization
+- Fuzzy finder for workspaces, tasks, branches, files
+- Inline diff preview in file panels
+
+**Potential Tasks:** 053-062
+
+**Details:** TBD — [`PLAN-v06-tui-overhaul.md`](./PLAN-v06-tui-overhaul.md)
+
+---
+
+### v0.7 — Desktop App (Tauri) 🔜 PARALLEL with v0.6
+**Timeline:** Q2 2026 (Mar-Apr) | **Status:** PLANNED
+
+Native desktop application using Tauri. Reuses the React + Tailwind UI from the mobile PWA, packaged as a lightweight native app with system-level integrations.
+
+**Why Tauri:**
+- Uses system webview (~5MB vs Electron's ~150MB)
+- Rust backend can invoke git/AI CLIs directly
+- Native OS notifications, system tray, filesystem access
+- Same React + Tailwind stack as mobile — maximum code reuse
+
+**Key Features:**
+- Reuse `@ditloop/mobile` React components in native window
+- System tray with execution status and quick actions
+- Native OS notifications (replace Web Push)
+- Direct filesystem access for workspace browsing
+- Auto-connect to local DitLoop server
+- Multi-window support (workspace per window)
+- Deep linking (`ditloop://workspace/my-project`)
+- Auto-updates via Tauri updater
+
+**Shared with Mobile:**
+- API client (`api/client.ts`, `api/websocket.ts`)
+- Store layer (Zustand stores)
+- View components (Approvals, Executions, Workspaces)
+- Tailwind design system
+
+**Desktop-only:**
+- Tauri Rust commands for local git/AI CLI execution
+- System tray integration
+- Native file dialogs
+- OS notification center
+- Keyboard shortcuts (Cmd/Ctrl palette)
+
+**Potential Tasks:** 063-072
+
+**Details:** TBD — [`PLAN-v07-desktop.md`](./PLAN-v07-desktop.md)
 
 ---
 
@@ -135,6 +202,8 @@ Progressive Web App for mobile devices. Review and approve AI changes from your 
 | v0.3 | +`launcher` module in core | AI CLI orchestration, context injection, AIDF authoring, templates |
 | v0.4 | +`server` package | HTTP/WS API, remote execution, client SDK, IDE plugins |
 | v0.5 | +`mobile` package | PWA, push notifications, mobile approval, offline sync |
+| v0.6 | enhanced `tui` + `ui` | Multi-panel layouts, vim navigation, file tree, command log |
+| v0.7 | +`desktop` package (Tauri) | Native app, system tray, OS notifications, direct CLI access |
 
 ## Task Index
 
@@ -181,21 +250,21 @@ Progressive Web App for mobile devices. Review and approve AI changes from your 
 | D04 | Update AIDF Context | v0.3.1 | 📋 |
 | D05 | Docs Site Setup | v0.3.1 | 📋 |
 | D06 | Landing & Docs | v0.3.1 | 📋 |
-| 038 | Server Package | v0.4 | ⏳ |
-| 039 | WebSocket Bridge | v0.4 | 📋 |
-| 040 | Remote Approval | v0.4 | ⏳ |
-| 041 | Server CLI | v0.4 | ⏳ |
-| 042 | Execution API | v0.4 | ⏳ |
-| 043 | Execution Monitor | v0.4 | ⏳ |
-| 044 | Execution Dashboard View | v0.4 | ⏳ |
-| 045 | Mobile Package | v0.5 | 📋 |
-| 046 | Mobile Workspace View | v0.5 | 📋 |
-| 047 | Mobile Chat View | v0.5 | 📋 |
-| 048 | Mobile Approval View | v0.5 | 📋 |
-| 049 | Mobile Execution View | v0.5 | 📋 |
-| 050 | Push Notification Service | v0.5 | 📋 |
-| 051 | State Sync Engine | v0.5 | 📋 |
-| 052 | Notification Preferences | v0.5 | 📋 |
+| 038 | Server Package | v0.4 | ✅ |
+| 039 | WebSocket Bridge | v0.4 | ✅ |
+| 040 | Remote Approval | v0.4 | ✅ |
+| 041 | Server CLI | v0.4 | ✅ |
+| 042 | Execution API | v0.4 | ✅ |
+| 043 | Execution Monitor | v0.4 | ✅ |
+| 044 | Execution Dashboard View | v0.4 | ✅ |
+| 045 | Mobile Package | v0.5 | ✅ |
+| 046 | Mobile Workspace View | v0.5 | ✅ |
+| 047 | Mobile Chat View | v0.5 | ✅ |
+| 048 | Mobile Approval View | v0.5 | ✅ |
+| 049 | Mobile Execution View | v0.5 | ✅ |
+| 050 | Push Notification Service | v0.5 | ✅ |
+| 051 | State Sync Engine | v0.5 | ✅ |
+| 052 | Notification Preferences | v0.5 | ✅ |
 
 **Legend:**
 - ✅ Completed
@@ -303,6 +372,7 @@ MIT License — See `LICENSE` for details.
 
 ---
 
-**Last Updated:** February 15, 2026
-**Current Version:** v0.3 (AI Launcher & AIDF Authoring) ✅
-**In Progress:** v0.4 (Server & API) ⏳ | v0.3.1 (Docs & Dogfooding) ⏳
+**Last Updated:** February 16, 2026
+**Current Version:** v0.5 (Mobile Integration) ✅
+**In Progress:** v0.3.1 (Docs & Dogfooding) ⏳
+**Next:** v0.6 (TUI Overhaul) 📋 | v0.7 (Desktop — Tauri) 📋 ← parallel

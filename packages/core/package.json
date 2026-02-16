@@ -2,6 +2,21 @@
   "name": "@ditloop/core",
   "version": "0.1.0",
   "description": "DitLoop core — workspace, profile, provider, and execution engine",
+  "license": "MIT",
+  "author": "Ruben Mavarez <rubennmavarezb@gmail.com>",
+  "homepage": "https://github.com/rubenmavarezb/ditloop/tree/main/packages/core#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rubenmavarezb/ditloop.git",
+    "directory": "packages/core"
+  },
+  "keywords": [
+    "ditloop",
+    "workspace-management",
+    "git-identity",
+    "event-driven",
+    "aidf"
+  ],
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

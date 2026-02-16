@@ -3,6 +3,23 @@
   "private": true,
   "description": "Terminal IDE centered on Developer In The Loop for multi-project developers",
   "license": "MIT",
+  "author": "Ruben Mavarez <rubennmavarezb@gmail.com>",
+  "homepage": "https://github.com/rubenmavarezb/ditloop#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rubenmavarezb/ditloop.git"
+  },
+  "keywords": [
+    "terminal-ide",
+    "tui",
+    "developer-tools",
+    "workspace-management",
+    "git-identity",
+    "ai-development",
+    "aidf",
+    "ink",
+    "cli"
+  ],
   "engines": {
     "node": ">=20.0.0"
   },
@@ -14,9 +31,13 @@
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "clean": "turbo clean",
-    "playground": "pnpm --filter @ditloop/playground start"
+    "playground": "pnpm --filter @ditloop/playground start",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
-    "turbo": "^2.8.9"
+    "turbo": "^2.8.9",
+    "vitepress": "^1.6.4"
   }
 }

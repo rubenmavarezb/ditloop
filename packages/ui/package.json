@@ -2,6 +2,21 @@
   "name": "@ditloop/ui",
   "version": "0.1.0",
   "description": "DitLoop UI — reusable Ink terminal components (design system)",
+  "license": "MIT",
+  "author": "Ruben Mavarez <rubennmavarezb@gmail.com>",
+  "homepage": "https://github.com/rubenmavarezb/ditloop/tree/main/packages/ui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rubenmavarezb/ditloop.git",
+    "directory": "packages/ui"
+  },
+  "keywords": [
+    "ditloop",
+    "ink",
+    "terminal-ui",
+    "tui-components",
+    "react"
+  ],
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
