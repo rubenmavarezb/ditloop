@@ -195,6 +195,9 @@ importers:
       '@ditloop/ui':
         specifier: workspace:*
         version: link:../ui
+      fuse.js:
+        specifier: ^7.0.0
+        version: 7.1.0
       ink:
         specifier: ^5.1.0
         version: 5.2.1(@types/react@18.3.28)(react@18.3.1)

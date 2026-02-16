@@ -23,3 +23,6 @@ export type { FileTreePanelData } from './useFileTreePanel.js';
 
 export { useCommandLog } from './useCommandLog.js';
 export type { CommandLogData } from './useCommandLog.js';
+
+export { useFuzzyFinder } from './useFuzzyFinder.js';
+export type { FuzzyFinderData, FuzzySearchItem } from './useFuzzyFinder.js';

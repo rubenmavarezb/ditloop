@@ -98,3 +98,7 @@ export type {
   CommandLogPanelProps,
   CommandLogEntry,
 } from './panels/index.js';
+
+// Overlay
+export { FuzzyFinder } from './overlay/index.js';
+export type { FuzzyFinderProps, FuzzyItem } from './overlay/index.js';
