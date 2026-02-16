@@ -1,4 +1,5 @@
 export { EventBus, getEventBus, resetEventBus } from './event-bus.js';
+export { ALL_EVENT_NAMES } from './events.js';
 export type {
   DitLoopEventMap,
   DitLoopEventName,

@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+  }
+
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Prevent pull-to-refresh on the whole page (we handle it ourselves) */
+  body {
+    overscroll-behavior-y: contain;
+  }
+}
+
+@layer components {
+  .tap-target {
+    @apply min-h-tap min-w-[44px];
+  }
+}
