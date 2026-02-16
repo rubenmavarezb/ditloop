@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss';
-import { ditloopPreset } from '@ditloop/web-ui';
+import { ditloopPreset } from '../web-ui/src/tailwind.preset.js';
 
 export default {
   content: [
