@@ -18,6 +18,10 @@ export interface ThemeColors {
   border: string;
   /** Background hint color. */
   bg: string;
+  /** Focused panel border color. */
+  borderFocused: string;
+  /** Panel header background hint. */
+  panelHeader: string;
 }
 
 /** Default color palette for DitLoop. */
@@ -31,4 +35,6 @@ export const defaultColors: ThemeColors = {
   textDim: '#95a5a6',
   border: '#34495e',
   bg: '#1a1a2e',
+  borderFocused: '#00bcd4',
+  panelHeader: '#2c3e50',
 };

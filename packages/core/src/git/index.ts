@@ -6,3 +6,9 @@ export type { CommitResult, GitCommitManagerOptions } from './git-commit-manager
 
 export { GitBranchManager } from './git-branch-manager.js';
 export type { BranchInfo, GitBranchManagerOptions } from './git-branch-manager.js';
+
+export { GitWorktreeReader } from './git-worktree-reader.js';
+export type { WorktreeEntry, GitWorktreeReaderOptions } from './git-worktree-reader.js';
+
+export { GitLogReader } from './git-log-reader.js';
+export type { CommitEntry, GitLogOptions, GitLogReaderOptions } from './git-log-reader.js';

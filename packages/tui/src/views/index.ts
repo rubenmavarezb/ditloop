@@ -14,3 +14,6 @@ export type { TaskEditorViewProps, TaskFieldValues } from './TaskEditor/index.js
 
 export { ExecutionDashboard } from './ExecutionDashboard/index.js';
 export type { ExecutionDashboardProps, ExecutionRow } from './ExecutionDashboard/index.js';
+
+export { WorkspacePanelsView } from './WorkspacePanels/index.js';
+export type { WorkspacePanelsViewProps } from './WorkspacePanels/index.js';

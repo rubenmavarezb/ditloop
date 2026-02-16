@@ -26,3 +26,5 @@ export type {
   QuietHours,
   WorkspaceNotificationOverride,
 } from './schema.js';
+export { LayoutPersistence } from './layout-persistence.js';
+export type { PersistedLayoutConfig } from './layout-persistence.js';

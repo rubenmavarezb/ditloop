@@ -153,7 +153,27 @@ async function main() {
 
   useAppStore.getState().init(workspaces, currentEmail ?? undefined);
 
-  render(<App />);
+  // Enter alternate screen buffer for full-screen TUI (like lazygit, vim)
+  process.stdout.write('\x1b[?1049h');
+  process.stdout.write('\x1b[H\x1b[2J');
+
+  const instance = render(<App />);
+
+  // Restore original screen on exit
+  const restore = () => {
+    process.stdout.write('\x1b[?1049l');
+  };
+
+  instance.waitUntilExit().then(restore);
+  process.on('exit', restore);
+  process.on('SIGINT', () => {
+    restore();
+    process.exit(0);
+  });
+  process.on('SIGTERM', () => {
+    restore();
+    process.exit(0);
+  });
 }
 
 /**
@@ -165,6 +185,8 @@ function toWorkspaceItemData(ws: ResolvedWorkspace): WorkspaceItemData {
     type: ws.type,
     projectCount: ws.projects.length,
     status: 'idle',
+    path: ws.path,
+    aidfPath: ws.aidf ? `${ws.path}/.ai` : undefined,
   };
 }
 

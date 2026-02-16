@@ -45,7 +45,7 @@ describe('AppStore', () => {
 
     const state = useAppStore.getState();
     expect(state.activeWorkspaceIndex).toBe(1);
-    expect(state.currentView).toBe('workspace-detail');
+    expect(state.currentView).toBe('workspace-panels');
   });
 
   it('navigates to a view', () => {
