@@ -12,6 +12,16 @@ import {
   ApprovalDetail,
   Settings,
 } from '@ditloop/web-ui';
+import { DesktopShell } from './components/Layout/DesktopShell.js';
+
+/** Placeholder for the filesystem browser view (Task 067). */
+function FileBrowserPlaceholder() {
+  return (
+    <div className="flex h-full items-center justify-center text-slate-500">
+      <p>File browser — coming soon</p>
+    </div>
+  );
+}
 
 /** Root desktop application component with routing and theme management. */
 export function App() {
@@ -24,21 +34,19 @@ export function App() {
 
   return (
     <BrowserRouter>
-      <div className="flex h-screen flex-col bg-slate-950">
-        {/* Desktop shell placeholder — will be replaced in Task 064 */}
-        <main className="flex-1 overflow-auto">
-          <Routes>
-            <Route path="/" element={<WorkspaceList />} />
-            <Route path="/workspace/:id" element={<WorkspaceDetail />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/approvals" element={<ApprovalList />} />
-            <Route path="/approvals/:id" element={<ApprovalDetail />} />
-            <Route path="/executions" element={<ExecutionList />} />
-            <Route path="/executions/:id" element={<ExecutionDetail />} />
-            <Route path="/settings" element={<Settings />} />
-          </Routes>
-        </main>
-      </div>
+      <DesktopShell>
+        <Routes>
+          <Route path="/" element={<WorkspaceList />} />
+          <Route path="/workspace/:id" element={<WorkspaceDetail />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/approvals" element={<ApprovalList />} />
+          <Route path="/approvals/:id" element={<ApprovalDetail />} />
+          <Route path="/executions" element={<ExecutionList />} />
+          <Route path="/executions/:id" element={<ExecutionDetail />} />
+          <Route path="/files" element={<FileBrowserPlaceholder />} />
+          <Route path="/settings" element={<Settings />} />
+        </Routes>
+      </DesktopShell>
     </BrowserRouter>
   );
 }
