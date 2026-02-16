@@ -1,12 +1,17 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useTheme } from './hooks/useTheme.js';
-import { useConnectionStore } from './store/connection.js';
-import { ConnectionSetup } from './views/ConnectionSetup/index.js';
-import { Chat } from './views/Chat/index.js';
-import { WorkspaceList, WorkspaceDetail } from './views/Workspaces/index.js';
-import { ExecutionList, ExecutionDetail } from './views/Executions/index.js';
-import { ApprovalList, ApprovalDetail } from './views/Approvals/index.js';
-import { Settings } from './views/Settings/index.js';
+import { useTheme } from '@ditloop/web-ui';
+import {
+  useConnectionStore,
+  ConnectionSetup,
+  Chat,
+  WorkspaceList,
+  WorkspaceDetail,
+  ExecutionList,
+  ExecutionDetail,
+  ApprovalList,
+  ApprovalDetail,
+  Settings,
+} from '@ditloop/web-ui/server';
 import { AppShell } from './components/Layout/AppShell.js';
 
 /** Root application component with routing and theme management. */
