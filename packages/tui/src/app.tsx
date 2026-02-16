@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Box, useApp } from 'ink';
 import {
   ThemeProvider,
@@ -17,6 +18,9 @@ import { DiffReviewView } from './views/DiffReview/DiffReviewView.js';
 import { LauncherView } from './views/Launcher/LauncherView.js';
 import { TaskEditorView } from './views/TaskEditor/TaskEditorView.js';
 import { ExecutionDashboard } from './views/ExecutionDashboard/ExecutionDashboard.js';
+import { WorkspacePanelsView } from './views/WorkspacePanels/WorkspacePanelsView.js';
+import { useLayoutStore, RESIZE_STEP } from './state/layout-store.js';
+import { useKeyboardStore } from './state/keyboard-store.js';
 
 const SHORTCUTS = [
   { key: 'h/j/k/l', label: 'navigate' },
@@ -73,6 +77,16 @@ function MainContent() {
           onCancel={() => navigate('home')}
         />
       );
+    case 'workspace-panels': {
+      return (
+        <WorkspacePanelsView
+          repoPath={ws?.path ?? null}
+          aidfPath={ws?.aidfPath ?? null}
+          termWidth={process.stdout.columns ?? 80}
+          termHeight={process.stdout.rows ?? 24}
+        />
+      );
+    }
     case 'execution-dashboard':
       return (
         <ExecutionDashboard
@@ -92,6 +106,14 @@ function MainContent() {
  */
 export function App() {
   const { exit } = useApp();
+  const [termHeight, setTermHeight] = useState(process.stdout.rows ?? 24);
+
+  useEffect(() => {
+    const onResize = () => setTermHeight(process.stdout.rows ?? 24);
+    process.stdout.on('resize', onResize);
+    return () => { process.stdout.off('resize', onResize); };
+  }, []);
+
   const workspaces = useAppStore((s) => s.workspaces);
   const sidebarVisible = useAppStore((s) => s.sidebarVisible);
   const currentView = useAppStore((s) => s.currentView);
@@ -109,11 +131,26 @@ export function App() {
         return;
       }
       if (action === 'navigate-home') {
+        const { currentView: cv } = useAppStore.getState();
+        if (cv === 'workspace-panels') {
+          useAppStore.getState().clearWorkspaceDetailData();
+          useKeyboardStore.getState().setPanelOrder([]);
+        }
         navigate('home');
         return;
       }
-      // Number-key workspace activation handled by keyboard store (1-6 -> panel focus).
-      // Workspace activation from sidebar uses handleWorkspaceSelect below.
+      if (action === 'resize-grow') {
+        useLayoutStore.getState().resizePanel(_panelId, 'v', RESIZE_STEP);
+        return;
+      }
+      if (action === 'resize-shrink') {
+        useLayoutStore.getState().resizePanel(_panelId, 'v', -RESIZE_STEP);
+        return;
+      }
+      if (action === 'reset-layout') {
+        useLayoutStore.getState().resetLayout();
+        return;
+      }
     },
   });
 
@@ -123,7 +160,7 @@ export function App() {
 
   // Build breadcrumb segments
   const breadcrumbs = ['ditloop'];
-  if (currentView === 'workspace-detail' && activeIndex !== null) {
+  if ((currentView === 'workspace-detail' || currentView === 'workspace-panels') && activeIndex !== null) {
     breadcrumbs.push(workspaces[activeIndex]?.name ?? 'Workspace');
   } else {
     breadcrumbs.push(getViewTitle(currentView));
@@ -138,24 +175,17 @@ export function App() {
     />
   );
 
-  const mainArea = (
-    <Box flexDirection="column" width="100%">
-      <Header
-        segments={breadcrumbs}
-        rightText={currentProfile ?? undefined}
-      />
-      <MainContent />
-    </Box>
-  );
-
   return (
     <ThemeProvider>
-      <Box flexDirection="column" width="100%">
-        {sidebarVisible ? (
-          <SplitView left={sidebar} right={mainArea} ratio={[30, 70]} />
-        ) : (
-          mainArea
-        )}
+      <Box flexDirection="column" width="100%" height={termHeight}>
+        <Header segments={breadcrumbs} rightText={currentProfile ?? undefined} />
+        <Box flexDirection="column" width="100%" flexGrow={1} overflow="hidden">
+          {sidebarVisible && currentView !== 'workspace-panels' ? (
+            <SplitView left={sidebar} right={<MainContent />} ratio={[30, 70]} />
+          ) : (
+            <MainContent />
+          )}
+        </Box>
         <ShortcutsBar shortcuts={SHORTCUTS} />
       </Box>
     </ThemeProvider>

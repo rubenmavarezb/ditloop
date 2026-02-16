@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { PanelTaskEntry, PanelTaskStatus } from '@ditloop/ui';
 
 /** Data returned by the useTasksPanel hook. */
@@ -32,8 +32,18 @@ export function useTasksPanel(workspacePath: string | null): TasksPanelData {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [filter, setFilter] = useState<PanelTaskStatus | null>(null);
 
-  // Suppress unused setter warning — will be used when core integration is wired
-  void setTasks;
+  // TODO: Wire to AIDF context loader for live task data.
+  // Sample data for visual testing.
+  useEffect(() => {
+    if (!workspacePath) { setTasks([]); return; }
+    setTasks([
+      { id: 'TASK-053', title: 'Layout Engine', status: 'done' },
+      { id: 'TASK-054', title: 'Keyboard Manager', status: 'done' },
+      { id: 'TASK-055', title: 'Git Status Panel', status: 'done' },
+      { id: 'TASK-061', title: 'Fuzzy Finder', status: 'in-progress' },
+      { id: 'TASK-062', title: 'Panel Resizing', status: 'pending' },
+    ]);
+  }, [workspacePath]);
 
   const filtered = filter ? tasks.filter((t) => t.status === filter) : tasks;
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Box } from 'ink';
 import {
   resolveLayout,
@@ -24,6 +24,8 @@ import { useCommitsPanel } from '../../hooks/useCommitsPanel.js';
 import { useFileTreePanel } from '../../hooks/useFileTreePanel.js';
 import { useCommandLog } from '../../hooks/useCommandLog.js';
 import { useFuzzyFinder } from '../../hooks/useFuzzyFinder.js';
+import type { FuzzySearchItem } from '../../hooks/useFuzzyFinder.js';
+import { HelpOverlay } from './HelpOverlay.js';
 
 /** Props for the WorkspacePanelsView. */
 export interface WorkspacePanelsViewProps {
@@ -65,6 +67,8 @@ export function WorkspacePanelsView({
   const focusedPanelId = useKeyboardStore((s) => s.focusedPanelId);
   const panelOrder = useKeyboardStore((s) => s.panelOrder);
   const mode = useKeyboardStore((s) => s.mode);
+  const helpVisible = useKeyboardStore((s) => s.helpVisible);
+  const setPanelOrder = useKeyboardStore((s) => s.setPanelOrder);
 
   // Wire up panel hooks
   const gitStatus = useGitStatusPanel(repoPath);
@@ -74,11 +78,56 @@ export function WorkspacePanelsView({
   const fileTree = useFileTreePanel(aidfPath);
   const commandLog = useCommandLog();
 
-  // Fuzzy finder with placeholder items (will be populated from panel data)
-  const fuzzyFinder = useFuzzyFinder([]);
-
   // Resolve layout to absolute positions
   const resolvedPanels = resolveLayout(layoutConfig, termWidth, termHeight - 2); // -2 for shortcuts bar
+
+  // Fix 5: Initialize panelOrder from resolved layout.
+  // Depend on layoutConfig (stable ref) rather than resolvedPanels (new array each render).
+  const panelOrderInitialized = useRef(false);
+  useEffect(() => {
+    const panelIds = resolvedPanels
+      .filter((p) => p.panelId !== 'command-log') // bottom bar isn't focusable
+      .map((p) => p.panelId);
+    if (!panelOrderInitialized.current || panelOrder.length === 0) {
+      setPanelOrder(panelIds);
+      panelOrderInitialized.current = true;
+    }
+  }, [layoutConfig]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Fix 11: Populate fuzzy finder with panel data
+  const fuzzyItems = useMemo(() => {
+    const items: FuzzySearchItem[] = [];
+
+    for (const b of [...branches.local, ...branches.remote]) {
+      items.push({
+        label: b.name,
+        category: 'branch',
+        meta: b.isCurrent ? 'current' : undefined,
+        action: () => { /* TODO: switch branch */ },
+      });
+    }
+
+    for (const t of tasks.tasks) {
+      items.push({
+        label: `${t.id} ${t.title}`,
+        category: 'task',
+        meta: t.status,
+        action: () => { /* TODO: open task detail */ },
+      });
+    }
+
+    for (const n of fileTree.nodes) {
+      items.push({
+        label: n.path,
+        category: 'file',
+        action: () => { /* TODO: preview file */ },
+      });
+    }
+
+    return items;
+  }, [branches.local, branches.remote, tasks.tasks, fileTree.nodes]);
+
+  const fuzzyFinder = useFuzzyFinder(fuzzyItems);
 
   /** Render the content of a panel by its ID. */
   const renderPanel = (panelId: string, width: number, height: number) => {
@@ -170,16 +219,20 @@ export function WorkspacePanelsView({
     <Box flexDirection="column">
       <PanelContainer panels={resolvedPanels} renderPanel={renderPanel} />
       {mode === 'search' && (
-        <Box position="absolute" marginLeft={Math.floor(termWidth * 0.2)}>
-          <FuzzyFinder
-            visible={fuzzyFinder.visible || mode === 'search'}
-            query={fuzzyFinder.query}
-            results={fuzzyFinder.results}
-            selectedIndex={fuzzyFinder.selectedIndex}
-            termWidth={termWidth}
-            termHeight={termHeight}
-          />
-        </Box>
+        <FuzzyFinder
+          visible={true}
+          query={fuzzyFinder.query}
+          results={fuzzyFinder.results}
+          selectedIndex={fuzzyFinder.selectedIndex}
+          termWidth={termWidth}
+          termHeight={termHeight}
+        />
+      )}
+      {helpVisible && (
+        <HelpOverlay
+          visible={true}
+          width={Math.floor(termWidth * 0.7)}
+        />
       )}
       <ShortcutsBar shortcuts={PANEL_SHORTCUTS} />
     </Box>

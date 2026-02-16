@@ -152,12 +152,13 @@ describe('resolveLayout', () => {
   it('resolves DEFAULT_WORKSPACE_LAYOUT for 120x40', () => {
     const panels = resolveLayout(DEFAULT_WORKSPACE_LAYOUT, 120, 40);
 
-    // 5 panels in rows + 1 bottomBar = 6
-    expect(panels).toHaveLength(6);
+    // 6 panels in rows + 1 bottomBar = 7
+    expect(panels).toHaveLength(7);
 
     const panelIds = panels.map((p) => p.panelId);
     expect(panelIds).toContain('git-status');
     expect(panelIds).toContain('commits');
+    expect(panelIds).toContain('file-tree');
     expect(panelIds).toContain('tasks');
     expect(panelIds).toContain('preview');
     expect(panelIds).toContain('branches');
@@ -171,9 +172,9 @@ describe('resolveLayout', () => {
 
     // Preview should span 2 rows
     const preview = panels.find((p) => p.panelId === 'preview')!;
+    const fileTree = panels.find((p) => p.panelId === 'file-tree')!;
     const tasks = panels.find((p) => p.panelId === 'tasks')!;
-    const branches = panels.find((p) => p.panelId === 'branches')!;
-    expect(preview.height).toBe(tasks.height + branches.height);
+    expect(preview.height).toBe(fileTree.height + panels.find((p) => p.panelId === 'branches')!.height);
   });
 
   it('panel widths sum to terminal width per row', () => {

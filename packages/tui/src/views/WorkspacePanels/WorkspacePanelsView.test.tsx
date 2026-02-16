@@ -16,7 +16,7 @@ describe('WorkspacePanelsView', () => {
     useKeyboardStore.setState({
       mode: 'normal',
       focusedPanelId: 'git-status',
-      panelOrder: ['git-status', 'commits', 'tasks', 'preview', 'branches', 'command-log'],
+      panelOrder: ['git-status', 'commits', 'file-tree', 'tasks', 'preview', 'branches'],
       bindings: [],
       helpVisible: false,
     });
@@ -38,21 +38,26 @@ describe('WorkspacePanelsView', () => {
     expect(lastFrame()).toBeDefined();
   });
 
-  it('shows panel labels', () => {
+  it('shows panel titles', () => {
     const { lastFrame } = renderWithTheme(
       <WorkspacePanelsView
-        repoPath={null}
-        aidfPath={null}
-        termWidth={120}
-        termHeight={40}
+        repoPath="/tmp/repo"
+        aidfPath="/tmp/repo/.ai"
+        termWidth={200}
+        termHeight={50}
       />,
     );
     const frame = lastFrame() ?? '';
-    // Should contain at least some panel labels
-    expect(frame.length).toBeGreaterThan(0);
+    expect(frame).toContain('Git Status');
+    expect(frame).toContain('Commits');
+    expect(frame).toContain('Branches');
+    expect(frame).toContain('Preview');
+    expect(frame).toContain('File Tree');
+    // Tasks panel may be narrow; check for partial label
+    expect(frame).toContain('ask');
   });
 
-  it('shows shortcuts bar', () => {
+  it('shows shortcuts bar with expected keys', () => {
     const { lastFrame } = renderWithTheme(
       <WorkspacePanelsView
         repoPath={null}
@@ -63,6 +68,23 @@ describe('WorkspacePanelsView', () => {
     );
     const frame = lastFrame() ?? '';
     expect(frame).toContain('Tab');
+    expect(frame).toContain('j/k');
+    expect(frame).toContain('h/l');
+    expect(frame).toContain('+/-');
     expect(frame).toContain('Help');
+  });
+
+  it('renders with mock data when paths are provided', () => {
+    const { lastFrame } = renderWithTheme(
+      <WorkspacePanelsView
+        repoPath="/tmp/repo"
+        aidfPath="/tmp/repo/.ai"
+        termWidth={120}
+        termHeight={40}
+      />,
+    );
+    const frame = lastFrame() ?? '';
+    // Mock data should populate panels
+    expect(frame.length).toBeGreaterThan(100);
   });
 });

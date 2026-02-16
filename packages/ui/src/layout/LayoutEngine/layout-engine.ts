@@ -308,7 +308,8 @@ export const DEFAULT_WORKSPACE_LAYOUT: LayoutConfig = {
     {
       height: '34%',
       columns: [
-        { panelId: 'tasks', width: '35%' },
+        { panelId: 'file-tree', width: '20%' },
+        { panelId: 'tasks', width: '15%' },
         { panelId: 'preview', width: '65%', rowSpan: 2 },
       ],
     },

@@ -40,6 +40,12 @@ export function useCommitsPanel(repoPath: string | null): CommitsPanelData {
     }
 
     // TODO: Wire to GitLogReader.getLog() and subscribe to git:commit events.
+    // Sample data for visual testing.
+    setCommits([
+      { shortHash: 'abc1234', author: 'Dev', relativeTime: '2h', subject: 'feat: add panel system', isHead: true, refs: ['HEAD -> main'] },
+      { shortHash: 'def5678', author: 'Dev', relativeTime: '1d', subject: 'fix: keyboard navigation', isHead: false, refs: [] },
+      { shortHash: 'ghi9012', author: 'Dev', relativeTime: '3d', subject: 'refactor: layout engine', isHead: false, refs: ['tag: v0.5'] },
+    ]);
     setSelectedIndex(0);
   }, [repoPath]);
 

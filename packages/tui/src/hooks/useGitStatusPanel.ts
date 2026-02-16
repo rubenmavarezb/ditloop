@@ -52,7 +52,13 @@ export function useGitStatusPanel(repoPath: string | null): GitStatusPanelData {
     }
 
     // TODO: Wire to GitStatusReader.getStatus() and subscribe to git:status-changed events.
-    // Reset selection when data changes.
+    // Sample data for visual testing until core services are wired.
+    setStaged([{ path: 'src/app.tsx', status: 'M' }]);
+    setUnstaged([
+      { path: 'src/index.ts', status: 'M' },
+      { path: 'README.md', status: 'M' },
+    ]);
+    setUntracked(['src/new-file.ts', 'docs/notes.md']);
     setSelectedIndex(0);
   }, [repoPath]);
 

@@ -11,6 +11,10 @@ export interface WorkspaceItemData {
   projectCount: number;
   /** Workspace status. */
   status: 'active' | 'idle' | 'warning' | 'error';
+  /** Filesystem path to the workspace root. */
+  path?: string;
+  /** Path to the .ai/ directory, if detected. */
+  aidfPath?: string;
 }
 
 /** Props for the WorkspaceItem component. */

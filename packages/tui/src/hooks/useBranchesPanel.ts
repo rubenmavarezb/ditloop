@@ -49,6 +49,15 @@ export function useBranchesPanel(repoPath: string | null): BranchesPanelData {
 
     // TODO: Wire to GitBranchManager.listBranches() and subscribe to
     // git:branch-created, git:branch-switched, git:branch-deleted events.
+    // Sample data for visual testing.
+    setLocal([
+      { name: 'main', isCurrent: true, ahead: 0, behind: 0, isRemote: false },
+      { name: 'feat/v06-tui', isCurrent: false, ahead: 3, behind: 0, isRemote: false },
+      { name: 'fix/keyboard', isCurrent: false, ahead: 1, behind: 2, isRemote: false },
+    ]);
+    setRemote([
+      { name: 'origin/main', isCurrent: false, ahead: 0, behind: 0, isRemote: true },
+    ]);
     setSelectedIndex(0);
   }, [repoPath]);
 

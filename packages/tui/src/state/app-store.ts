@@ -67,7 +67,7 @@ export const useAppStore = create<AppState>((set) => ({
   activateWorkspace: (index) =>
     set({
       activeWorkspaceIndex: index,
-      currentView: 'workspace-detail',
+      currentView: 'workspace-panels',
       workspaceDetailData: null,
     }),
 

@@ -7,6 +7,17 @@ export interface KeyboardManagerOptions {
   onAction: (action: string, panelId: string) => void;
   /** Called when the user presses 'q' in normal mode. */
   onQuit: () => void;
+  /** Called with typed characters when in search mode. */
+  onSearchInput?: (input: string, key: SearchKey) => void;
+}
+
+/** Key flags forwarded in search mode. */
+export interface SearchKey {
+  escape: boolean;
+  return: boolean;
+  backspace: boolean;
+  upArrow: boolean;
+  downArrow: boolean;
 }
 
 /**
@@ -14,21 +25,30 @@ export interface KeyboardManagerOptions {
  * Calls useInput once at the app root level and dispatches
  * to the keyboard store based on current mode and bindings.
  *
- * @param options - Action and quit handlers
+ * @param options - Action, quit, and search input handlers
  */
 export function useKeyboardManager(options: KeyboardManagerOptions): void {
-  const { onAction, onQuit } = options;
+  const { onAction, onQuit, onSearchInput } = options;
 
   useInput((input, key) => {
     const state = useKeyboardStore.getState();
     const { mode } = state;
 
-    // Search mode: only Escape exits
+    // Search mode: forward keys to search handler, Escape exits
     if (mode === 'search') {
       if (key.escape) {
         state.setMode('normal');
+        return;
       }
-      // All other keys passed through to the fuzzy finder
+      if (onSearchInput) {
+        onSearchInput(input, {
+          escape: key.escape,
+          return: key.return,
+          backspace: key.delete || input === '\x7f',
+          upArrow: key.upArrow,
+          downArrow: key.downArrow,
+        });
+      }
       return;
     }
 
@@ -58,6 +78,12 @@ export function useKeyboardManager(options: KeyboardManagerOptions): void {
       return;
     }
 
+    // Enter: activate current selection
+    if (key.return) {
+      onAction('activate', state.focusedPanelId);
+      return;
+    }
+
     // Tab / Shift+Tab: cycle focus
     if (key.tab) {
       if (key.shift) {
@@ -78,10 +104,36 @@ export function useKeyboardManager(options: KeyboardManagerOptions): void {
       return;
     }
 
-    // Number keys 1-6: jump to panel
+    // j/k: scroll within focused panel
+    if (input === 'j' && !key.ctrl && !key.meta) {
+      onAction('scroll-down', state.focusedPanelId);
+      return;
+    }
+    if (input === 'k' && !key.ctrl && !key.meta) {
+      onAction('scroll-up', state.focusedPanelId);
+      return;
+    }
+
+    // Number keys 1-7: jump to panel
     const num = parseInt(input, 10);
-    if (num >= 1 && num <= 6 && !key.ctrl && !key.meta) {
+    if (num >= 1 && num <= 7 && !key.ctrl && !key.meta) {
       state.focusByNumber(num);
+      return;
+    }
+
+    // +: resize panel bigger
+    if (input === '+') {
+      onAction('resize-grow', state.focusedPanelId);
+      return;
+    }
+    // -: resize panel smaller
+    if (input === '-') {
+      onAction('resize-shrink', state.focusedPanelId);
+      return;
+    }
+    // =: reset layout to default
+    if (input === '=' && !key.ctrl && !key.meta) {
+      onAction('reset-layout', state.focusedPanelId);
       return;
     }
 

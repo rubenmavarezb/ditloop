@@ -55,6 +55,14 @@ export function useFileTreePanel(rootPath: string | null): FileTreePanelData {
 
     // TODO: Wire to FileTreeBuilder.build() for initial tree
     // and watch for file system changes.
+    // Sample data for visual testing.
+    setNodes([
+      { path: 'src', name: 'src', isDirectory: true, expanded: true, depth: 0 },
+      { path: 'src/app.tsx', name: 'app.tsx', isDirectory: false, expanded: false, depth: 1 },
+      { path: 'src/index.ts', name: 'index.ts', isDirectory: false, expanded: false, depth: 1 },
+      { path: 'src/hooks', name: 'hooks', isDirectory: true, expanded: false, depth: 1 },
+      { path: 'README.md', name: 'README.md', isDirectory: false, expanded: false, depth: 0 },
+    ]);
     setSelectedIndex(0);
   }, [rootPath]);
 
