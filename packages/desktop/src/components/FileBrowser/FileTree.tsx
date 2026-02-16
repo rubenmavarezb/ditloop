@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 
 /** File entry from Rust backend. */
@@ -42,10 +42,12 @@ function TreeNode({
   entry,
   depth,
   onSelect,
+  onContextMenu,
 }: {
   entry: FileEntry;
   depth: number;
   onSelect: (entry: FileEntry) => void;
+  onContextMenu?: (e: React.MouseEvent, path: string, isDir: boolean) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [children, setChildren] = useState<FileEntry[]>([]);
@@ -79,6 +81,7 @@ function TreeNode({
       <button
         onClick={toggle}
         onDoubleClick={() => entry.is_dir && toggle()}
+        onContextMenu={(e) => onContextMenu?.(e, entry.path, entry.is_dir)}
         className={`flex w-full items-center gap-1 rounded px-1 py-0.5 text-left text-sm hover:bg-slate-800/50 ${
           isAidf ? 'text-ditloop-400' : 'text-slate-300'
         }`}
@@ -101,6 +104,7 @@ function TreeNode({
             entry={child}
             depth={depth + 1}
             onSelect={onSelect}
+            onContextMenu={onContextMenu}
           />
         ))}
     </div>
@@ -111,14 +115,16 @@ function TreeNode({
 export function FileTree({
   entries,
   onSelect,
+  onContextMenu,
 }: {
   entries: FileEntry[];
   onSelect: (entry: FileEntry) => void;
+  onContextMenu?: (e: React.MouseEvent, path: string, isDir: boolean) => void;
 }) {
   return (
     <div className="flex flex-col">
       {entries.map((entry) => (
-        <TreeNode key={entry.path} entry={entry} depth={0} onSelect={onSelect} />
+        <TreeNode key={entry.path} entry={entry} depth={0} onSelect={onSelect} onContextMenu={onContextMenu} />
       ))}
     </div>
   );

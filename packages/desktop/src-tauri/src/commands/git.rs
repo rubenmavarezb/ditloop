@@ -246,3 +246,128 @@ fn char_to_status(c: char) -> String {
     }
     .to_string()
 }
+
+/// Parse git porcelain v2 output into GitStatus (extracted for testability).
+pub fn parse_porcelain_v2(output: &str) -> GitStatus {
+    let mut branch = String::new();
+    let mut ahead = 0u32;
+    let mut behind = 0u32;
+    let mut staged = Vec::new();
+    let mut unstaged = Vec::new();
+    let mut untracked = Vec::new();
+
+    for line in output.lines() {
+        if line.starts_with("# branch.head ") {
+            branch = line.strip_prefix("# branch.head ").unwrap_or("").to_string();
+        } else if line.starts_with("# branch.ab ") {
+            let parts: Vec<&str> = line.split_whitespace().collect();
+            if parts.len() >= 4 {
+                ahead = parts[2].trim_start_matches('+').parse().unwrap_or(0);
+                behind = parts[3].trim_start_matches('-').parse().unwrap_or(0);
+            }
+        } else if line.starts_with("1 ") || line.starts_with("2 ") {
+            let parts: Vec<&str> = line.split_whitespace().collect();
+            if parts.len() >= 9 {
+                let xy = parts[1];
+                let file_path = parts.last().unwrap_or(&"").to_string();
+                let x = xy.chars().next().unwrap_or('.');
+                let y = xy.chars().nth(1).unwrap_or('.');
+
+                if x != '.' {
+                    staged.push(FileChange {
+                        path: file_path.clone(),
+                        status: char_to_status(x),
+                    });
+                }
+                if y != '.' {
+                    unstaged.push(FileChange {
+                        path: file_path,
+                        status: char_to_status(y),
+                    });
+                }
+            }
+        } else if line.starts_with("? ") {
+            let file_path = line.strip_prefix("? ").unwrap_or("").to_string();
+            untracked.push(file_path);
+        }
+    }
+
+    GitStatus {
+        branch,
+        ahead,
+        behind,
+        staged,
+        unstaged,
+        untracked,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_char_to_status() {
+        assert_eq!(char_to_status('M'), "modified");
+        assert_eq!(char_to_status('A'), "added");
+        assert_eq!(char_to_status('D'), "deleted");
+        assert_eq!(char_to_status('R'), "renamed");
+        assert_eq!(char_to_status('C'), "copied");
+        assert_eq!(char_to_status('T'), "type-changed");
+        assert_eq!(char_to_status('X'), "unknown");
+    }
+
+    #[test]
+    fn test_parse_porcelain_v2_branch_info() {
+        let output = "# branch.oid abc123\n# branch.head main\n# branch.upstream origin/main\n# branch.ab +3 -1\n";
+        let status = parse_porcelain_v2(output);
+        assert_eq!(status.branch, "main");
+        assert_eq!(status.ahead, 3);
+        assert_eq!(status.behind, 1);
+    }
+
+    #[test]
+    fn test_parse_porcelain_v2_staged_and_unstaged() {
+        let output = "# branch.head feat/test\n1 M. N... 100644 100644 100644 abc123 def456 src/main.rs\n1 .M N... 100644 100644 100644 abc123 def456 src/lib.rs\n";
+        let status = parse_porcelain_v2(output);
+        assert_eq!(status.staged.len(), 1);
+        assert_eq!(status.staged[0].path, "src/main.rs");
+        assert_eq!(status.staged[0].status, "modified");
+        assert_eq!(status.unstaged.len(), 1);
+        assert_eq!(status.unstaged[0].path, "src/lib.rs");
+        assert_eq!(status.unstaged[0].status, "modified");
+    }
+
+    #[test]
+    fn test_parse_porcelain_v2_untracked() {
+        let output = "# branch.head main\n? new_file.txt\n? another.rs\n";
+        let status = parse_porcelain_v2(output);
+        assert_eq!(status.untracked, vec!["new_file.txt", "another.rs"]);
+    }
+
+    #[test]
+    fn test_parse_porcelain_v2_empty() {
+        let status = parse_porcelain_v2("");
+        assert_eq!(status.branch, "");
+        assert_eq!(status.ahead, 0);
+        assert_eq!(status.behind, 0);
+        assert!(status.staged.is_empty());
+        assert!(status.unstaged.is_empty());
+        assert!(status.untracked.is_empty());
+    }
+
+    #[test]
+    fn test_parse_porcelain_v2_detached_head() {
+        let output = "# branch.head (detached)\n# branch.oid abc123\n";
+        let status = parse_porcelain_v2(output);
+        assert_eq!(status.branch, "(detached)");
+    }
+
+    #[test]
+    fn test_parse_porcelain_v2_added_file() {
+        let output = "# branch.head main\n1 A. N... 000000 100644 100644 0000000 abc1234 new_file.ts\n";
+        let status = parse_porcelain_v2(output);
+        assert_eq!(status.staged.len(), 1);
+        assert_eq!(status.staged[0].status, "added");
+    }
+}

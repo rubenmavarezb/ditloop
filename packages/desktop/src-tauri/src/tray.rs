@@ -9,13 +9,12 @@ use tauri::{
 pub fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<TrayIcon<R>> {
     let show_hide = MenuItem::with_id(app, "show_hide", "Show DitLoop", true, None::<&str>)?;
     let separator1 = PredefinedMenuItem::separator(app)?;
-    let active_execs = MenuItem::with_id(app, "active_execs", "Active Executions: 0", false, None::<&str>)?;
-    let pending_approvals = MenuItem::with_id(app, "pending_approvals", "Pending Approvals: 0", false, None::<&str>)?;
+    let workspace_count = MenuItem::with_id(app, "workspace_count", "Workspaces: 0", false, None::<&str>)?;
     let separator2 = PredefinedMenuItem::separator(app)?;
-    let new_execution = MenuItem::with_id(app, "new_execution", "New Execution...", true, None::<&str>)?;
     let open_workspace = MenuItem::with_id(app, "open_workspace", "Open Workspace...", true, None::<&str>)?;
+    let open_files = MenuItem::with_id(app, "open_files", "Browse Files...", true, None::<&str>)?;
     let separator3 = PredefinedMenuItem::separator(app)?;
-    let preferences = MenuItem::with_id(app, "preferences", "Preferences...", true, None::<&str>)?;
+    let preferences = MenuItem::with_id(app, "preferences", "Settings...", true, None::<&str>)?;
     let quit = MenuItem::with_id(app, "quit", "Quit DitLoop", true, None::<&str>)?;
 
     let menu = Menu::with_items(
@@ -23,11 +22,10 @@ pub fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<TrayIcon<R>>
         &[
             &show_hide,
             &separator1,
-            &active_execs,
-            &pending_approvals,
+            &workspace_count,
             &separator2,
-            &new_execution,
             &open_workspace,
+            &open_files,
             &separator3,
             &preferences,
             &quit,
@@ -53,18 +51,18 @@ pub fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<TrayIcon<R>>
                         }
                     }
                 }
-                "new_execution" => {
-                    if let Some(window) = app.get_webview_window("main") {
-                        let _ = window.show();
-                        let _ = window.set_focus();
-                        let _ = window.emit("tray:navigate", "/executions");
-                    }
-                }
                 "open_workspace" => {
                     if let Some(window) = app.get_webview_window("main") {
                         let _ = window.show();
                         let _ = window.set_focus();
                         let _ = window.emit("tray:navigate", "/");
+                    }
+                }
+                "open_files" => {
+                    if let Some(window) = app.get_webview_window("main") {
+                        let _ = window.show();
+                        let _ = window.set_focus();
+                        let _ = window.emit("tray:navigate", "/files");
                     }
                 }
                 "preferences" => {
@@ -85,30 +83,28 @@ pub fn create_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<TrayIcon<R>>
     Ok(tray)
 }
 
-/// Update tray menu counts by rebuilding the menu with new values.
+/// Update tray menu with workspace count.
 #[tauri::command]
 pub fn update_tray_counts(
     app: AppHandle,
-    active_executions: u32,
-    pending_approvals: u32,
+    workspace_count: u32,
 ) -> Result<(), String> {
     if let Some(tray) = app.tray_by_id("ditloop-tray") {
         let show_hide = MenuItem::with_id(&app, "show_hide", "Show DitLoop", true, None::<&str>).map_err(|e| e.to_string())?;
         let separator1 = PredefinedMenuItem::separator(&app).map_err(|e| e.to_string())?;
-        let active_execs = MenuItem::with_id(&app, "active_execs", format!("Active Executions: {}", active_executions), false, None::<&str>).map_err(|e| e.to_string())?;
-        let pending = MenuItem::with_id(&app, "pending_approvals", format!("Pending Approvals: {}", pending_approvals), false, None::<&str>).map_err(|e| e.to_string())?;
+        let ws_count = MenuItem::with_id(&app, "workspace_count", format!("Workspaces: {}", workspace_count), false, None::<&str>).map_err(|e| e.to_string())?;
         let separator2 = PredefinedMenuItem::separator(&app).map_err(|e| e.to_string())?;
-        let new_execution = MenuItem::with_id(&app, "new_execution", "New Execution...", true, None::<&str>).map_err(|e| e.to_string())?;
         let open_workspace = MenuItem::with_id(&app, "open_workspace", "Open Workspace...", true, None::<&str>).map_err(|e| e.to_string())?;
+        let open_files = MenuItem::with_id(&app, "open_files", "Browse Files...", true, None::<&str>).map_err(|e| e.to_string())?;
         let separator3 = PredefinedMenuItem::separator(&app).map_err(|e| e.to_string())?;
-        let preferences = MenuItem::with_id(&app, "preferences", "Preferences...", true, None::<&str>).map_err(|e| e.to_string())?;
+        let preferences = MenuItem::with_id(&app, "preferences", "Settings...", true, None::<&str>).map_err(|e| e.to_string())?;
         let quit = MenuItem::with_id(&app, "quit", "Quit DitLoop", true, None::<&str>).map_err(|e| e.to_string())?;
 
         let menu = Menu::with_items(
             &app,
             &[
-                &show_hide, &separator1, &active_execs, &pending,
-                &separator2, &new_execution, &open_workspace,
+                &show_hide, &separator1, &ws_count,
+                &separator2, &open_workspace, &open_files,
                 &separator3, &preferences, &quit,
             ],
         ).map_err(|e| e.to_string())?;

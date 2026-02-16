@@ -49,6 +49,7 @@ pub fn run() {
             commands::ai_cli::inject_context,
             commands::config::load_ditloop_config,
             commands::config::get_git_identity,
+            commands::config::switch_git_profile,
             tray::update_tray_counts,
             notifications::send_notification,
             notifications::check_notification_permission,

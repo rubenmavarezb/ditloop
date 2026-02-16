@@ -1,11 +1,17 @@
+import { useState } from 'react';
+import { useThemeStore } from '@ditloop/web-ui';
+import type { ThemeMode } from '@ditloop/web-ui';
 import { useProfiles } from '../../hooks/useProfiles.js';
 import { useConfig } from '../../hooks/useConfig.js';
 import type { ProfileConfig } from '../../hooks/useConfig.js';
 
-/** Desktop settings view with profile management and app info. */
+/** Desktop settings view with profile management, theme, notifications, and app info. */
 export function Settings() {
   const { config, configPath } = useConfig();
   const { profiles, currentProfileName, currentEmail, loading } = useProfiles();
+  const themeMode = useThemeStore((s) => s.mode);
+  const setThemeMode = useThemeStore((s) => s.setMode);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   return (
     <div className="flex h-full flex-col overflow-auto p-6">
@@ -52,6 +58,43 @@ export function Settings() {
               )}
             </div>
           )}
+        </section>
+
+        {/* Appearance Section */}
+        <section className="rounded-lg border border-slate-800 bg-slate-900 p-4">
+          <h2 className="mb-3 text-sm font-semibold text-white">Appearance</h2>
+          <div className="flex gap-2">
+            {(['system', 'dark', 'light'] as ThemeMode[]).map((mode) => (
+              <button
+                key={mode}
+                onClick={() => setThemeMode(mode)}
+                className={`rounded px-3 py-1.5 text-xs capitalize ${
+                  themeMode === mode
+                    ? 'bg-ditloop-600 text-white'
+                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white'
+                }`}
+              >
+                {mode}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* Notifications Section */}
+        <section className="rounded-lg border border-slate-800 bg-slate-900 p-4">
+          <h2 className="mb-3 text-sm font-semibold text-white">Notifications</h2>
+          <label className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              checked={notificationsEnabled}
+              onChange={(e) => setNotificationsEnabled(e.target.checked)}
+              className="h-4 w-4 rounded border-slate-600 bg-slate-800 text-ditloop-500 focus:ring-ditloop-500"
+            />
+            <span className="text-xs text-slate-300">Enable OS notifications</span>
+          </label>
+          <p className="mt-1 ml-7 text-[10px] text-slate-600">
+            Receive notifications for git events and task completion.
+          </p>
         </section>
 
         {/* Config Section */}

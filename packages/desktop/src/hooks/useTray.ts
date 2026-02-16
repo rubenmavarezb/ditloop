@@ -4,15 +4,14 @@ import { listen } from '@tauri-apps/api/event';
 import { useNavigate } from 'react-router-dom';
 
 /** Send tray count updates and handle tray navigation events. */
-export function useTray(activeExecutions: number, pendingApprovals: number) {
+export function useTray(workspaceCount: number) {
   useEffect(() => {
     invoke('update_tray_counts', {
-      activeExecutions,
-      pendingApprovals,
+      workspaceCount,
     }).catch(() => {
       // Tray may not be available in dev mode
     });
-  }, [activeExecutions, pendingApprovals]);
+  }, [workspaceCount]);
 
   const navigate = useNavigate();
 

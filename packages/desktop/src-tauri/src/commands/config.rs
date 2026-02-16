@@ -78,6 +78,36 @@ pub fn load_ditloop_config() -> Result<ConfigLoadResult, String> {
     })
 }
 
+/// Switch to a named git profile from DitLoop config.
+/// Sets global git user.name and user.email.
+#[tauri::command]
+pub fn switch_git_profile(profile_name: String) -> Result<(), String> {
+    let home = dirs::home_dir().ok_or("Could not determine home directory")?;
+    let config_path = home.join(".ditloop").join("config.yml");
+
+    let content = fs::read_to_string(&config_path)
+        .map_err(|e| format!("Failed to read config: {}", e))?;
+    let config: DitLoopConfigFile = serde_yaml::from_str(&content)
+        .map_err(|e| format!("Failed to parse config: {}", e))?;
+
+    let profile = config
+        .profiles
+        .get(&profile_name)
+        .ok_or_else(|| format!("Profile '{}' not found in config", profile_name))?;
+
+    std::process::Command::new("git")
+        .args(["config", "--global", "user.name", &profile.name])
+        .output()
+        .map_err(|e| format!("Failed to set git user.name: {}", e))?;
+
+    std::process::Command::new("git")
+        .args(["config", "--global", "user.email", &profile.email])
+        .output()
+        .map_err(|e| format!("Failed to set git user.email: {}", e))?;
+
+    Ok(())
+}
+
 /// Get the current git identity (user.email).
 #[tauri::command]
 pub fn get_git_identity() -> Result<Option<String>, String> {
@@ -91,5 +121,67 @@ pub fn get_git_identity() -> Result<Option<String>, String> {
         Ok(if email.is_empty() { None } else { Some(email) })
     } else {
         Ok(None)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_config_yaml() {
+        let yaml = r#"
+profiles:
+  personal:
+    name: Test User
+    email: test@example.com
+    sshHost: github-personal
+  work:
+    name: Work User
+    email: work@example.com
+
+workspaces:
+  - name: my-project
+    path: /home/user/projects/my-project
+    type: single
+    profile: personal
+    aidf: true
+  - name: work-project
+    path: /home/user/work/project
+    profile: work
+"#;
+        let config: DitLoopConfigFile = serde_yaml::from_str(yaml).unwrap();
+        assert_eq!(config.profiles.len(), 2);
+        assert_eq!(config.workspaces.len(), 2);
+
+        let personal = &config.profiles["personal"];
+        assert_eq!(personal.name, "Test User");
+        assert_eq!(personal.email, "test@example.com");
+        assert_eq!(personal.ssh_host, Some("github-personal".to_string()));
+
+        let ws = &config.workspaces[0];
+        assert_eq!(ws.name, "my-project");
+        assert!(ws.aidf);
+        assert_eq!(ws.profile, "personal");
+
+        let ws2 = &config.workspaces[1];
+        assert!(!ws2.aidf); // default
+        assert_eq!(ws2.r#type, "single"); // default
+    }
+
+    #[test]
+    fn test_parse_empty_config() {
+        let yaml = "{}";
+        let config: DitLoopConfigFile = serde_yaml::from_str(yaml).unwrap();
+        assert!(config.profiles.is_empty());
+        assert!(config.workspaces.is_empty());
+    }
+
+    #[test]
+    fn test_load_ditloop_config_returns_result() {
+        // This test just verifies the function doesn't panic.
+        // It may return exists: false if no config file is present.
+        let result = load_ditloop_config();
+        assert!(result.is_ok());
     }
 }
