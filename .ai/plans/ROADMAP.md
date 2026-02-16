@@ -25,7 +25,7 @@ Built the foundational architecture and core features for workspace management, 
 
 **Completion Date:** February 2026
 
-**Details:** [`PLAN-v01-mvp.md`](./PLAN-v01-mvp.md)
+**Details:** [`PLAN-v01-mvp.md`](./completed/PLAN-v01-mvp.md)
 
 ---
 
@@ -45,7 +45,7 @@ Transformed DitLoop from a dashboard into an execution tool. Git operations, AI 
 
 **Completion Date:** February 2026
 
-**Details:** [`PLAN-v02-execution.md`](./PLAN-v02-execution.md)
+**Details:** [`PLAN-v02-execution.md`](./completed/PLAN-v02-execution.md)
 
 ---
 
@@ -66,14 +66,14 @@ Instead of building a custom chat engine, DitLoop orchestrates existing AI CLI t
 
 **Completion Date:** February 2026
 
-**Details:** [`PLAN-v03-chat-authoring.md`](./PLAN-v03-chat-authoring.md)
+**Details:** [`PLAN-v03-chat-authoring.md`](./completed/PLAN-v03-chat-authoring.md)
 
 ---
 
-### v0.3.1 — Documentation, Dogfooding & GitHub Pages 🔜 PARALLEL
-**Timeline:** Feb 2026 | **Status:** IN PROGRESS
+### v0.3.1 — Documentation, Dogfooding & GitHub Pages ✅ COMPLETED
+**Timeline:** Feb 2026 | **Status:** SHIPPED
 
-Prepare DitLoop for real-world usage and public visibility. OSS documentation, local CLI setup, updated AIDF context, and GitHub Pages site.
+Prepared DitLoop for real-world usage and public visibility. OSS documentation, local CLI setup, updated AIDF context, and GitHub Pages site.
 
 **Key Features:**
 - README.md, LICENSE, CONTRIBUTING.md
@@ -81,16 +81,18 @@ Prepare DitLoop for real-world usage and public visibility. OSS documentation, l
 - Updated .ai/ context files
 - GitHub Pages with landing page + docs (VitePress)
 
-**Tasks:** D01-D06 — OSS Readiness (D01-D03), AIDF Update (D04), GitHub Pages (D05-D06)
+**Tasks:** D01-D06 (in `tasks/completed/`)
 
-**Details:** [`PLAN-v03.1-docs-publishing.md`](./PLAN-v03.1-docs-publishing.md)
+**Completion Date:** February 2026
+
+**Details:** [`PLAN-v03.1-docs-publishing.md`](./completed/PLAN-v03.1-docs-publishing.md)
 
 ---
 
-### v0.4 — Server & API 🔜 NEXT
-**Timeline:** Q2 2026 (Mar-Apr) | **Status:** IN PROGRESS
+### v0.4 — Server & API ✅ COMPLETED
+**Timeline:** Feb 2026 | **Status:** SHIPPED
 
-Turn DitLoop into a service with HTTP/WebSocket API. Remote access to workspaces, AI CLI launching, approval workflow, and real-time event streaming. Prepares infrastructure for mobile (v0.5).
+Turned DitLoop into a service with HTTP/WebSocket API. Remote access to workspaces, AI CLI launching, approval workflow, and real-time event streaming. Infrastructure for mobile (v0.5).
 
 **Key Features:**
 - Hono HTTP server with REST API (workspaces, profiles, AIDF, launcher)
@@ -101,9 +103,11 @@ Turn DitLoop into a service with HTTP/WebSocket API. Remote access to workspaces
 - Execution monitoring with rate limiting and FIFO queue
 - TUI execution dashboard
 
-**Tasks:** 038-044 — Server (038-041), Remote Execution (042-044)
+**Tasks:** 038-044 (in `tasks/completed/`)
 
-**Details:** [`PLAN-v04-server.md`](./PLAN-v04-server.md)
+**Completion Date:** February 2026
+
+**Details:** [`PLAN-v04-server.md`](./completed/PLAN-v04-server.md)
 
 ---
 
@@ -124,7 +128,7 @@ Progressive Web App for mobile devices. Review and approve AI changes from your 
 
 **Completion Date:** February 2026
 
-**Details:** [`PLAN-v05-mobile.md`](./PLAN-v05-mobile.md)
+**Details:** [`PLAN-v05-mobile.md`](./completed/PLAN-v05-mobile.md)
 
 ---
 
@@ -244,12 +248,12 @@ Native desktop application using Tauri. Reuses the React + Tailwind UI from the 
 | 033 | Template Engine | v0.3 | ✅ |
 | 034 | Task Editor View | v0.3 | ✅ |
 | 035 | Scaffold Command | v0.3 | ✅ |
-| D01 | README & License | v0.3.1 | 📋 |
-| D02 | Contributing Guide | v0.3.1 | 📋 |
-| D03 | Dogfooding Setup | v0.3.1 | 📋 |
-| D04 | Update AIDF Context | v0.3.1 | 📋 |
-| D05 | Docs Site Setup | v0.3.1 | 📋 |
-| D06 | Landing & Docs | v0.3.1 | 📋 |
+| D01 | README & License | v0.3.1 | ✅ |
+| D02 | Contributing Guide | v0.3.1 | ✅ |
+| D03 | Dogfooding Setup | v0.3.1 | ✅ |
+| D04 | Update AIDF Context | v0.3.1 | ✅ |
+| D05 | Docs Site Setup | v0.3.1 | ✅ |
+| D06 | Landing & Docs | v0.3.1 | ✅ |
 | 038 | Server Package | v0.4 | ✅ |
 | 039 | WebSocket Bridge | v0.4 | ✅ |
 | 040 | Remote Approval | v0.4 | ✅ |
@@ -374,5 +378,5 @@ MIT License — See `LICENSE` for details.
 
 **Last Updated:** February 16, 2026
 **Current Version:** v0.5 (Mobile Integration) ✅
-**In Progress:** v0.3.1 (Docs & Dogfooding) ⏳
+**Completed:** v0.1 → v0.5 + v0.3.1 (all shipped)
 **Next:** v0.6 (TUI Overhaul) 📋 | v0.7 (Desktop — Tauri) 📋 ← parallel
