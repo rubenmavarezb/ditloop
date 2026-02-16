@@ -132,68 +132,119 @@ Progressive Web App for mobile devices. Review and approve AI changes from your 
 
 ---
 
-### v0.6 — TUI Overhaul (LazyGit-inspired) 🔜 NEXT
-**Timeline:** Q2 2026 (Mar-Apr) | **Status:** PLANNED
+### v0.6 — TUI Overhaul (LazyGit-inspired) ✅ COMPLETED
+**Timeline:** Feb 2026 | **Status:** SHIPPED
 
-Transform DitLoop's TUI from a simple dashboard into a dense, panel-based terminal IDE inspired by LazyGit and Yazi. Multi-panel layouts, vim-style navigation, and deep git/AIDF integration in a single screen.
-
-**Inspiration:**
-- **LazyGit:** Multi-panel layout (status + files + branches + commits + stash), keyboard-driven navigation, worktree support, command log
-- **Yazi:** Terminal file manager with vim keys, file tree with icons, file previews
+Transformed DitLoop's TUI into a dense, panel-based terminal IDE inspired by LazyGit and Yazi. Multi-panel layouts, vim-style navigation, and deep git/AIDF integration in a single screen.
 
 **Key Features:**
 - Multi-panel workspace view (git status | AIDF tasks | branches | recent commits)
 - Vim-style navigation (h/j/k/l) across all views
 - File tree browser for `.ai/` context with preview pane
 - Command log panel showing git ops, AI launches, events
-- Git worktree detection and display
 - Panel resizing and layout customization
 - Fuzzy finder for workspaces, tasks, branches, files
-- Inline diff preview in file panels
 
-**Potential Tasks:** 053-062
+**Tasks:** 053-062 (in `tasks/completed/`)
 
-**Details:** TBD — [`PLAN-v06-tui-overhaul.md`](./PLAN-v06-tui-overhaul.md)
+**Completion Date:** February 2026
+
+**Details:** [`PLAN-v06-tui-overhaul.md`](./completed/PLAN-v06-tui-overhaul.md)
 
 ---
 
-### v0.7 — Desktop App (Tauri) 🔜 PARALLEL with v0.6
-**Timeline:** Q2 2026 (Mar-Apr) | **Status:** PLANNED
+### v0.7 — Desktop App (Tauri) ✅ COMPLETED
+**Timeline:** Feb 2026 | **Status:** SHIPPED
 
-Native desktop application using Tauri. Reuses the React + Tailwind UI from the mobile PWA, packaged as a lightweight native app with system-level integrations.
-
-**Why Tauri:**
-- Uses system webview (~5MB vs Electron's ~150MB)
-- Rust backend can invoke git/AI CLIs directly
-- Native OS notifications, system tray, filesystem access
-- Same React + Tailwind stack as mobile — maximum code reuse
+Native desktop application using Tauri 2.x. Local-first architecture — React frontend communicates via Tauri IPC to Rust backend commands that execute git/AI operations directly on the filesystem.
 
 **Key Features:**
-- Reuse `@ditloop/mobile` React components in native window
-- System tray with execution status and quick actions
-- Native OS notifications (replace Web Push)
-- Direct filesystem access for workspace browsing
-- Auto-connect to local DitLoop server
-- Multi-window support (workspace per window)
-- Deep linking (`ditloop://workspace/my-project`)
-- Auto-updates via Tauri updater
+- Local-first architecture (React → Tauri IPC → Rust → filesystem/git)
+- System tray with workspace status and quick actions
+- Native OS notifications
+- File browser with `.ai/` awareness
+- Rust-backed git operations (status, log, diff, branches, commit, checkout)
+- Command palette (Cmd+K) with ~40+ dynamic commands
+- Multi-window support per workspace
+- Deep linking (`ditloop://` protocol)
+- AI CLI launching from desktop
+- Profile/identity management
 
-**Shared with Mobile:**
-- API client (`api/client.ts`, `api/websocket.ts`)
-- Store layer (Zustand stores)
-- View components (Approvals, Executions, Workspaces)
-- Tailwind design system
+**Tasks:** 063R-069R (in `tasks/completed/`)
 
-**Desktop-only:**
-- Tauri Rust commands for local git/AI CLI execution
-- System tray integration
-- Native file dialogs
-- OS notification center
-- Keyboard shortcuts (Cmd/Ctrl palette)
+**Completion Date:** February 2026
 
-**Potential Tasks:** 063-072
+**Details:** [`PLAN-v07-desktop.md`](./completed/PLAN-v07-desktop.md)
 
-**Details:** TBD — [`PLAN-v07-desktop.md`](./PLAN-v07-desktop.md)
+---
+
+### v0.8 — DitLoop IDE: Multi-Project AI Workspace 🔜 NEXT
+**Timeline:** Q1-Q2 2026 | **Status:** PLANNED
+
+Transform DitLoop Desktop from a workspace dashboard into a full-featured IDE. Tab-based multi-project workspace, embedded terminal, AI chat with multi-provider support, autonomous task execution with approval workflow, customizable layouts, and themes — all powered by AIDF.
+
+**Design Reference:** SuperDesign mockups (5 layout variants: Default, Code Focus, AI Focus, Git Focus, Zen)
+
+**Key Features:**
+- Tab-based workspace switching (each tab = full project context)
+- Embedded terminal via xterm.js + Tauri PTY
+- AI Chat panel with provider selector (Claude, GPT, Gemini, Ollama)
+- AI Task execution with step progress, logs, and inline approval
+- Enhanced Source Control (staging, commits, stash, side-by-side diff)
+- File explorer with git status indicators and AIDF awareness
+- 5 layout presets (Default, Code Focus, AI Focus, Git Focus, Zen)
+- Theme system (Neon, Brutalist, Classic, Light)
+- Identity mismatch warnings
+- Full keyboard shortcut system
+
+**Tasks:** 070-084 (Desktop IDE)
+
+**Details:** [`PLAN-v08-ide.md`](./PLAN-v08-ide.md)
+
+---
+
+### v0.8-TUI — DitLoop TUI: tmux-powered Terminal IDE 🔜 NEXT
+**Timeline:** Q1-Q2 2026 | **Status:** PLANNED
+
+Transform DitLoop TUI from a panel dashboard into a tmux-powered terminal IDE. DitLoop manages tmux panes programmatically — Ink/React panels surround a real native terminal where the developer runs any command (claude, aider, git, vim, etc.). DitLoop is NOT a terminal emulator — it's a smart tmux layout manager with contextual panels.
+
+**Key Insight:** There is no "chat panel." The center pane IS the real terminal. The user runs `claude`, `aider`, or any AI CLI directly. DitLoop provides context (AIDF, git identity, workspace path) and orchestration around the terminal.
+
+**Key Features:**
+- tmux session management with programmatic pane control
+- Panel-mode Ink rendering (sidebar, git, status bar in separate tmux panes)
+- Workspace context switching (cd + git identity + panel refresh)
+- Enhanced sidebar with AIDF context, provider badges, quick actions
+- Source Control panel with commit input, staging, stash
+- 5 tmux layout presets (Default, Code Focus, Git Focus, Multi-Terminal, Zen)
+- AI CLI launcher with AIDF context injection
+- Fullscreen toggle fallback for users without tmux
+
+**Tasks:** 090-100 (TUI tmux)
+
+**Details:** [`PLAN-v08-tui.md`](./PLAN-v08-tui.md)
+
+---
+
+### v0.8-Mobile — DitLoop Mobile & Tablet Companion 🔜 NEXT
+**Timeline:** Q1-Q2 2026 | **Status:** PLANNED
+
+Upgrade DitLoop's mobile PWA from a basic approval tool into a full companion app. Monitor workspaces, view AI sessions in real-time, approve/reject changes with swipe gestures, and launch tasks from your phone or tablet. Inspired by Claude Code mobile but designed for multi-project, multi-AI, multi-identity workflows.
+
+**Design Reference:** SuperDesign mockups — 5 mobile screens + 2 tablet layouts
+
+**Key Features:**
+- Workspace Hub with active session cards and provider badges
+- AI Session view with live streaming output and code block rendering
+- Approval Queue with filter chips and status badges
+- Diff Review with swipe gestures (left=reject, right=approve) and haptic feedback
+- Tablet Split View (workspace list + detail) and 3-panel (sessions + output + diff)
+- Push notifications for pending approvals
+- Offline mode with sync queue
+
+**Tasks:** 110-121 (Mobile & Tablet)
+
+**Details:** [`PLAN-v08-mobile.md`](./PLAN-v08-mobile.md)
 
 ---
 
@@ -208,6 +259,9 @@ Native desktop application using Tauri. Reuses the React + Tailwind UI from the 
 | v0.5 | +`mobile` package | PWA, push notifications, mobile approval, offline sync |
 | v0.6 | enhanced `tui` + `ui` | Multi-panel layouts, vim navigation, file tree, command log |
 | v0.7 | +`desktop` package (Tauri) | Native app, system tray, OS notifications, direct CLI access |
+| v0.8 | enhanced `desktop` + `web-ui` | Tab workspaces, embedded terminal, AI chat, layout system, themes |
+| v0.8-TUI | enhanced `tui` + `ui` | tmux integration, panel-mode rendering, layout presets, AI CLI launcher |
+| v0.8-Mobile | enhanced `mobile` + `web-ui` | Companion app, live sessions, swipe approvals, tablet layouts |
 
 ## Task Index
 
@@ -269,6 +323,61 @@ Native desktop application using Tauri. Reuses the React + Tailwind UI from the 
 | 050 | Push Notification Service | v0.5 | ✅ |
 | 051 | State Sync Engine | v0.5 | ✅ |
 | 052 | Notification Preferences | v0.5 | ✅ |
+| 053 | Multi-panel Layout | v0.6 | ✅ |
+| 054 | Vim Keyboard Navigation | v0.6 | ✅ |
+| 055 | Git Status Panel | v0.6 | ✅ |
+| 056 | Tasks Panel | v0.6 | ✅ |
+| 057 | Branches Panel | v0.6 | ✅ |
+| 058 | Commits Panel | v0.6 | ✅ |
+| 059 | File Tree Panel | v0.6 | ✅ |
+| 060 | Command Log Panel | v0.6 | ✅ |
+| 061 | Fuzzy Finder | v0.6 | ✅ |
+| 062 | Panel Integration | v0.6 | ✅ |
+| 063R | Desktop Architecture (Revised) | v0.7 | ✅ |
+| 064R | Desktop Git Integration | v0.7 | ✅ |
+| 065R | Command Palette | v0.7 | ✅ |
+| 066R | System Tray | v0.7 | ✅ |
+| 067R | Notifications & Deep Link | v0.7 | ✅ |
+| 068R | Multi-Window & AI Tools | v0.7 | ✅ |
+| 069R | Desktop CI/CD | v0.7 | ✅ |
+| 070 | Fix web-ui Build | v0.8 | 📋 |
+| 071 | Desktop Layout Engine | v0.8 | 📋 |
+| 072 | Tab-based Workspace Switching | v0.8 | 📋 |
+| 073 | Embedded Terminal (xterm.js) | v0.8 | 📋 |
+| 074 | File Explorer Panel | v0.8 | 📋 |
+| 075 | Enhanced Source Control | v0.8 | 📋 |
+| 076 | Diff Viewer | v0.8 | 📋 |
+| 077 | AI Chat Panel | v0.8 | 📋 |
+| 078 | AI Task Execution Panel | v0.8 | 📋 |
+| 079 | AIDF Context Manager | v0.8 | 📋 |
+| 080 | Layout Presets | v0.8 | 📋 |
+| 081 | Theme System | v0.8 | 📋 |
+| 082 | Identity Mismatch Warnings | v0.8 | 📋 |
+| 083 | Enhanced Status Bar | v0.8 | 📋 |
+| 084 | Keyboard Shortcuts System | v0.8 | 📋 |
+| 090 | tmux Session Manager | v0.8-TUI | 📋 |
+| 091 | Panel-mode Ink Rendering | v0.8-TUI | 📋 |
+| 092 | Workspace Context Switching (tmux) | v0.8-TUI | 📋 |
+| 093 | Enhanced Sidebar with AIDF Context | v0.8-TUI | 📋 |
+| 094 | Source Control Panel with Commit | v0.8-TUI | 📋 |
+| 095 | TUI Status Bar | v0.8-TUI | 📋 |
+| 096 | TUI Identity Mismatch Warnings | v0.8-TUI | 📋 |
+| 097 | tmux Layout Presets | v0.8-TUI | 📋 |
+| 098 | Multi-Terminal Layout | v0.8-TUI | 📋 |
+| 099 | AI CLI Launcher with Context | v0.8-TUI | 📋 |
+| 100 | Fullscreen Toggle Fallback | v0.8-TUI | 📋 |
+| 110 | Workspace Hub (Home) | v0.8-Mobile | 📋 |
+| 111 | Workspace Detail View | v0.8-Mobile | 📋 |
+| 112 | Bottom Navigation + Routing | v0.8-Mobile | 📋 |
+| 113 | AI Session View (Live Output) | v0.8-Mobile | 📋 |
+| 114 | Session Instruction Input | v0.8-Mobile | 📋 |
+| 115 | Approval Queue Screen | v0.8-Mobile | 📋 |
+| 116 | Diff Review (Mobile) | v0.8-Mobile | 📋 |
+| 117 | Swipe Gestures + Approve/Reject | v0.8-Mobile | 📋 |
+| 118 | Tablet Split View | v0.8-Mobile | 📋 |
+| 119 | Tablet Session & Approval (3-panel) | v0.8-Mobile | 📋 |
+| 120 | Push Notifications (Enhanced) | v0.8-Mobile | 📋 |
+| 121 | Offline Mode + Sync Queue | v0.8-Mobile | 📋 |
 
 **Legend:**
 - ✅ Completed
@@ -340,7 +449,13 @@ Native desktop application using Tauri. Reuses the React + Tailwind UI from the 
 - Mobile approval time: < 30s per task
 - Offline mode usage: > 20%
 
-## Future Vision (Beyond v0.5)
+## Future Vision (Beyond v0.8)
+
+### Ecosystem
+- **Desktop IDE** (v0.8) — Primary development interface
+- **TUI companion** (v0.6) — Lightweight terminal alternative
+- **Mobile companion** (v0.5) — Remote approvals and monitoring via PWA
+- **Server** (v0.4) — Bridges desktop ↔ mobile with real-time sync
 
 ### Potential Features
 - **Multi-user collaboration:** Real-time shared workspaces
@@ -377,6 +492,7 @@ MIT License — See `LICENSE` for details.
 ---
 
 **Last Updated:** February 16, 2026
-**Current Version:** v0.5 (Mobile Integration) ✅
-**Completed:** v0.1 → v0.5 + v0.3.1 (all shipped)
-**Next:** v0.6 (TUI Overhaul) 📋 | v0.7 (Desktop — Tauri) 📋 ← parallel
+**Current Version:** v0.7 (Desktop App) ✅
+**Completed:** v0.1 → v0.7 + v0.3.1 (all shipped) — 69 tasks, 8 plans
+**Next:** v0.8 — Desktop IDE (15 tasks) + TUI (11 tasks) + Mobile (12 tasks) = **38 tasks** 📋
+**Note:** Tasks 085-089 and 101-109 reserved for future use.
