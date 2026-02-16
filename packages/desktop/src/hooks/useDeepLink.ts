@@ -11,25 +11,8 @@ export function useDeepLink() {
       navigate(event.payload);
     });
 
-    const unlistenConnect = listen<string>('deep-link:connect', (event) => {
-      try {
-        const url = new URL(event.payload);
-        const serverUrl = url.searchParams.get('url');
-        const token = url.searchParams.get('token');
-        if (serverUrl && token) {
-          // Store params and redirect to connection setup
-          sessionStorage.setItem('dl-url', serverUrl);
-          sessionStorage.setItem('dl-token', token);
-          navigate('/');
-        }
-      } catch {
-        // Invalid URL
-      }
-    });
-
     return () => {
       unlistenNav.then((fn) => fn());
-      unlistenConnect.then((fn) => fn());
     };
   }, [navigate]);
 }

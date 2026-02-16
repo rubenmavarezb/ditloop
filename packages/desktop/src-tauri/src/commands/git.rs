@@ -1,6 +1,6 @@
 use serde::Serialize;
 use std::path::Path;
-use std::process::Command;
+use tokio::process::Command;
 
 /// Parsed git status output.
 #[derive(Debug, Serialize)]
@@ -40,7 +40,7 @@ pub struct GitBranch {
 
 /// Get parsed git status for a workspace.
 #[tauri::command]
-pub fn git_status(workspace_path: String) -> Result<GitStatus, String> {
+pub async fn git_status(workspace_path: String) -> Result<GitStatus, String> {
     let path = Path::new(&workspace_path);
     if !path.join(".git").exists() {
         return Err("Not a git repository".to_string());
@@ -50,6 +50,7 @@ pub fn git_status(workspace_path: String) -> Result<GitStatus, String> {
         .args(["status", "--porcelain=v2", "--branch"])
         .current_dir(path)
         .output()
+        .await
         .map_err(|e| e.to_string())?;
 
     if !output.status.success() {
@@ -112,7 +113,7 @@ pub fn git_status(workspace_path: String) -> Result<GitStatus, String> {
 
 /// Get recent git log entries.
 #[tauri::command]
-pub fn git_log(workspace_path: String, count: u32) -> Result<Vec<GitCommit>, String> {
+pub async fn git_log(workspace_path: String, count: u32) -> Result<Vec<GitCommit>, String> {
     let output = Command::new("git")
         .args([
             "log",
@@ -121,6 +122,7 @@ pub fn git_log(workspace_path: String, count: u32) -> Result<Vec<GitCommit>, Str
         ])
         .current_dir(&workspace_path)
         .output()
+        .await
         .map_err(|e| e.to_string())?;
 
     if !output.status.success() {
@@ -148,7 +150,7 @@ pub fn git_log(workspace_path: String, count: u32) -> Result<Vec<GitCommit>, Str
 
 /// Get unified diff (staged or unstaged).
 #[tauri::command]
-pub fn git_diff(workspace_path: String, staged: bool) -> Result<String, String> {
+pub async fn git_diff(workspace_path: String, staged: bool) -> Result<String, String> {
     let mut args = vec!["diff"];
     if staged {
         args.push("--cached");
@@ -158,6 +160,7 @@ pub fn git_diff(workspace_path: String, staged: bool) -> Result<String, String> 
         .args(&args)
         .current_dir(&workspace_path)
         .output()
+        .await
         .map_err(|e| e.to_string())?;
 
     Ok(String::from_utf8_lossy(&output.stdout).to_string())
@@ -165,11 +168,12 @@ pub fn git_diff(workspace_path: String, staged: bool) -> Result<String, String> 
 
 /// List local and remote branches.
 #[tauri::command]
-pub fn git_branch_list(workspace_path: String) -> Result<Vec<GitBranch>, String> {
+pub async fn git_branch_list(workspace_path: String) -> Result<Vec<GitBranch>, String> {
     let output = Command::new("git")
         .args(["branch", "-a", "--no-color"])
         .current_dir(&workspace_path)
         .output()
+        .await
         .map_err(|e| e.to_string())?;
 
     if !output.status.success() {
@@ -197,11 +201,12 @@ pub fn git_branch_list(workspace_path: String) -> Result<Vec<GitBranch>, String>
 
 /// Commit staged changes with a message.
 #[tauri::command]
-pub fn git_commit(workspace_path: String, message: String) -> Result<String, String> {
+pub async fn git_commit(workspace_path: String, message: String) -> Result<String, String> {
     let output = Command::new("git")
         .args(["commit", "-m", &message])
         .current_dir(&workspace_path)
         .output()
+        .await
         .map_err(|e| e.to_string())?;
 
     if !output.status.success() {
@@ -213,11 +218,12 @@ pub fn git_commit(workspace_path: String, message: String) -> Result<String, Str
 
 /// Checkout a branch.
 #[tauri::command]
-pub fn git_checkout(workspace_path: String, branch: String) -> Result<(), String> {
+pub async fn git_checkout(workspace_path: String, branch: String) -> Result<(), String> {
     let output = Command::new("git")
         .args(["checkout", &branch])
         .current_dir(&workspace_path)
         .output()
+        .await
         .map_err(|e| e.to_string())?;
 
     if !output.status.success() {

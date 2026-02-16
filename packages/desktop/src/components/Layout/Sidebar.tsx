@@ -10,9 +10,6 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { path: '/', label: 'Workspaces', icon: '{}' },
-  { path: '/chat', label: 'Chat', icon: '>' },
-  { path: '/approvals', label: 'Approvals', icon: '!' },
-  { path: '/executions', label: 'Runs', icon: '#' },
   { path: '/files', label: 'Files', icon: '~' },
   { path: '/settings', label: 'Settings', icon: '*' },
 ];

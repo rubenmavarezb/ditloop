@@ -1,6 +1,5 @@
 import { useEffect, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import { ditloopWs } from '@ditloop/web-ui';
 
 /** Notification type matching Rust enum. */
 type NotificationType =
@@ -9,7 +8,12 @@ type NotificationType =
   | 'execution_failed'
   | 'execution_started';
 
-/** Request notification permission and listen for WebSocket events to trigger OS notifications. */
+/**
+ * Request notification permission and provide a notify() function for OS notifications.
+ *
+ * In the local-first architecture, notifications are triggered by desktop hooks
+ * (e.g., useGitStatus detecting changes) rather than a WebSocket connection.
+ */
 export function useNotifications(enabled: boolean) {
   useEffect(() => {
     if (!enabled) return;
@@ -33,29 +37,6 @@ export function useNotifications(enabled: boolean) {
     },
     [enabled],
   );
-
-  useEffect(() => {
-    if (!enabled) return;
-
-    const unsubscribe = ditloopWs.onMessage((message) => {
-      switch (message.event) {
-        case 'approval:requested':
-          notify('approval_requested', 'Approval Needed', (message.data as Record<string, string>)?.name ?? 'New approval request');
-          break;
-        case 'execution:completed':
-          notify('execution_completed', 'Execution Complete', (message.data as Record<string, string>)?.name ?? 'Task completed');
-          break;
-        case 'execution:failed':
-          notify('execution_failed', 'Execution Failed', (message.data as Record<string, string>)?.name ?? 'Task failed');
-          break;
-        case 'execution:started':
-          notify('execution_started', 'Execution Started', (message.data as Record<string, string>)?.name ?? 'Task started');
-          break;
-      }
-    });
-
-    return unsubscribe;
-  }, [enabled, notify]);
 
   return { notify };
 }

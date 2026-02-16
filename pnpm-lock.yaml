@@ -60,6 +60,9 @@ importers:
 
   packages/desktop:
     dependencies:
+      '@ditloop/core':
+        specifier: workspace:*
+        version: link:../core
       '@ditloop/web-ui':
         specifier: workspace:*
         version: link:../web-ui

@@ -1,17 +1,5 @@
-import { useConnectionStore } from '@ditloop/web-ui';
-
-/** Status dot colors by connection status. */
-const STATUS_COLORS = {
-  connected: 'bg-green-400',
-  connecting: 'bg-yellow-400 animate-pulse',
-  disconnected: 'bg-slate-500',
-  error: 'bg-red-400',
-} as const;
-
-/** Custom title bar with drag region, connection status, and window controls. */
+/** Custom title bar with drag region and window controls. */
 export function TitleBar() {
-  const status = useConnectionStore((s) => s.status);
-
   const minimize = async () => {
     const { getCurrentWindow } = await import('@tauri-apps/api/window');
     await getCurrentWindow().minimize();
@@ -32,13 +20,13 @@ export function TitleBar() {
       data-tauri-drag-region
       className="flex h-10 shrink-0 items-center justify-between border-b border-slate-800 bg-slate-950 px-3"
     >
-      {/* Left: app title + status */}
+      {/* Left: app title */}
       <div className="flex items-center gap-2" data-tauri-drag-region>
         <span className="text-sm font-bold text-white" data-tauri-drag-region>
           DitLoop
         </span>
-        <div className={`h-2 w-2 rounded-full ${STATUS_COLORS[status]}`} />
-        <span className="text-xs text-slate-500 capitalize">{status}</span>
+        <div className="h-2 w-2 rounded-full bg-green-400" />
+        <span className="text-xs text-slate-500">Local</span>
       </div>
 
       {/* Right: window controls */}

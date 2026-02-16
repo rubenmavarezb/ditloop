@@ -25,10 +25,10 @@ export function useShortcuts() {
         return;
       }
 
-      // Cmd/Ctrl+1..6 — navigate to sidebar sections
-      if (mod && e.key >= '1' && e.key <= '6') {
+      // Cmd/Ctrl+1..3 — navigate to sidebar sections
+      if (mod && e.key >= '1' && e.key <= '3') {
         e.preventDefault();
-        const routes = ['/', '/chat', '/approvals', '/executions', '/files', '/settings'];
+        const routes = ['/', '/files', '/settings'];
         const index = parseInt(e.key, 10) - 1;
         if (index < routes.length) {
           navigate(routes[index]);

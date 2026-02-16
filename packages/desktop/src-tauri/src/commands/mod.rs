@@ -1,4 +1,5 @@
 pub mod ai_cli;
+pub mod config;
 pub mod filesystem;
 pub mod git;
 pub mod server;
