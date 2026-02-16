@@ -6,3 +6,4 @@ export { useAiTools, useLaunchAiCli } from './useLocalAiCli.js';
 export { useShortcuts } from './useShortcuts.js';
 export { useDeepLink } from './useDeepLink.js';
 export { useMultiWindow } from './useMultiWindow.js';
+export { useUpdater } from './useUpdater.js';

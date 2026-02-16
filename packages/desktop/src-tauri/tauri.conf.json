@@ -31,6 +31,12 @@
       "desktop": {
         "schemes": ["ditloop"]
       }
+    },
+    "updater": {
+      "endpoints": [
+        "https://releases.ditloop.dev/desktop/{{target}}/{{arch}}/{{current_version}}"
+      ],
+      "pubkey": ""
     }
   },
   "bundle": {
