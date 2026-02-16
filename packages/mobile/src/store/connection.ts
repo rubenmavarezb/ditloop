@@ -58,11 +58,46 @@ export const useConnectionStore = create<ConnectionState>()(
     }),
     {
       name: 'ditloop-connection',
+      storage: {
+        getItem: (name) => {
+          // URL from localStorage (persists across sessions)
+          const saved = localStorage.getItem(name);
+          // Token from sessionStorage (cleared on tab close)
+          const tokenData = sessionStorage.getItem(`${name}-token`);
+          if (!saved) return null;
+          const parsed = JSON.parse(saved);
+          if (tokenData) {
+            const tokenParsed = JSON.parse(tokenData);
+            parsed.state.token = tokenParsed.token;
+            parsed.state.configured = !!tokenParsed.token;
+          } else {
+            // No token in session — user must re-enter
+            parsed.state.token = '';
+            parsed.state.configured = false;
+          }
+          return parsed;
+        },
+        setItem: (name, value) => {
+          const data = JSON.parse(JSON.stringify(value));
+          // Store token separately in sessionStorage
+          const token = data.state?.token ?? '';
+          sessionStorage.setItem(`${name}-token`, JSON.stringify({ token }));
+          // Strip token from localStorage
+          if (data.state) {
+            data.state.token = '';
+          }
+          localStorage.setItem(name, JSON.stringify(data));
+        },
+        removeItem: (name) => {
+          localStorage.removeItem(name);
+          sessionStorage.removeItem(`${name}-token`);
+        },
+      },
       partialize: (state) => ({
         serverUrl: state.serverUrl,
         token: state.token,
         configured: state.configured,
-      }),
+      }) as ConnectionState,
     },
   ),
 );

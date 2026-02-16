@@ -12,6 +12,7 @@ const NAV_ITEMS: NavItem[] = [
   { path: '/chat', label: 'Chat', icon: '>' },
   { path: '/approvals', label: 'Approvals', icon: '!' },
   { path: '/executions', label: 'Runs', icon: '#' },
+  { path: '/settings', label: 'Settings', icon: '*' },
 ];
 
 /** Bottom navigation bar for mobile app. */

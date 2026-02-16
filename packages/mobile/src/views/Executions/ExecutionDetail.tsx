@@ -2,25 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../api/client.js';
 import { useConnectionStore } from '../../store/connection.js';
-import type { Execution, ExecutionStatus } from '../../components/ExecutionCard/index.js';
-
-/** Map execution status to dot styling classes. */
-const STATUS_DOT_CLASSES: Record<ExecutionStatus, string> = {
-  running: 'bg-blue-400 animate-pulse',
-  queued: 'bg-yellow-400',
-  success: 'bg-green-400',
-  failed: 'bg-red-400',
-  cancelled: 'bg-slate-500',
-};
-
-/** Map execution status to human-readable label. */
-const STATUS_LABELS: Record<ExecutionStatus, string> = {
-  running: 'Running',
-  queued: 'Queued',
-  success: 'Completed',
-  failed: 'Failed',
-  cancelled: 'Cancelled',
-};
+import { STATUS_DOT_CLASSES, STATUS_LABELS } from '../../components/ExecutionCard/index.js';
+import type { Execution } from '../../components/ExecutionCard/index.js';
 
 /**
  * Format elapsed time as a human-readable string.

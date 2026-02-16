@@ -72,6 +72,9 @@ export class DitLoopWebSocket {
     const { serverUrl, token } = useConnectionStore.getState();
     if (!serverUrl || !token) return;
 
+    // Browser WebSocket API does not support custom headers (Authorization).
+    // Token is passed via query parameter as a necessary compromise.
+    // The server should NOT log full WebSocket upgrade URLs.
     const wsUrl = serverUrl.replace(/^http/, 'ws') + `/ws?token=${encodeURIComponent(token)}`;
 
     useConnectionStore.getState().setStatus('connecting');

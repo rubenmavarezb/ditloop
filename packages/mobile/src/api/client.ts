@@ -49,14 +49,23 @@ export async function apiFetch<T = unknown>(
 
 /**
  * Check if the server is reachable and the token is valid.
+ * Makes an unauthenticated health check AND an authenticated request.
  *
- * @returns True if health check passes
+ * @returns True if server is reachable and token is accepted
  */
 export async function checkHealth(): Promise<boolean> {
   try {
-    const { serverUrl } = useConnectionStore.getState();
-    const response = await fetch(`${serverUrl}/api/health`);
-    return response.ok;
+    const { serverUrl, token } = useConnectionStore.getState();
+
+    // Check server is reachable
+    const healthRes = await fetch(`${serverUrl}/api/health`);
+    if (!healthRes.ok) return false;
+
+    // Validate token with an authenticated endpoint
+    const authRes = await fetch(`${serverUrl}/api/workspaces`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return authRes.ok;
   } catch {
     return false;
   }
