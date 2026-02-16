@@ -18,6 +18,14 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             commands::greet,
+            commands::filesystem::list_directory,
+            commands::filesystem::read_file,
+            commands::filesystem::file_exists,
+            commands::filesystem::get_home_dir,
+            commands::workspace::detect_workspaces,
+            commands::workspace::get_workspace_info,
+            commands::workspace::open_in_terminal,
+            commands::workspace::open_in_editor,
             tray::update_tray_counts,
             notifications::send_notification,
             notifications::check_notification_permission,

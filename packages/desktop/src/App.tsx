@@ -13,15 +13,7 @@ import {
   Settings,
 } from '@ditloop/web-ui';
 import { DesktopShell } from './components/Layout/DesktopShell.js';
-
-/** Placeholder for the filesystem browser view (Task 067). */
-function FileBrowserPlaceholder() {
-  return (
-    <div className="flex h-full items-center justify-center text-slate-500">
-      <p>File browser — coming soon</p>
-    </div>
-  );
-}
+import { FileBrowser } from './components/FileBrowser/FileBrowser.js';
 
 /** Root desktop application component with routing and theme management. */
 export function App() {
@@ -43,7 +35,7 @@ export function App() {
           <Route path="/approvals/:id" element={<ApprovalDetail />} />
           <Route path="/executions" element={<ExecutionList />} />
           <Route path="/executions/:id" element={<ExecutionDetail />} />
-          <Route path="/files" element={<FileBrowserPlaceholder />} />
+          <Route path="/files" element={<FileBrowser />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </DesktopShell>
