@@ -52,6 +52,7 @@ export const ServerSchema = z.object({
   enabled: z.boolean().default(false),
   port: z.number().int().min(1024).max(65535).default(9847),
   host: z.string().default('127.0.0.1'),
+  contactEmail: z.string().default('ditloop@localhost').describe('Contact email for VAPID push notifications'),
 });
 
 export type ServerConfig = z.infer<typeof ServerSchema>;
@@ -77,6 +78,47 @@ export const ProviderConfigSchema = z.object({
 
 export type ProviderConfig = z.infer<typeof ProviderConfigSchema>;
 
+// --- Quiet Hours ---
+
+export const QuietHoursSchema = z.object({
+  enabled: z.boolean().default(false),
+  start: z.string().regex(/^\d{2}:\d{2}$/).default('22:00').describe('Start time in HH:MM format'),
+  end: z.string().regex(/^\d{2}:\d{2}$/).default('08:00').describe('End time in HH:MM format'),
+});
+
+export type QuietHours = z.infer<typeof QuietHoursSchema>;
+
+// --- Notification Event Toggles ---
+
+export const NotificationEventTogglesSchema = z.object({
+  'approval-requested': z.boolean().default(true),
+  'execution-completed': z.boolean().default(true),
+  'execution-failed': z.boolean().default(true),
+  'session-message': z.boolean().default(true),
+});
+
+export type NotificationEventToggles = z.infer<typeof NotificationEventTogglesSchema>;
+
+// --- Per-Workspace Notification Override ---
+
+export const WorkspaceNotificationOverrideSchema = z.object({
+  enabled: z.boolean().optional(),
+  events: NotificationEventTogglesSchema.partial().optional(),
+});
+
+export type WorkspaceNotificationOverride = z.infer<typeof WorkspaceNotificationOverrideSchema>;
+
+// --- Notification Preferences ---
+
+export const NotificationPreferencesSchema = z.object({
+  enabled: z.boolean().default(true),
+  quietHours: QuietHoursSchema.default({}),
+  events: NotificationEventTogglesSchema.default({}),
+  workspaceOverrides: z.record(z.string(), WorkspaceNotificationOverrideSchema).default({}),
+});
+
+export type NotificationPreferences = z.infer<typeof NotificationPreferencesSchema>;
+
 // --- Root config ---
 
 export const DitLoopConfigSchema = z.object({
@@ -85,6 +127,7 @@ export const DitLoopConfigSchema = z.object({
   defaults: DefaultsSchema.default({}),
   server: ServerSchema.default({}),
   providers: z.record(z.string(), ProviderConfigSchema).default({}),
+  notifications: NotificationPreferencesSchema.default({}),
 });
 
 export type DitLoopConfig = z.infer<typeof DitLoopConfigSchema>;

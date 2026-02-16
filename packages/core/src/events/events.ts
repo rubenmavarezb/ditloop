@@ -20,6 +20,8 @@ export interface ExecutionEvents {
   'execution:output': { taskId: string; stream: 'stdout' | 'stderr'; data: string };
   'execution:completed': { taskId: string; exitCode: number };
   'execution:error': { taskId: string; error: string };
+  'execution:queued': { taskId: string; position: number; provider: string };
+  'execution:dequeued': { taskId: string; provider: string };
 }
 
 export interface ApprovalEvents {
@@ -85,3 +87,17 @@ export type DitLoopEventMap =
   & ProviderEvents;
 
 export type DitLoopEventName = keyof DitLoopEventMap;
+
+/** All known DitLoop event names. Useful for dynamic subscription. */
+export const ALL_EVENT_NAMES: DitLoopEventName[] = [
+  'workspace:activated', 'workspace:deactivated', 'workspace:created', 'workspace:removed', 'workspace:error',
+  'profile:switched', 'profile:mismatch', 'profile:guard-blocked',
+  'execution:started', 'execution:progress', 'execution:output', 'execution:completed', 'execution:error', 'execution:queued', 'execution:dequeued',
+  'approval:requested', 'approval:granted', 'approval:denied',
+  'git:status-changed', 'git:commit', 'git:push', 'git:pull', 'git:branch-created', 'git:branch-switched', 'git:branch-deleted',
+  'action:executed', 'action:failed', 'action:rolled-back',
+  'chat:message-sent', 'chat:message-received', 'chat:stream-chunk', 'chat:error',
+  'aidf:detected', 'aidf:context-loaded', 'aidf:task-selected', 'aidf:created', 'aidf:updated', 'aidf:deleted',
+  'launcher:context-built', 'launcher:started', 'launcher:exited',
+  'provider:connected', 'provider:disconnected', 'provider:error',
+] as const;

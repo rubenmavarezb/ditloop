@@ -18,8 +18,12 @@ import { createProfileRoutes } from './api/profiles.js';
 import { createLauncherRoutes } from './api/launcher.js';
 import { createApprovalRoutes } from './api/approvals.js';
 import { createExecutionRoutes } from './api/executions.js';
+import { createNotificationRoutes } from './api/notifications.js';
 import { WebSocketBridge } from './ws/websocket-bridge.js';
 import { ExecutionMonitor } from './execution/execution-monitor.js';
+import { PushNotificationService } from './notifications/index.js';
+import { StateSyncEngine } from './sync/index.js';
+import { createSyncRoutes } from './api/sync.js';
 
 /** Dependencies needed to create a DitLoop server. */
 export interface DitLoopServerDeps {
@@ -40,6 +44,10 @@ export interface DitLoopServerInstance {
   wsBridge: WebSocketBridge;
   /** The execution monitor. */
   executionMonitor: ExecutionMonitor;
+  /** The push notification service. */
+  pushNotificationService: PushNotificationService;
+  /** The state sync engine. */
+  stateSyncEngine: StateSyncEngine;
   /** The authentication token. */
   token: string;
   /** Stop the server gracefully. */
@@ -60,6 +68,18 @@ export async function createServer(deps: DitLoopServerDeps): Promise<DitLoopServ
 
   // Create execution monitor
   const executionMonitor = new ExecutionMonitor(eventBus);
+
+  // Create state sync engine
+  const stateSyncEngine = new StateSyncEngine(eventBus);
+
+  // Create push notification service
+  const vapidKeys = PushNotificationService.loadOrCreateVapidKeys();
+  const contactEmail = config.server.contactEmail;
+  const pushNotificationService = new PushNotificationService(
+    vapidKeys.publicKey,
+    vapidKeys.privateKey,
+    contactEmail,
+  );
 
   // Create Hono app
   const app = new Hono();
@@ -91,10 +111,31 @@ export async function createServer(deps: DitLoopServerDeps): Promise<DitLoopServ
   }));
   app.route('/api', createExecutionRoutes({
     executionEngine: deps.executionEngine,
-    aiLauncher: deps.aiLauncher,
     workspaceManager: deps.workspaceManager,
     executionMonitor,
     eventBus,
+  }));
+  // Notification preferences (mutable at runtime)
+  const configNotif = config.notifications;
+  let notificationPreferences: import('./notifications/preferences.js').NotificationPreferences = {
+    enabled: configNotif?.enabled ?? true,
+    quietHours: configNotif?.quietHours ?? { enabled: false, start: '22:00', end: '08:00' },
+    events: configNotif?.events ?? {
+      'approval-requested': true,
+      'execution-completed': true,
+      'execution-failed': true,
+      'session-message': true,
+    },
+    workspaceOverrides: configNotif?.workspaceOverrides ?? {},
+  };
+
+  app.route('/api', createNotificationRoutes({
+    pushService: pushNotificationService,
+    getPreferences: () => notificationPreferences,
+    setPreferences: (prefs) => { notificationPreferences = prefs; },
+  }));
+  app.route('/api', createSyncRoutes({
+    syncEngine: stateSyncEngine,
   }));
 
   // Global error handler
@@ -117,6 +158,7 @@ export async function createServer(deps: DitLoopServerDeps): Promise<DitLoopServ
   const close = async (): Promise<void> => {
     wsBridge.close();
     executionMonitor.destroy();
+    stateSyncEngine.destroy();
     httpServer.close();
 
     await new Promise<void>((resolve) => {
@@ -130,6 +172,8 @@ export async function createServer(deps: DitLoopServerDeps): Promise<DitLoopServ
     httpServer,
     wsBridge,
     executionMonitor,
+    pushNotificationService,
+    stateSyncEngine,
     token,
     close,
   };

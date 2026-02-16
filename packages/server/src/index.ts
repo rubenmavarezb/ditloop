@@ -24,3 +24,30 @@ export type {
   ExecutionStats,
   OutputLine,
 } from './execution/index.js';
+
+export { StateSyncEngine } from './sync/index.js';
+export type {
+  Delta,
+  StateSnapshot,
+  OfflineEvent,
+  ConflictStrategy,
+  ProcessResult,
+} from './sync/index.js';
+
+export { createSyncRoutes } from './api/sync.js';
+export type { SyncRouteDeps } from './api/sync.js';
+
+export { PushNotificationService } from './notifications/index.js';
+export type {
+  NotificationType,
+  DitLoopNotification,
+  SubscriptionInfo,
+  PushSubscriptionData,
+  VapidKeys,
+} from './notifications/index.js';
+
+export { createNotificationRoutes } from './api/notifications.js';
+export type { NotificationRouteDeps } from './api/notifications.js';
+
+export { shouldSendNotification } from './notifications/index.js';
+export type { NotificationPreferences } from './notifications/index.js';

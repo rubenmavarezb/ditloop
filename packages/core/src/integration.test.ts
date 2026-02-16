@@ -10,6 +10,7 @@ import { EventBus } from './events/index.js';
 import { AidfDetector } from './aidf/detector/index.js';
 import { ContextLoader } from './aidf/context-loader/index.js';
 import { ContextMerger } from './aidf/context-loader/context-merger.js';
+import { DitLoopConfigSchema } from './config/index.js';
 import type { DitLoopConfig, SingleWorkspace, GroupWorkspace } from './config/index.js';
 
 describe('Integration: Config → Workspaces → AIDF', () => {
@@ -73,12 +74,12 @@ describe('Integration: Config → Workspaces → AIDF', () => {
     workspaces: (SingleWorkspace | GroupWorkspace)[],
     profiles: DitLoopConfig['profiles'] = {},
   ): DitLoopConfig {
-    return {
+    return DitLoopConfigSchema.parse({
       profiles,
       workspaces,
       defaults: { editor: '$EDITOR', aidf: true },
       server: { enabled: false, port: 9847, host: '127.0.0.1' },
-    };
+    });
   }
 
   describe('config loads and workspaces resolve', () => {

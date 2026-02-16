@@ -8,6 +8,7 @@ import { InitWizard } from './commands/init.js';
 import { WorkspaceList } from './commands/workspace.js';
 import { ProfileList, ProfileCurrent } from './commands/profile.js';
 import { ScaffoldWizard } from './commands/scaffold.js';
+import { startServer, stopServer, restartServer, getServerStatus } from './commands/server.js';
 
 const args = process.argv.slice(2);
 const command = args[0];
@@ -23,6 +24,7 @@ Usage:
   ditloop profile list     List configured profiles
   ditloop profile current  Show current git identity
   ditloop scaffold [type]  Scaffold AIDF file (task, role, skill, plan)
+  ditloop server <cmd>     Server management (start, stop, restart, status)
   ditloop --version        Print version
   ditloop --help           Show this help
 `.trim();
@@ -86,6 +88,41 @@ async function main() {
 
     console.error(`Unknown profile subcommand: ${subcommand}`);
     process.exit(1);
+  }
+
+  // server commands
+  if (command === 'server') {
+    switch (subcommand) {
+      case 'start': {
+        const result = startServer();
+        console.log(result.message);
+        process.exit(result.success ? 0 : 1);
+        break;
+      }
+      case 'stop': {
+        const result = stopServer();
+        console.log(result.message);
+        process.exit(result.success ? 0 : 1);
+        break;
+      }
+      case 'restart': {
+        const result = restartServer();
+        console.log(result.message);
+        process.exit(result.success ? 0 : 1);
+        break;
+      }
+      case 'status': {
+        const status = getServerStatus();
+        console.log(status.running ? `Server running (PID ${status.pid})` : 'Server not running');
+        process.exit(0);
+        break;
+      }
+      default:
+        console.error(`Unknown server subcommand: ${subcommand ?? '(none)'}`);
+        console.log('Usage: ditloop server start|stop|restart|status');
+        process.exit(1);
+    }
+    return;
   }
 
   // scaffold command

@@ -131,9 +131,10 @@ export class ExecutionMonitor {
       await this.startExecution(execution);
     } else {
       this.queue.push(id);
-      this.eventBus.emit('execution:progress', {
+      this.eventBus.emit('execution:queued', {
         taskId: id,
-        message: `Queued (position ${this.queue.length})`,
+        position: this.queue.length,
+        provider: options.provider ?? 'default',
       });
     }
 
@@ -241,6 +242,10 @@ export class ExecutionMonitor {
   }
 
   private async startExecution(execution: TrackedExecution): Promise<void> {
+    this.eventBus.emit('execution:dequeued', {
+      taskId: execution.id,
+      provider: execution.provider ?? 'default',
+    });
     execution.status = 'running';
     execution.abortController = new AbortController();
 

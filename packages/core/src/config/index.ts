@@ -8,6 +8,10 @@ export {
   WorkspaceSchema,
   ServerSchema,
   DefaultsSchema,
+  NotificationPreferencesSchema,
+  NotificationEventTogglesSchema,
+  QuietHoursSchema,
+  WorkspaceNotificationOverrideSchema,
 } from './schema.js';
 export type {
   DitLoopConfig,
@@ -17,4 +21,8 @@ export type {
   Workspace,
   ServerConfig,
   Defaults,
+  NotificationPreferences,
+  NotificationEventToggles,
+  QuietHours,
+  WorkspaceNotificationOverride,
 } from './schema.js';
