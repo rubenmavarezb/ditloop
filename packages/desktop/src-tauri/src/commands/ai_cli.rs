@@ -62,14 +62,21 @@ pub async fn launch_ai_cli(
 
     #[cfg(target_os = "windows")]
     {
-        // Use separate arguments to prevent injection — no shell interpolation
+        // Try Windows Terminal first, fall back to cmd with separate args (no shell interpolation)
         let mut cmd_parts = vec![tool.clone()];
         cmd_parts.extend(args.iter().cloned());
-        let child = Command::new("cmd")
-            .args(["/c", "start", "cmd", "/k"])
-            .arg(format!("cd /d \"{}\" && {}", workspace_path.replace('"', ""), cmd_parts.join(" ")))
-            .current_dir(&workspace_path)
+        let escaped_cmd = cmd_parts.iter().map(|a| shell_escape_win(a)).collect::<Vec<_>>().join(" ");
+
+        let child = Command::new("wt")
+            .args(["-d", &workspace_path, "cmd", "/k", &escaped_cmd])
             .spawn()
+            .or_else(|_| {
+                // Fallback: use cmd.exe with /d to change directory, /k to keep open
+                Command::new("cmd")
+                    .args(["/d", "/k", &format!("cd /d {} && {}", shell_escape_win(&workspace_path), escaped_cmd)])
+                    .current_dir(&workspace_path)
+                    .spawn()
+            })
             .map_err(|e| format!("Failed to launch terminal: {}", e))?;
         return Ok(child.id().unwrap_or(0));
     }
@@ -159,7 +166,13 @@ async fn check_tool_version(cmd: &str) -> (bool, Option<String>) {
     }
 }
 
-/// Escape a string for shell usage with single quotes.
+/// Escape a string for shell usage with single quotes (macOS/Linux).
 fn shell_escape(s: &str) -> String {
     format!("'{}'", s.replace('\'', "'\\''"))
+}
+
+/// Escape a string for Windows cmd usage with double quotes.
+#[cfg(target_os = "windows")]
+fn shell_escape_win(s: &str) -> String {
+    format!("\"{}\"", s.replace('"', "\"\""))
 }

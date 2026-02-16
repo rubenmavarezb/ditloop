@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::fs;
+use tokio::process::Command;
 
 /// Profile from DitLoop config.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -71,6 +72,15 @@ pub fn load_ditloop_config() -> Result<ConfigLoadResult, String> {
     let config: DitLoopConfigFile = serde_yaml::from_str(&content)
         .map_err(|e| format!("Failed to parse config: {}", e))?;
 
+    // Expand ~ to home directory in workspace paths
+    let mut config = config;
+    let home_str = home.to_string_lossy().to_string();
+    for ws in &mut config.workspaces {
+        if ws.path.starts_with('~') {
+            ws.path = ws.path.replacen('~', &home_str, 1);
+        }
+    }
+
     Ok(ConfigLoadResult {
         config,
         config_path: config_path_str,
@@ -81,7 +91,7 @@ pub fn load_ditloop_config() -> Result<ConfigLoadResult, String> {
 /// Switch to a named git profile from DitLoop config.
 /// Sets global git user.name and user.email.
 #[tauri::command]
-pub fn switch_git_profile(profile_name: String) -> Result<(), String> {
+pub async fn switch_git_profile(profile_name: String) -> Result<(), String> {
     let home = dirs::home_dir().ok_or("Could not determine home directory")?;
     let config_path = home.join(".ditloop").join("config.yml");
 
@@ -95,14 +105,16 @@ pub fn switch_git_profile(profile_name: String) -> Result<(), String> {
         .get(&profile_name)
         .ok_or_else(|| format!("Profile '{}' not found in config", profile_name))?;
 
-    std::process::Command::new("git")
+    Command::new("git")
         .args(["config", "--global", "user.name", &profile.name])
         .output()
+        .await
         .map_err(|e| format!("Failed to set git user.name: {}", e))?;
 
-    std::process::Command::new("git")
+    Command::new("git")
         .args(["config", "--global", "user.email", &profile.email])
         .output()
+        .await
         .map_err(|e| format!("Failed to set git user.email: {}", e))?;
 
     Ok(())
@@ -110,10 +122,11 @@ pub fn switch_git_profile(profile_name: String) -> Result<(), String> {
 
 /// Get the current git identity (user.email).
 #[tauri::command]
-pub fn get_git_identity() -> Result<Option<String>, String> {
-    let output = std::process::Command::new("git")
+pub async fn get_git_identity() -> Result<Option<String>, String> {
+    let output = Command::new("git")
         .args(["config", "user.email"])
         .output()
+        .await
         .map_err(|e| format!("Failed to run git: {}", e))?;
 
     if output.status.success() {
@@ -167,6 +180,30 @@ workspaces:
         let ws2 = &config.workspaces[1];
         assert!(!ws2.aidf); // default
         assert_eq!(ws2.r#type, "single"); // default
+    }
+
+    #[test]
+    fn test_tilde_expansion_in_workspace_paths() {
+        let yaml = r#"
+workspaces:
+  - name: my-project
+    path: ~/projects/my-project
+    profile: personal
+  - name: abs-project
+    path: /home/user/work
+    profile: work
+"#;
+        let mut config: DitLoopConfigFile = serde_yaml::from_str(yaml).unwrap();
+        let home_str = dirs::home_dir().unwrap().to_string_lossy().to_string();
+        for ws in &mut config.workspaces {
+            if ws.path.starts_with('~') {
+                ws.path = ws.path.replacen('~', &home_str, 1);
+            }
+        }
+        assert!(config.workspaces[0].path.starts_with(&home_str));
+        assert!(!config.workspaces[0].path.contains('~'));
+        // Absolute path should be unchanged
+        assert_eq!(config.workspaces[1].path, "/home/user/work");
     }
 
     #[test]

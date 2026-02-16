@@ -20,6 +20,7 @@
     "tauri:build:universal": "tauri build --target universal-apple-darwin"
   },
   "dependencies": {
+    "@ditloop/core": "workspace:*",
     "@ditloop/web-ui": "workspace:*",
     "@tauri-apps/api": "^2.2.0",
     "@tauri-apps/plugin-dialog": "^2.2.0",

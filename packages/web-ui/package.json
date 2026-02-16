@@ -7,6 +7,10 @@
   "author": "Ruben Mavarez <rubennmavarezb@gmail.com>",
   "type": "module",
   "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./server": "./src/server.ts"
+  },
   "scripts": {
     "build": "tsc -b",
     "test": "vitest run",

@@ -1,15 +1,10 @@
 import { useMemo } from 'react';
-import { useConfig, type WorkspaceConfig, type ProfileConfig } from './useConfig.js';
+import type { Profile, ResolvedWorkspace } from '@ditloop/core';
+import { useConfig, type RustWorkspace } from './useConfig.js';
 
-/** Resolved workspace for display in the desktop app. */
-export interface ResolvedWorkspace {
-  id: string;
-  name: string;
-  type: 'single' | 'group';
-  path: string;
-  profile: string;
-  profileConfig?: ProfileConfig;
-  aidf: boolean;
+/** Desktop-specific resolved workspace with optional profile config. */
+export interface DesktopWorkspace extends Omit<ResolvedWorkspace, 'projects' | 'config'> {
+  profileConfig?: Profile;
 }
 
 /** Generate a URL-safe slug from a workspace name. */
@@ -24,14 +19,14 @@ function slugify(name: string): string {
 export function useWorkspaces() {
   const { config, configExists, loading, error, reload } = useConfig();
 
-  const workspaces = useMemo<ResolvedWorkspace[]>(() => {
+  const workspaces = useMemo<DesktopWorkspace[]>(() => {
     if (!config) return [];
 
-    return config.workspaces.map((ws: WorkspaceConfig) => ({
+    return config.workspaces.map((ws: RustWorkspace) => ({
       id: slugify(ws.name),
       name: ws.name,
       type: (ws.type === 'group' ? 'group' : 'single') as 'single' | 'group',
-      path: ws.path.replace(/^~/, ''),
+      path: ws.path,
       profile: ws.profile,
       profileConfig: config.profiles[ws.profile],
       aidf: ws.aidf,

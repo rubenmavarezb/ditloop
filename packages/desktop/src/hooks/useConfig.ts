@@ -1,17 +1,26 @@
 import { useState, useEffect, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
+import type { Profile } from '@ditloop/core';
 
-/** Profile from DitLoop config. */
-export interface ProfileConfig {
-  name: string;
-  email: string;
-  sshHost?: string;
-  sshKey?: string;
-  platform?: string;
+/** Config load result from Rust. */
+interface ConfigLoadResult {
+  config: RustConfig;
+  configPath: string;
+  exists: boolean;
 }
 
-/** Workspace entry from DitLoop config. */
-export interface WorkspaceConfig {
+/**
+ * Rust-side config shape (flat workspaces array with string type field).
+ * This matches the serde output from config.rs, which differs slightly
+ * from core's discriminated union.
+ */
+interface RustConfig {
+  profiles: Record<string, Profile>;
+  workspaces: RustWorkspace[];
+}
+
+/** Workspace entry as returned by Rust serde (flat, not discriminated union). */
+export interface RustWorkspace {
   name: string;
   path: string;
   type: string;
@@ -19,22 +28,9 @@ export interface WorkspaceConfig {
   aidf: boolean;
 }
 
-/** Full DitLoop config. */
-export interface DitLoopConfig {
-  profiles: Record<string, ProfileConfig>;
-  workspaces: WorkspaceConfig[];
-}
-
-/** Config load result from Rust. */
-interface ConfigLoadResult {
-  config: DitLoopConfig;
-  configPath: string;
-  exists: boolean;
-}
-
 /** Load and manage DitLoop configuration from ~/.ditloop/config.yml. */
 export function useConfig() {
-  const [config, setConfig] = useState<DitLoopConfig | null>(null);
+  const [config, setConfig] = useState<RustConfig | null>(null);
   const [configPath, setConfigPath] = useState<string>('');
   const [configExists, setConfigExists] = useState(true);
   const [loading, setLoading] = useState(true);

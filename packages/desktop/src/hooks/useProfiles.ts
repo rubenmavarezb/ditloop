@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import { useConfig, type ProfileConfig } from './useConfig.js';
+import type { Profile } from '@ditloop/core';
+import { useConfig } from './useConfig.js';
 
 /** Provide profile management from DitLoop config. */
 export function useProfiles() {
@@ -27,7 +28,7 @@ export function useProfiles() {
 
   /** Find the profile name matching the current git email. */
   const currentProfileName = Object.entries(profiles).find(
-    ([, p]: [string, ProfileConfig]) => p.email === currentEmail,
+    ([, p]: [string, Profile]) => p.email === currentEmail,
   )?.[0];
 
   return {

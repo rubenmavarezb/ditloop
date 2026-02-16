@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useTheme } from '@ditloop/web-ui';
 import {
-  useTheme,
   useConnectionStore,
   ConnectionSetup,
   Chat,
@@ -11,7 +11,7 @@ import {
   ApprovalList,
   ApprovalDetail,
   Settings,
-} from '@ditloop/web-ui';
+} from '@ditloop/web-ui/server';
 import { AppShell } from './components/Layout/AppShell.js';
 
 /** Root application component with routing and theme management. */

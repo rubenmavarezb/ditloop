@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useThemeStore } from '@ditloop/web-ui';
 import type { ThemeMode } from '@ditloop/web-ui';
+import type { Profile } from '@ditloop/core';
 import { useProfiles } from '../../hooks/useProfiles.js';
 import { useConfig } from '../../hooks/useConfig.js';
-import type { ProfileConfig } from '../../hooks/useConfig.js';
 
 /** Desktop settings view with profile management, theme, notifications, and app info. */
 export function Settings() {
@@ -25,7 +25,7 @@ export function Settings() {
             <p className="text-xs text-slate-500">Loading...</p>
           ) : (
             <div className="space-y-2">
-              {Object.entries(profiles).map(([name, profile]: [string, ProfileConfig]) => {
+              {Object.entries(profiles).map(([name, profile]: [string, Profile]) => {
                 const isActive = name === currentProfileName;
                 return (
                   <div

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useWorkspaces, type ResolvedWorkspace } from '../../hooks/useWorkspaces.js';
+import { useWorkspaces, type DesktopWorkspace } from '../../hooks/useWorkspaces.js';
 import { useProfiles } from '../../hooks/useProfiles.js';
 
 /** Home view showing workspace list and current profile. */
@@ -63,7 +63,7 @@ export function Home() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {workspaces.map((ws: ResolvedWorkspace) => (
+          {workspaces.map((ws: DesktopWorkspace) => (
             <button
               key={ws.id}
               onClick={() => navigate(`/workspace/${ws.id}`)}

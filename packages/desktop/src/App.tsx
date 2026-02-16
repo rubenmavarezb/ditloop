@@ -12,6 +12,7 @@ import { useShortcuts } from './hooks/useShortcuts.js';
 import { useWorkspaces } from './hooks/useWorkspaces.js';
 import { useProfiles } from './hooks/useProfiles.js';
 import { useAiTools, useLaunchAiCli } from './hooks/useLocalAiCli.js';
+import { useNotifications } from './hooks/useNotifications.js';
 import { useTray } from './hooks/useTray.js';
 import { useDeepLink } from './hooks/useDeepLink.js';
 import type { PaletteCommand } from './store/commands.js';
@@ -25,6 +26,9 @@ function AppContent() {
   const { profiles, currentProfileName } = useProfiles();
   const { tools: aiTools } = useAiTools();
   const { launch } = useLaunchAiCli();
+
+  // Wire notifications — request permission for OS notifications
+  useNotifications(true);
 
   // Wire tray — send workspace count to system tray
   useTray(workspaces.length);
