@@ -26,6 +26,8 @@ pub fn run() {
             commands::workspace::get_workspace_info,
             commands::workspace::open_in_terminal,
             commands::workspace::open_in_editor,
+            commands::server::detect_local_server,
+            commands::server::health_check,
             tray::update_tray_counts,
             notifications::send_notification,
             notifications::check_notification_permission,

@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import {
   useTheme,
   useConnectionStore,
-  ConnectionSetup,
   Chat,
   WorkspaceList,
   WorkspaceDetail,
@@ -14,6 +13,7 @@ import {
 } from '@ditloop/web-ui';
 import { DesktopShell } from './components/Layout/DesktopShell.js';
 import { FileBrowser } from './components/FileBrowser/FileBrowser.js';
+import { DesktopConnectionSetup } from './views/ConnectionSetup/DesktopConnectionSetup.js';
 
 /** Root desktop application component with routing and theme management. */
 export function App() {
@@ -21,7 +21,7 @@ export function App() {
   const configured = useConnectionStore((s) => s.configured);
 
   if (!configured) {
-    return <ConnectionSetup />;
+    return <DesktopConnectionSetup />;
   }
 
   return (

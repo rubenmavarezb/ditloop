@@ -1,4 +1,5 @@
 pub mod filesystem;
+pub mod server;
 pub mod workspace;
 
 /// Placeholder command for testing IPC between frontend and Rust backend.
