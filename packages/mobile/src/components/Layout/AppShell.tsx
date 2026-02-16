@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { BottomNav } from './BottomNav.js';
-import { useConnectionStore } from '../../store/connection.js';
+import { useConnectionStore } from '@ditloop/web-ui';
 
 /** Status dot colors by connection status. */
 const STATUS_COLORS = {

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nicegui-org/nicegui/main/.schemas/capabilities.schema.json",
+  "identifier": "default",
+  "description": "Default capabilities for DitLoop desktop",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "shell:allow-open",
+    "shell:allow-execute",
+    "dialog:default",
+    "notification:default",
+    "os:default",
+    "process:default",
+    "updater:default",
+    "deep-link:default"
+  ]
+}
