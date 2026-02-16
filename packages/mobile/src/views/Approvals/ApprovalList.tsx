@@ -2,31 +2,11 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../api/client.js';
 import { ditloopWs } from '../../api/websocket.js';
-
-/** Risk level classification for an approval. */
-type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
-
-/** Approval record from the server API. */
-interface Approval {
-  id: string;
-  description: string;
-  riskLevel: RiskLevel;
-  diff?: string;
-  workspace?: string;
-  timestamp: string;
-  status: 'pending' | 'approved' | 'denied';
-}
+import { ConfirmDialog } from '../../components/ConfirmDialog/index.js';
+import { type Approval, RISK_COLORS } from './approval.types.js';
 
 /** Swipe threshold in pixels to trigger an action. */
 const SWIPE_THRESHOLD = 100;
-
-/** Risk level badge color mapping. */
-const RISK_COLORS: Record<RiskLevel, string> = {
-  low: 'bg-green-900 text-green-300',
-  medium: 'bg-yellow-900 text-yellow-300',
-  high: 'bg-orange-900 text-orange-300',
-  critical: 'bg-red-900 text-red-300',
-};
 
 /**
  * Formats a timestamp string into a human-readable relative or absolute string.
@@ -85,11 +65,11 @@ export function ApprovalList() {
     const unsubscribe = ditloopWs.onMessage((message) => {
       if (!message.event.startsWith('approval:')) return;
 
-      if (message.event === 'approval:new') {
+      if (message.event === 'approval:requested') {
         const approval = message.data as Approval;
         setApprovals((prev) => [approval, ...prev]);
       } else if (
-        message.event === 'approval:approved' ||
+        message.event === 'approval:granted' ||
         message.event === 'approval:denied'
       ) {
         const { id } = message.data as { id: string };
@@ -194,7 +174,10 @@ export function ApprovalList() {
       {/* Confirmation dialog for critical items */}
       {confirmAction && (
         <ConfirmDialog
-          action={confirmAction.action}
+          title={`Confirm ${confirmAction.action === 'approve' ? 'Approve' : 'Reject'}`}
+          message="This is a critical risk approval. Are you sure?"
+          confirmLabel={confirmAction.action === 'approve' ? 'Approve' : 'Reject'}
+          confirmColor={confirmAction.action === 'approve' ? 'bg-green-600 active:bg-green-700' : 'bg-red-600 active:bg-red-700'}
           onConfirm={() => handleAction(confirmAction.id, confirmAction.action)}
           onCancel={() => setConfirmAction(null)}
         />
@@ -338,48 +321,3 @@ function ApprovalCard({ approval, isProcessing, onApprove, onDeny, onTap }: Appr
   );
 }
 
-/** Props for the confirmation dialog. */
-interface ConfirmDialogProps {
-  action: 'approve' | 'deny';
-  onConfirm: () => void;
-  onCancel: () => void;
-}
-
-/**
- * Modal confirmation dialog for critical risk approvals.
- *
- * @param props - Dialog props
- */
-function ConfirmDialog({ action, onConfirm, onCancel }: ConfirmDialogProps) {
-  const label = action === 'approve' ? 'Approve' : 'Reject';
-  const colorClass =
-    action === 'approve'
-      ? 'bg-green-600 active:bg-green-700'
-      : 'bg-red-600 active:bg-red-700';
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-6">
-      <div className="w-full max-w-sm rounded-2xl border border-slate-700 bg-slate-900 p-6">
-        <h3 className="mb-2 text-base font-semibold text-white">Confirm {label}</h3>
-        <p className="mb-6 text-sm text-slate-400">
-          This is a <span className="font-semibold text-red-400">critical</span> risk
-          approval. Are you sure you want to {action === 'approve' ? 'approve' : 'reject'} it?
-        </p>
-        <div className="flex gap-3">
-          <button
-            onClick={onCancel}
-            className="flex-1 rounded-lg bg-slate-800 py-2.5 text-sm font-medium text-white active:bg-slate-700"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            className={`flex-1 rounded-lg py-2.5 text-sm font-medium text-white ${colorClass}`}
-          >
-            {label}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}

@@ -32,6 +32,7 @@ export function ExecutionList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
+  const [workspaceFilter, setWorkspaceFilter] = useState('');
 
   const fetchExecutions = useCallback(async () => {
     setLoading(true);
@@ -73,13 +74,33 @@ export function ExecutionList() {
     return unsubscribe;
   }, []);
 
-  const filtered = FILTER_STATUSES[activeTab]
+  const workspaces = [...new Set(executions.map((e) => e.workspace).filter(Boolean))] as string[];
+
+  let filtered = FILTER_STATUSES[activeTab]
     ? executions.filter((e) => FILTER_STATUSES[activeTab]!.includes(e.status))
     : executions;
+
+  if (workspaceFilter) {
+    filtered = filtered.filter((e) => e.workspace === workspaceFilter);
+  }
 
   return (
     <div className="flex flex-col gap-4 px-4 py-4">
       <h1 className="text-lg font-semibold text-white">Executions</h1>
+
+      {/* Workspace filter */}
+      {workspaces.length > 0 && (
+        <select
+          value={workspaceFilter}
+          onChange={(e) => setWorkspaceFilter(e.target.value)}
+          className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white"
+        >
+          <option value="">All workspaces</option>
+          {workspaces.map((ws) => (
+            <option key={ws} value={ws}>{ws}</option>
+          ))}
+        </select>
+      )}
 
       {/* Filter tabs */}
       <div className="flex gap-1 rounded-lg bg-slate-900 p-1">

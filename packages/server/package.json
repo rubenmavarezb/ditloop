@@ -2,6 +2,21 @@
   "name": "@ditloop/server",
   "version": "0.1.0",
   "description": "DitLoop server — HTTP/WebSocket API for remote access",
+  "license": "MIT",
+  "author": "Ruben Mavarez <rubennmavarezb@gmail.com>",
+  "homepage": "https://github.com/rubenmavarezb/ditloop/tree/main/packages/server#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rubenmavarezb/ditloop.git",
+    "directory": "packages/server"
+  },
+  "keywords": [
+    "ditloop",
+    "server",
+    "websocket",
+    "hono",
+    "api"
+  ],
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -2,6 +2,24 @@
   "name": "@ditloop/tui",
   "version": "0.1.0",
   "description": "DitLoop TUI — terminal IDE application",
+  "license": "MIT",
+  "author": "Ruben Mavarez <rubennmavarezb@gmail.com>",
+  "homepage": "https://github.com/rubenmavarezb/ditloop/tree/main/packages/tui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rubenmavarezb/ditloop.git",
+    "directory": "packages/tui"
+  },
+  "keywords": [
+    "ditloop",
+    "terminal-ide",
+    "tui",
+    "cli",
+    "ink"
+  ],
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "bin": {
     "ditloop": "dist/index.js"

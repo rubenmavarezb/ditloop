@@ -2,28 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { apiFetch } from '../../api/client.js';
 import { DiffViewer } from '../../components/DiffViewer/index.js';
-
-/** Risk level classification for an approval. */
-type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
-
-/** Approval record from the server API. */
-interface Approval {
-  id: string;
-  description: string;
-  riskLevel: RiskLevel;
-  diff?: string;
-  workspace?: string;
-  timestamp: string;
-  status: 'pending' | 'approved' | 'denied';
-}
-
-/** Risk level badge color mapping. */
-const RISK_COLORS: Record<RiskLevel, string> = {
-  low: 'bg-green-900 text-green-300',
-  medium: 'bg-yellow-900 text-yellow-300',
-  high: 'bg-orange-900 text-orange-300',
-  critical: 'bg-red-900 text-red-300',
-};
+import { ConfirmDialog } from '../../components/ConfirmDialog/index.js';
+import { type Approval, RISK_COLORS } from './approval.types.js';
 
 /**
  * Detail view for a single approval showing full description, diff, and action buttons.
@@ -175,35 +155,14 @@ export function ApprovalDetail() {
 
       {/* Confirmation dialog */}
       {confirmAction && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-6">
-          <div className="w-full max-w-sm rounded-2xl border border-slate-700 bg-slate-900 p-6">
-            <h3 className="mb-2 text-base font-semibold text-white">
-              Confirm {confirmAction === 'approve' ? 'Approve' : 'Reject'}
-            </h3>
-            <p className="mb-6 text-sm text-slate-400">
-              This is a <span className="font-semibold text-red-400">critical</span> risk
-              approval. Are you sure?
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setConfirmAction(null)}
-                className="flex-1 rounded-lg bg-slate-800 py-2.5 text-sm font-medium text-white active:bg-slate-700"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => handleAction(confirmAction)}
-                className={`flex-1 rounded-lg py-2.5 text-sm font-medium text-white ${
-                  confirmAction === 'approve'
-                    ? 'bg-green-600 active:bg-green-700'
-                    : 'bg-red-600 active:bg-red-700'
-                }`}
-              >
-                {confirmAction === 'approve' ? 'Approve' : 'Reject'}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDialog
+          title={`Confirm ${confirmAction === 'approve' ? 'Approve' : 'Reject'}`}
+          message="This is a critical risk approval. Are you sure?"
+          confirmLabel={confirmAction === 'approve' ? 'Approve' : 'Reject'}
+          confirmColor={confirmAction === 'approve' ? 'bg-green-600 active:bg-green-700' : 'bg-red-600 active:bg-red-700'}
+          onConfirm={() => handleAction(confirmAction)}
+          onCancel={() => setConfirmAction(null)}
+        />
       )}
     </div>
   );

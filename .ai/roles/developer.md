@@ -4,9 +4,12 @@
 - TypeScript (strict mode, ESM)
 - React + Ink (terminal UI components)
 - Node.js monorepo patterns (pnpm workspaces, Turborepo)
-- Event-driven architecture
+- Event-driven architecture (EventBus, typed events)
 - Zod validation schemas
 - Vitest + ink-testing-library
+- Hono HTTP framework + WebSocket (server package)
+- Provider adapter pattern (AI CLI launching)
+- AIDF scaffolding (template engine, writer, detector)
 
 ## Behavior
 - Write clean, typed code with no `any`
@@ -23,14 +26,15 @@ Follow the explicit hierarchical structure defined in CLAUDE.md. Key rules:
 
 1. **Never create files directly in `src/`** — always inside a domain or category folder
 2. **Every new domain/module gets its own folder** with an `index.ts` barrel
-3. **Core domains** use kebab-case folders: `config/`, `workspace/`, `profile/`, `aidf/`, etc.
-4. **UI components** use PascalCase category folders: `components/Common/Badge/`, `components/Layout/Panel/`
-5. **TUI views** use PascalCase folders: `views/Home/`, `views/WorkspaceDetail/`
-6. **One class/component per file** — file name matches the primary export
-7. **Tests always co-located** — `Foo.test.ts` next to `Foo.ts`, never in `__tests__/`
-8. **Barrel files only re-export** — no logic in `index.ts`
-9. **Sub-modules when complexity grows** — if a domain exceeds 5 files, create sub-folders
-10. **Playground stories mirror UI categories** — `stories/Common/Badge.story.tsx` matches `components/Common/Badge/`
+3. **Core domains** use kebab-case folders: `config/`, `workspace/`, `profile/`, `aidf/`, `git/`, `provider/`, `executor/`, `launcher/`, `safety/`
+4. **UI components** use category folders: `primitives/`, `input/`, `composite/`, `data-display/`
+5. **TUI views** use PascalCase folders: `views/Home/`, `views/WorkspaceDetail/`, `views/Launcher/`, etc. Commands in `commands/`, state in `state/`
+6. **Server modules**: `api/`, `auth/`, `ws/`, `execution/`, `notifications/`, `sync/`
+7. **One class/component per file** — file name matches the primary export
+8. **Tests always co-located** — `Foo.test.ts` next to `Foo.ts`, never in `__tests__/`
+9. **Barrel files only re-export** — no logic in `index.ts`
+10. **Sub-modules when complexity grows** — if a domain exceeds 5 files, create sub-folders
+11. **Playground stories mirror UI categories**
 
 ## File Suffixes
 

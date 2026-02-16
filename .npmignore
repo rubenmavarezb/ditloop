@@ -1,0 +1,25 @@
+# Source files
+src/
+*.ts
+!dist/**/*.d.ts
+tsconfig.json
+tsup.config.ts
+vitest.config.ts
+
+# Tests
+**/*.test.ts
+**/*.test.tsx
+**/*.story.tsx
+
+# Development
+.ai/
+.github/
+docs/
+.turbo/
+node_modules/
+
+# Config
+.eslintrc*
+.prettierrc*
+CLAUDE.md
+CONTRIBUTING.md

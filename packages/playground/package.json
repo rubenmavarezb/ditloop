@@ -2,6 +2,21 @@
   "name": "@ditloop/playground",
   "version": "0.1.0",
   "description": "DitLoop Playground — component catalog for terminal UI (Storybook for TUI)",
+  "private": true,
+  "license": "MIT",
+  "author": "Ruben Mavarez <rubennmavarezb@gmail.com>",
+  "homepage": "https://github.com/rubenmavarezb/ditloop/tree/main/packages/playground#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rubenmavarezb/ditloop.git",
+    "directory": "packages/playground"
+  },
+  "keywords": [
+    "ditloop",
+    "playground",
+    "component-catalog",
+    "ink"
+  ],
   "type": "module",
   "bin": {
     "ditloop-playground": "dist/index.js"

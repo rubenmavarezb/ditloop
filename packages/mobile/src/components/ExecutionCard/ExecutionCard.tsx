@@ -21,7 +21,7 @@ interface ExecutionCardProps {
 }
 
 /** Map execution status to dot styling classes. */
-const STATUS_DOT_CLASSES: Record<ExecutionStatus, string> = {
+export const STATUS_DOT_CLASSES: Record<ExecutionStatus, string> = {
   running: 'bg-blue-400 animate-pulse',
   queued: 'bg-yellow-400',
   success: 'bg-green-400',
@@ -30,7 +30,7 @@ const STATUS_DOT_CLASSES: Record<ExecutionStatus, string> = {
 };
 
 /** Map execution status to human-readable label. */
-const STATUS_LABELS: Record<ExecutionStatus, string> = {
+export const STATUS_LABELS: Record<ExecutionStatus, string> = {
   running: 'Running',
   queued: 'Queued',
   success: 'Completed',

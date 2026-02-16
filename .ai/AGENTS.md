@@ -2,7 +2,7 @@
 
 ## Project Description
 
-DitLoop is a terminal IDE centered on Developer In The Loop (DITL) for developers working across multiple projects and clients. It provides a unified TUI dashboard with workspace management, automatic git identity switching, AI-driven task execution, and a provider-agnostic architecture.
+DitLoop is a terminal IDE centered on Developer In The Loop (DITL) for developers working across multiple projects and clients. It provides a unified TUI dashboard with workspace management, automatic git identity switching, AI-driven task execution, and a provider-agnostic architecture. It includes an HTTP/WebSocket server for remote access and a mobile PWA companion app.
 
 ## Architecture
 
@@ -12,23 +12,83 @@ DitLoop is a terminal IDE centered on Developer In The Loop (DITL) for developer
 packages/
 ├── core/       @ditloop/core       Business logic (zero UI deps)
 ├── ui/         @ditloop/ui         Ink/React components (design system)
-├── tui/        @ditloop/tui        Terminal app (composes core + ui)
+├── tui/        @ditloop/tui        Terminal app (CLI + TUI dashboard)
+├── server/     @ditloop/server     HTTP/WebSocket API for remote access
+├── mobile/     @ditloop/mobile     React PWA companion app
 └── playground/ @ditloop/playground Component catalog
 ```
 
 ### Key Patterns
 
-- **Event-driven**: Core emits typed events, UI subscribes via hooks
-- **Provider-agnostic**: Adapter pattern for AI providers (Claude, OpenAI, Cursor, etc.)
+- **Event-driven**: Core emits typed events via `EventBus`, UI subscribes via hooks
+- **Provider-agnostic**: Adapter pattern for AI providers (Claude, OpenAI, etc.)
 - **Layered context**: ditloop config → group AIDF → project AIDF (project wins)
 - **Separation**: Core has zero UI deps, UI components are pure/presentational, Views wire things together
+- **Approval flow**: `ActionExecutor` → `ApprovalEngine` → User approval → Execution with trace
 
 ### Dependencies Flow
 
 ```
 @ditloop/tui → @ditloop/ui → (ink, react)
      ↓              ↓
-@ditloop/core (zod, execa, simple-git, eventemitter3)
+@ditloop/core (zod, execa, simple-git, eventemitter3, yaml, gray-matter, chokidar)
+     ↑
+@ditloop/server → (hono, ws, web-push)
+
+@ditloop/mobile → (react, react-router-dom, zustand, vite, tailwind, workbox)
+@ditloop/playground → @ditloop/ui
+```
+
+## Core Domains
+
+| Domain | Key Exports | Purpose |
+|--------|-------------|---------|
+| `config` | `loadConfig`, `ConfigSchema` | YAML config loading and Zod validation |
+| `events` | `EventBus`, `DitLoopEventMap` | Typed event system for cross-module communication |
+| `workspace` | `WorkspaceManager`, `GroupResolver` | Workspace discovery, grouping, status |
+| `profile` | `ProfileManager`, `SSHAgent`, `IdentityGuard` | Git identity switching and verification |
+| `git` | `GitManager` | Git operations (clone, status, commits) |
+| `provider` | `ProviderRegistry`, adapters | AI provider abstraction (Claude, OpenAI) |
+| `executor` | `ExecutionEngine` | Task execution with safety controls |
+| `launcher` | `AiLauncher`, `CLIRegistry` | AI CLI detection and context-aware launching |
+| `aidf` | `AidfDetector`, `ContextLoader`, `TemplateEngine`, `AidfWriter` | AIDF folder management and scaffolding |
+| `safety` | `ApprovalEngine`, `ActionExecutor` | Approval workflows and action safety |
+
+## Server Modules
+
+| Module | Purpose |
+|--------|---------|
+| `createServer` | Factory to start HTTP/WebSocket server |
+| `tokenAuthMiddleware` | Bearer token authentication |
+| HTTP routes | REST API for workspaces, profiles, executions, approvals, notifications |
+| `WebSocketBridge` | Real-time event streaming |
+| `ExecutionMonitor` | Task execution tracking with rate limiting |
+| `StateSyncEngine` | Offline-first state sync with conflict resolution |
+| `PushNotificationService` | Web push notifications via VAPID |
+
+## TUI Views
+
+| View | Purpose |
+|------|---------|
+| `Home` | Workspace overview with sidebar navigation |
+| `WorkspaceDetail` | Git status, tasks, and actions per workspace |
+| `TaskDetail` | Task inspection and metadata |
+| `TaskEditor` | Create and edit AIDF tasks |
+| `Launcher` | AI CLI launcher with context injection |
+| `DiffReview` | Code diff review interface |
+| `ExecutionDashboard` | Real-time execution monitoring |
+
+## CLI Commands
+
+```
+ditloop                          # Launch TUI dashboard
+ditloop init                     # Interactive setup wizard
+ditloop workspace list           # List configured workspaces
+ditloop profile list             # List configured profiles
+ditloop profile current          # Show current git identity
+ditloop scaffold [type]          # Scaffold AIDF file (task|role|skill|plan)
+ditloop server start|stop|status # Manage HTTP/WebSocket server
+ditloop --version / --help
 ```
 
 ## File Organization — Explicit Hierarchical Structure
@@ -37,9 +97,11 @@ Every module and component lives in its own **named folder**, organized by **dom
 
 ### Structure per package
 
-- **core**: `src/<domain>/<file>.ts` — domains: config, events, workspace, profile, aidf, git, chat, provider, executor, safety. When a domain grows beyond 5 files, split into sub-module folders (e.g., `aidf/detector/`, `aidf/context-loader/`).
-- **ui**: `src/components/<Category>/<ComponentName>/ComponentName.tsx` — categories: Common, Layout, Workspace, Chat, etc. Each component in its own PascalCase folder with index.ts barrel.
-- **tui**: `src/views/<ViewName>/ViewName.tsx` — one folder per full-screen view. App-level hooks in `src/hooks/`.
+- **core**: `src/<domain>/<file>.ts` — domains: config, events, workspace, profile, aidf, git, provider, executor, launcher, safety, types. When a domain grows beyond 5 files, split into sub-module folders (e.g., `aidf/detector/`, `aidf/context-loader/`, `aidf/template/`, `aidf/writer/`).
+- **ui**: `src/<category>/<ComponentName>/ComponentName.tsx` — categories: primitives, input, composite, data-display. Each component in its own folder with index.ts barrel. Hooks in `src/hooks/`, theme in `src/theme/`.
+- **tui**: `src/views/<ViewName>/ViewName.tsx` — one folder per full-screen view. Commands in `src/commands/`, state in `src/state/`, hooks in `src/hooks/`, navigation in `src/navigation/`.
+- **server**: `src/<module>/<file>.ts` — modules: api, auth, ws, execution, notifications, sync.
+- **mobile**: `src/views/<ViewName>/`, `src/components/<Category>/`, `src/store/`.
 - **playground**: `src/stories/<Category>/ComponentName.story.tsx` — mirrors ui categories.
 
 ### File suffixes
@@ -107,4 +169,6 @@ export class IdentityGuard {
 - `@ditloop/core` MUST NOT import from ink, react, or any UI library
 - `@ditloop/ui` components MUST be pure — receive data via props only
 - `@ditloop/tui` views connect core (via hooks) to ui (via props)
+- `@ditloop/server` depends on core only — no UI imports
+- `@ditloop/mobile` is a standalone PWA — communicates with server via HTTP/WebSocket
 - Cross-package communication only via the typed EventBus

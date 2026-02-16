@@ -6,6 +6,7 @@ import { Chat } from './views/Chat/index.js';
 import { WorkspaceList, WorkspaceDetail } from './views/Workspaces/index.js';
 import { ExecutionList, ExecutionDetail } from './views/Executions/index.js';
 import { ApprovalList, ApprovalDetail } from './views/Approvals/index.js';
+import { Settings } from './views/Settings/index.js';
 import { AppShell } from './components/Layout/AppShell.js';
 
 /** Root application component with routing and theme management. */
@@ -28,6 +29,7 @@ export function App() {
           <Route path="/approvals/:id" element={<ApprovalDetail />} />
           <Route path="/executions" element={<ExecutionList />} />
           <Route path="/executions/:id" element={<ExecutionDetail />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </AppShell>
     </BrowserRouter>
