@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import type { WorkspaceItemData } from '@ditloop/ui';
 
 /** Available views in the TUI application. */
-export type ViewName = 'home' | 'workspace-detail' | 'task-detail' | 'diff-review' | 'launcher' | 'task-editor' | 'execution-dashboard';
+export type ViewName = 'home' | 'workspace-detail' | 'workspace-panels' | 'task-detail' | 'diff-review' | 'launcher' | 'task-editor' | 'execution-dashboard';
 
 /** Workspace detail data loaded on activation. */
 export interface WorkspaceDetailState {
