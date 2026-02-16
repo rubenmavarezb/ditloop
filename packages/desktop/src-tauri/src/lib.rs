@@ -1,6 +1,9 @@
 mod commands;
+mod deep_link;
 mod notifications;
 mod tray;
+
+use tauri_plugin_deep_link::DeepLinkExt;
 
 /// Run the Tauri application with all plugins registered.
 pub fn run() {
@@ -14,6 +17,13 @@ pub fn run() {
         .plugin(tauri_plugin_deep_link::init())
         .setup(|app| {
             tray::create_tray(app.handle())?;
+
+            // Register deep link handler
+            let handle = app.handle().clone();
+            app.deep_link().on_open_url(move |event| {
+                deep_link::handle_deep_link(&handle, event.urls().to_vec());
+            });
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

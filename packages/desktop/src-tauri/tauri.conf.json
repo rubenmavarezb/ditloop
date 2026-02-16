@@ -26,6 +26,13 @@
       "csp": null
     }
   },
+  "plugins": {
+    "deep-link": {
+      "desktop": {
+        "schemes": ["ditloop"]
+      }
+    }
+  },
   "bundle": {
     "active": true,
     "targets": "all",
