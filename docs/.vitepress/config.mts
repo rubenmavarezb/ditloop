@@ -35,6 +35,7 @@ export default defineConfig({
         text: 'AIDF',
         items: [
           { text: 'Overview', link: '/aidf/overview' },
+          { text: 'AIDF Docs (external)', link: 'https://rubenmavarezb.github.io/aidf/' },
         ],
       },
     ],
@@ -49,7 +50,7 @@ export default defineConfig({
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright 2025 Ruben Mavarez',
+      copyright: 'Copyright 2026 Ruben Mavarez',
     },
   },
 });
