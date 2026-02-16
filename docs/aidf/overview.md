@@ -2,6 +2,12 @@
 
 **AIDF** (AI Development Framework) is a structured approach to providing context for AI-assisted development. It defines a standard directory layout and file formats that AI tools can consume to understand your project.
 
+::: tip Full AIDF Documentation
+AIDF is an independent framework that works with any AI tool. For the complete specification, concepts, and CLI reference, visit the **[official AIDF docs](https://rubenmavarezb.github.io/aidf/)**.
+
+This page covers how DitLoop integrates with AIDF.
+:::
+
 ## What is AIDF?
 
 When you work with AI coding assistants (Claude, ChatGPT, Cursor, etc.), they need context about your project — architecture, conventions, current tasks, and what role they should play. AIDF standardizes this by defining an `.ai/` directory structure that any AI tool can read.
