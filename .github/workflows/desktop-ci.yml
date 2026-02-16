@@ -35,6 +35,9 @@ jobs:
       - name: Install frontend dependencies
         run: pnpm install
 
+      - name: Build dependencies
+        run: pnpm --filter @ditloop/core --filter @ditloop/web-ui build
+
       - name: TypeScript check
         run: pnpm --filter @ditloop/desktop typecheck
 
