@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Box } from 'ink';
 import {
   resolveLayout,
@@ -17,6 +17,7 @@ import {
 import type { Shortcut } from '@ditloop/ui';
 import { useLayoutStore } from '../../state/layout-store.js';
 import { useKeyboardStore } from '../../state/keyboard-store.js';
+import { usePanelActionStore } from '../../state/panel-actions.js';
 import { useGitStatusPanel } from '../../hooks/useGitStatusPanel.js';
 import { useTasksPanel } from '../../hooks/useTasksPanel.js';
 import { useBranchesPanel } from '../../hooks/useBranchesPanel.js';
@@ -75,8 +76,59 @@ export function WorkspacePanelsView({
   const tasks = useTasksPanel(repoPath);
   const branches = useBranchesPanel(repoPath);
   const commits = useCommitsPanel(repoPath);
-  const fileTree = useFileTreePanel(aidfPath);
+  const fileTree = useFileTreePanel(repoPath);
   const commandLog = useCommandLog();
+
+  // Preview panel state: loads file content when file tree selection changes
+  const [previewLines, setPreviewLines] = useState<string[]>([]);
+  const [previewScroll, setPreviewScroll] = useState(0);
+
+  useEffect(() => {
+    const selectedPath = fileTree.selectedPath;
+    if (!selectedPath) {
+      setPreviewLines([]);
+      return;
+    }
+
+    import('node:fs/promises').then(({ readFile, stat }) => {
+      stat(selectedPath).then((s) => {
+        if (s.isDirectory()) {
+          setPreviewLines(['(directory)']);
+          return;
+        }
+        if (s.size > 100_000) {
+          setPreviewLines(['(file too large to preview)']);
+          return;
+        }
+        return readFile(selectedPath, 'utf-8').then((content) => {
+          setPreviewLines(content.split('\n'));
+          setPreviewScroll(0);
+        });
+      }).catch(() => setPreviewLines(['(cannot read file)']));
+    });
+  }, [fileTree.selectedPath]);
+
+  // Subscribe to panel actions and route to the correct panel hook
+  const lastAction = usePanelActionStore((s) => s.lastAction);
+  useEffect(() => {
+    if (!lastAction) return;
+    const { panelId, action } = lastAction;
+
+    const handlers: Record<string, { moveUp: () => void; moveDown: () => void; toggleExpand?: () => void }> = {
+      'git-status': gitStatus,
+      'tasks': tasks,
+      'branches': branches,
+      'commits': commits,
+      'file-tree': fileTree,
+    };
+
+    const handler = handlers[panelId];
+    if (!handler) return;
+
+    if (action === 'scroll-down') handler.moveDown();
+    if (action === 'scroll-up') handler.moveUp();
+    if (action === 'activate' || action === 'toggle-expand') handler.toggleExpand?.();
+  }, [lastAction]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Resolve layout to absolute positions
   const resolvedPanels = resolveLayout(layoutConfig, termWidth, termHeight - 2); // -2 for shortcuts bar
@@ -180,8 +232,8 @@ export function WorkspacePanelsView({
           return (
             <PreviewPanel
               title={fileTree.selectedPath ?? 'Preview'}
-              lines={[]}
-              scrollOffset={0}
+              lines={previewLines}
+              scrollOffset={previewScroll}
               maxLines={height - 2}
             />
           );

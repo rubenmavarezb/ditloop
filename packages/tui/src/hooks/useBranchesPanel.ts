@@ -1,5 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import type { PanelBranchEntry } from '@ditloop/ui';
+
+const execFileAsync = promisify(execFile);
 
 /** Data returned by the useBranchesPanel hook. */
 export interface BranchesPanelData {
@@ -18,8 +22,8 @@ export interface BranchesPanelData {
 }
 
 /**
- * Hook that manages branches panel state and connects to core GitBranchManager.
- * Provides selection navigation and live branch updates.
+ * Hook that manages branches panel state with real git data.
+ * Reads local and remote branches from the repository.
  *
  * @param repoPath - Path to the git repository
  * @returns Panel data with local/remote branches and selection controls
@@ -47,18 +51,52 @@ export function useBranchesPanel(repoPath: string | null): BranchesPanelData {
       return;
     }
 
-    // TODO: Wire to GitBranchManager.listBranches() and subscribe to
-    // git:branch-created, git:branch-switched, git:branch-deleted events.
-    // Sample data for visual testing.
-    setLocal([
-      { name: 'main', isCurrent: true, ahead: 0, behind: 0, isRemote: false },
-      { name: 'feat/v06-tui', isCurrent: false, ahead: 3, behind: 0, isRemote: false },
-      { name: 'fix/keyboard', isCurrent: false, ahead: 1, behind: 2, isRemote: false },
-    ]);
-    setRemote([
-      { name: 'origin/main', isCurrent: false, ahead: 0, behind: 0, isRemote: true },
-    ]);
-    setSelectedIndex(0);
+    async function loadBranches() {
+      try {
+        // Get local branches with ahead/behind info
+        const { stdout: localOut } = await execFileAsync('git', [
+          'branch', '-v', '--format=%(refname:short)\t%(HEAD)\t%(upstream:trackshort)',
+        ], { cwd: repoPath! });
+
+        const localBranches: PanelBranchEntry[] = localOut.trim().split('\n').filter(Boolean).map((line) => {
+          const [name, head, trackShort] = line.split('\t');
+          const isCurrent = head === '*';
+          let ahead = 0;
+          let behind = 0;
+          if (trackShort) {
+            const aheadMatch = trackShort.match(/>(\d+)?/);
+            const behindMatch = trackShort.match(/<(\d+)?/);
+            if (aheadMatch) ahead = parseInt(aheadMatch[1] ?? '1', 10);
+            if (behindMatch) behind = parseInt(behindMatch[1] ?? '1', 10);
+          }
+          return { name, isCurrent, ahead, behind, isRemote: false };
+        });
+
+        // Get remote branches
+        const { stdout: remoteOut } = await execFileAsync('git', [
+          'branch', '-r', '--format=%(refname:short)',
+        ], { cwd: repoPath! });
+
+        const remoteBranches: PanelBranchEntry[] = remoteOut.trim().split('\n')
+          .filter((line) => line && !line.includes('HEAD'))
+          .map((name) => ({
+            name: name.trim(),
+            isCurrent: false,
+            ahead: 0,
+            behind: 0,
+            isRemote: true,
+          }));
+
+        setLocal(localBranches);
+        setRemote(remoteBranches);
+        setSelectedIndex(0);
+      } catch {
+        setLocal([]);
+        setRemote([]);
+      }
+    }
+
+    loadBranches();
   }, [repoPath]);
 
   return { local, remote, selectedIndex, moveUp, moveDown, totalBranches };
