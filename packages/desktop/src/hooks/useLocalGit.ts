@@ -100,6 +100,104 @@ export function useGitDiff(path: string | undefined, staged = false) {
   return { data, loading, refresh };
 }
 
+/** Git stash entry from Rust backend. */
+interface GitStash {
+  index: number;
+  message: string;
+}
+
+/** Hook for git operations (stage, unstage, commit, discard, push, stash). */
+export function useGitActions(path: string | undefined) {
+  const stageFiles = useCallback(
+    async (files: string[]) => {
+      if (!path) return;
+      await invoke('git_add', { workspacePath: path, files });
+    },
+    [path],
+  );
+
+  const unstageFiles = useCallback(
+    async (files: string[]) => {
+      if (!path) return;
+      await invoke('git_reset', { workspacePath: path, files });
+    },
+    [path],
+  );
+
+  const discardFile = useCallback(
+    async (file: string) => {
+      if (!path) return;
+      await invoke('git_discard', { workspacePath: path, file });
+    },
+    [path],
+  );
+
+  const commit = useCallback(
+    async (message: string) => {
+      if (!path) return;
+      return invoke<string>('git_commit', { workspacePath: path, message });
+    },
+    [path],
+  );
+
+  const push = useCallback(async () => {
+    if (!path) return;
+    return invoke<string>('git_push', { workspacePath: path });
+  }, [path]);
+
+  return { stageFiles, unstageFiles, discardFile, commit, push };
+}
+
+/** Hook for git stash operations. */
+export function useGitStash(path: string | undefined) {
+  const [stashes, setStashes] = useState<GitStash[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const refresh = useCallback(async () => {
+    if (!path) return;
+    setLoading(true);
+    try {
+      const result = await invoke<GitStash[]>('git_stash_list', { workspacePath: path });
+      setStashes(result);
+    } finally {
+      setLoading(false);
+    }
+  }, [path]);
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  const create = useCallback(
+    async (message?: string) => {
+      if (!path) return;
+      await invoke('git_stash_push', { workspacePath: path, message: message || null });
+      await refresh();
+    },
+    [path, refresh],
+  );
+
+  const pop = useCallback(
+    async (index: number) => {
+      if (!path) return;
+      await invoke('git_stash_pop', { workspacePath: path, index });
+      await refresh();
+    },
+    [path, refresh],
+  );
+
+  const drop = useCallback(
+    async (index: number) => {
+      if (!path) return;
+      await invoke('git_stash_drop', { workspacePath: path, index });
+      await refresh();
+    },
+    [path, refresh],
+  );
+
+  return { stashes, loading, refresh, create, pop, drop };
+}
+
 /** Hook for git branches. */
 export function useGitBranches(path: string | undefined) {
   const [data, setData] = useState<GitBranch[]>([]);

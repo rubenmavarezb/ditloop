@@ -3,7 +3,7 @@ export { useWorkspaces } from './useWorkspaces.js';
 export { useProfiles } from './useProfiles.js';
 export { useTray } from './useTray.js';
 export { useNotifications } from './useNotifications.js';
-export { useGitStatus, useGitLog, useGitDiff, useGitBranches } from './useLocalGit.js';
+export { useGitStatus, useGitLog, useGitDiff, useGitBranches, useGitActions, useGitStash } from './useLocalGit.js';
 export { useAiTools, useLaunchAiCli } from './useLocalAiCli.js';
 export { useShortcuts } from './useShortcuts.js';
 export { useDeepLink } from './useDeepLink.js';
