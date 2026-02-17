@@ -1,12 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Disable text selection and context menu in desktop app */
+/* Base styles — consume theme tokens */
 body {
   user-select: none;
   -webkit-user-select: none;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
+  background: var(--dl-bg-base, #050508);
+  color: var(--dl-text-primary, #d1d5db);
+  font-family: var(--dl-font-sans, 'Inter', system-ui, -apple-system, sans-serif);
 }
 
 /* Allow text selection in specific areas */
@@ -15,9 +22,10 @@ body {
   -webkit-user-select: text;
 }
 
-/* Custom scrollbar for dark theme */
+/* Custom scrollbar using theme tokens */
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -25,10 +33,82 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(51 65 85 / 0.5);
+  background: var(--dl-scrollbar-thumb, rgba(0, 217, 255, 0.3));
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(71 85 105 / 0.7);
+  background: var(--dl-scrollbar-thumb-hover, rgba(0, 217, 255, 0.5));
+}
+
+/* Glass panel component class — for use in Tailwind @apply or direct usage */
+@layer components {
+  .glass-panel {
+    background: var(--dl-glass-bg, rgba(15, 15, 19, 0.6));
+    border: 1px solid var(--dl-glass-border, rgba(255, 255, 255, 0.08));
+    border-radius: var(--dl-radius-panel, 16px);
+    backdrop-filter: blur(var(--dl-glass-blur, 10.5px));
+    -webkit-backdrop-filter: blur(var(--dl-glass-blur, 10.5px));
+    box-shadow: var(--dl-glass-shadow, 0 4px 26px rgba(0, 0, 0, 0.5));
+    overflow: hidden;
+  }
+
+  .glass-header {
+    background: var(--dl-bg-header, rgba(10, 10, 15, 0.4));
+    backdrop-filter: blur(var(--dl-glass-blur, 10.5px));
+    -webkit-backdrop-filter: blur(var(--dl-glass-blur, 10.5px));
+  }
+
+  /* Neon glow text effect */
+  .glow-primary {
+    text-shadow: var(--dl-glow-primary, 0 0 8px rgba(0, 217, 255, 0.6));
+  }
+
+  .glow-secondary {
+    text-shadow: var(--dl-glow-secondary, 0 0 8px rgba(189, 0, 255, 0.6));
+  }
+}
+
+/* Ambient background gradients (neon theme only) */
+[data-theme="neon"] .layout-engine::before,
+[data-theme="neon"] .layout-engine::after {
+  content: '';
+  position: absolute;
+  width: 960px;
+  height: 600px;
+  border-radius: 9999px;
+  filter: blur(105px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+[data-theme="neon"] .layout-engine::before {
+  background: rgba(88, 28, 135, 0.2);
+  top: -240px;
+  left: -192px;
+}
+
+[data-theme="neon"] .layout-engine::after {
+  background: rgba(22, 78, 99, 0.2);
+  bottom: -240px;
+  right: -192px;
+}
+
+[data-theme="neon"] .layout-engine {
+  position: relative;
+}
+
+/* Resize handle hover state */
+.group:hover > div {
+  opacity: 1;
+}
+
+/* Transitions for panel show/hide */
+.layout-panel {
+  transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+}
+
+/* Code font for terminal and code areas */
+code, pre, .font-mono {
+  font-family: var(--dl-font-mono, 'JetBrains Mono', monospace);
 }
