@@ -203,8 +203,8 @@ Transform DitLoop Desktop from a workspace dashboard into a full-featured IDE. T
 
 ---
 
-### v0.8-TUI — DitLoop TUI: tmux-powered Terminal IDE 🔜 NEXT
-**Timeline:** Q1-Q2 2026 | **Status:** PLANNED
+### v0.8-TUI — DitLoop TUI: tmux-powered Terminal IDE ✅ COMPLETED
+**Timeline:** Q1-Q2 2026 | **Status:** SHIPPED
 
 Transform DitLoop TUI from a panel dashboard into a tmux-powered terminal IDE. DitLoop manages tmux panes programmatically — Ink/React panels surround a real native terminal where the developer runs any command (claude, aider, git, vim, etc.). DitLoop is NOT a terminal emulator — it's a smart tmux layout manager with contextual panels.
 
@@ -222,7 +222,9 @@ Transform DitLoop TUI from a panel dashboard into a tmux-powered terminal IDE. D
 
 **Tasks:** 090-100 (TUI tmux)
 
-**Details:** [`PLAN-v08-tui.md`](./PLAN-v08-tui.md)
+**Completion Date:** February 2026
+
+**Details:** [`PLAN-v08-tui.md`](./completed/PLAN-v08-tui.md)
 
 ---
 
@@ -355,17 +357,17 @@ Upgrade DitLoop's mobile PWA from a basic approval tool into a full companion ap
 | 082 | Identity Mismatch Warnings | v0.8 | 📋 |
 | 083 | Enhanced Status Bar | v0.8 | 📋 |
 | 084 | Keyboard Shortcuts System | v0.8 | 📋 |
-| 090 | tmux Session Manager | v0.8-TUI | 📋 |
-| 091 | Panel-mode Ink Rendering | v0.8-TUI | 📋 |
-| 092 | Workspace Context Switching (tmux) | v0.8-TUI | 📋 |
-| 093 | Enhanced Sidebar with AIDF Context | v0.8-TUI | 📋 |
-| 094 | Source Control Panel with Commit | v0.8-TUI | 📋 |
-| 095 | TUI Status Bar | v0.8-TUI | 📋 |
-| 096 | TUI Identity Mismatch Warnings | v0.8-TUI | 📋 |
-| 097 | tmux Layout Presets | v0.8-TUI | 📋 |
-| 098 | Multi-Terminal Layout | v0.8-TUI | 📋 |
-| 099 | AI CLI Launcher with Context | v0.8-TUI | 📋 |
-| 100 | Fullscreen Toggle Fallback | v0.8-TUI | 📋 |
+| 090 | tmux Session Manager | v0.8-TUI | ✅ |
+| 091 | Panel-mode Ink Rendering | v0.8-TUI | ✅ |
+| 092 | Workspace Context Switching (tmux) | v0.8-TUI | ✅ |
+| 093 | Enhanced Sidebar with AIDF Context | v0.8-TUI | ✅ |
+| 094 | Source Control Panel with Commit | v0.8-TUI | ✅ |
+| 095 | TUI Status Bar | v0.8-TUI | ✅ |
+| 096 | TUI Identity Mismatch Warnings | v0.8-TUI | ✅ |
+| 097 | tmux Layout Presets | v0.8-TUI | ✅ |
+| 098 | Multi-Terminal Layout | v0.8-TUI | ✅ |
+| 099 | AI CLI Launcher with Context | v0.8-TUI | ✅ |
+| 100 | Fullscreen Toggle Fallback | v0.8-TUI | ✅ |
 | 110 | Workspace Hub (Home) | v0.8-Mobile | 📋 |
 | 111 | Workspace Detail View | v0.8-Mobile | 📋 |
 | 112 | Bottom Navigation + Routing | v0.8-Mobile | 📋 |
