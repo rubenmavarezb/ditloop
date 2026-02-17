@@ -6,3 +6,7 @@ export { useChatStore } from './chat.js';
 export type { ChatMessage, ChatConversation, ChatState, ChatActions, ChatStore } from './chat.js';
 export { useAidfContextStore } from './aidf-context.js';
 export type { AidfFile, AidfWorkspaceContext, AidfContextState, AidfContextActions, AidfContextStore } from './aidf-context.js';
+export { useTaskExecutionStore } from './task-execution.js';
+export type { TaskStep, AgentLogEntry, ProposedChange, AiTask, TaskExecutionState, TaskExecutionActions } from './task-execution.js';
+export { useShortcutStore, DEFAULT_SHORTCUTS } from './shortcuts.js';
+export type { ShortcutBinding, ShortcutState, ShortcutActions } from './shortcuts.js';

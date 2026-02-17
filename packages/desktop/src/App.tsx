@@ -19,6 +19,7 @@ import { useNotifications } from './hooks/useNotifications.js';
 import { useTray } from './hooks/useTray.js';
 import { useDeepLink } from './hooks/useDeepLink.js';
 import { TabBar } from './components/TabBar/TabBar.js';
+import { ShortcutSheet } from './components/ShortcutSheet/ShortcutSheet.js';
 import { useWorkspaceTabsStore } from './store/workspace-tabs.js';
 import type { PaletteCommand } from './store/commands.js';
 
@@ -163,6 +164,7 @@ function AppContent() {
         </Routes>
       )}
       <CommandPalette open={paletteOpen} onClose={closePalette} commands={commands} />
+      <ShortcutSheet />
     </DesktopShell>
   );
 }
