@@ -4,3 +4,5 @@ export { useWorkspaceTabsStore } from './workspace-tabs.js';
 export type { WorkspaceTab, WorkspaceTabsState, WorkspaceTabsActions, WorkspaceTabsStore } from './workspace-tabs.js';
 export { useChatStore } from './chat.js';
 export type { ChatMessage, ChatConversation, ChatState, ChatActions, ChatStore } from './chat.js';
+export { useAidfContextStore } from './aidf-context.js';
+export type { AidfFile, AidfWorkspaceContext, AidfContextState, AidfContextActions, AidfContextStore } from './aidf-context.js';
