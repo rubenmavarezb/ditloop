@@ -1,4 +1,5 @@
 import { render } from 'ink';
+import { spawnSync } from 'node:child_process';
 import { version, loadConfig, EventBus, WorkspaceManager, ProfileManager } from '@ditloop/core';
 import type { WorkspaceItemData } from '@ditloop/ui';
 import type { ResolvedWorkspace } from '@ditloop/core';
@@ -9,16 +10,29 @@ import { WorkspaceList } from './commands/workspace.js';
 import { ProfileList, ProfileCurrent } from './commands/profile.js';
 import { ScaffoldWizard } from './commands/scaffold.js';
 import { startServer, stopServer, restartServer, getServerStatus } from './commands/server.js';
+import { TmuxManager } from './tmux/tmux-manager.js';
+import { SessionOrchestrator } from './tmux/session-orchestrator.js';
+import { PanelRenderer } from './panels/panel-renderer.js';
+import type { PanelType } from './panels/panel-renderer.js';
 
 const args = process.argv.slice(2);
 const command = args[0];
 const subcommand = args[1];
 
+/** Parse a named flag from argv (e.g. --panel sidebar → "sidebar"). */
+function parseFlag(flag: string): string | undefined {
+  const idx = args.indexOf(flag);
+  return idx !== -1 && idx + 1 < args.length ? args[idx + 1] : undefined;
+}
+
+const panelType = parseFlag('--panel') as PanelType | undefined;
+const ipcPath = parseFlag('--ipc');
+
 const HELP = `
 ◉ ditloop v${version} — Terminal IDE centered on Developer In The Loop
 
 Usage:
-  ditloop                  Launch the TUI dashboard
+  ditloop                  Launch the TUI dashboard (tmux if available)
   ditloop init             Interactive setup wizard
   ditloop workspace list   List configured workspaces
   ditloop profile list     List configured profiles
@@ -45,6 +59,18 @@ async function main() {
   // init command
   if (command === 'init') {
     render(<InitWizard />);
+    return;
+  }
+
+  // ── Panel mode: render a single panel in an Ink instance ──
+  if (panelType) {
+    const validPanels: PanelType[] = ['sidebar', 'source-control', 'git', 'status'];
+    if (!validPanels.includes(panelType)) {
+      console.error(`Unknown panel type: ${panelType}. Valid: ${validPanels.join(', ')}`);
+      process.exit(1);
+    }
+
+    render(<PanelRenderer type={panelType} ipcPath={ipcPath ?? ''} />);
     return;
   }
 
@@ -145,7 +171,40 @@ async function main() {
     process.exit(1);
   }
 
-  // Default: launch TUI
+  // ── Default: launch TUI ──
+  // Decide between orchestrator mode (tmux) and fallback (Ink dashboard)
+  const tmux = new TmuxManager();
+  const tmuxAvailable = await tmux.isTmuxAvailable();
+  const insideTmux = tmux.isInsideTmux();
+
+  if (tmuxAvailable && !insideTmux) {
+    // Load config early so we can pass workspace data to the orchestrator
+    const tmuxConfig = await loadConfig().catch(() => undefined);
+
+    // Orchestrator mode: create tmux session with panels
+    const orchestrator = new SessionOrchestrator(tmux);
+    const result = await orchestrator.orchestrate({
+      cwd: process.cwd(),
+      config: tmuxConfig,
+    });
+
+    // Attach user to the tmux session (blocks until session exits)
+    spawnSync('tmux', ['attach-session', '-t', result.sessionName], {
+      stdio: 'inherit',
+    });
+
+    // Session ended — clean up
+    await orchestrator.cleanup(result);
+    return;
+  }
+
+  // ── Dashboard fallback: no tmux or already inside tmux ──
+  if (!tmuxAvailable) {
+    console.log('⚠ tmux not found. Falling back to Ink dashboard.');
+    console.log('  Install tmux for the full multi-pane experience.');
+    console.log('');
+  }
+
   const wm = new WorkspaceManager(config, eventBus);
   const pm = new ProfileManager(config, eventBus);
   const workspaces = wm.list().map(toWorkspaceItemData);
