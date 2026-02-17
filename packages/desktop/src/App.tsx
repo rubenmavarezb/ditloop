@@ -18,6 +18,8 @@ import { useAiTools, useLaunchAiCli } from './hooks/useLocalAiCli.js';
 import { useNotifications } from './hooks/useNotifications.js';
 import { useTray } from './hooks/useTray.js';
 import { useDeepLink } from './hooks/useDeepLink.js';
+import { TabBar } from './components/TabBar/TabBar.js';
+import { useWorkspaceTabsStore } from './store/workspace-tabs.js';
 import type { PaletteCommand } from './store/commands.js';
 
 /** IDE layout with all panels wired into the LayoutEngine. */
@@ -41,16 +43,23 @@ function AppContent() {
   const { profiles } = useProfiles();
   const { tools: aiTools } = useAiTools();
   const { launch } = useLaunchAiCli();
+  const { tabs, activeTabId, openTab } = useWorkspaceTabsStore();
 
   useNotifications(true);
   useTray(workspaces.length);
   useDeepLink();
 
   const activeWorkspace = useMemo(() => {
+    // First check if we have an active tab
+    if (activeTabId) {
+      const tabWs = workspaces.find((ws) => ws.id === activeTabId);
+      if (tabWs) return tabWs;
+    }
+    // Fallback to route matching
     const match = location.pathname.match(/^\/workspace\/(.+)$/);
     if (!match) return null;
     return workspaces.find((ws) => ws.id === match[1]) ?? null;
-  }, [location.pathname, workspaces]);
+  }, [location.pathname, workspaces, activeTabId]);
 
   const availableAiTools = useMemo(() => aiTools.filter((t) => t.available), [aiTools]);
 
@@ -139,17 +148,17 @@ function AppContent() {
     [navigate, workspaces, profiles, activeWorkspace, availableAiTools, launch],
   );
 
-  // Determine if we're in IDE mode (workspace selected) or dashboard mode
-  const isIDEMode = location.pathname.startsWith('/workspace/');
+  // IDE mode when we have tabs open or navigated to a workspace
+  const hasOpenTabs = tabs.length > 0;
+  const isIDEMode = hasOpenTabs || location.pathname.startsWith('/workspace/');
 
   return (
-    <DesktopShell>
+    <DesktopShell header={isIDEMode ? <TabBar /> : undefined}>
       {isIDEMode ? (
         <IDELayout />
       ) : (
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/workspace/:id" element={<IDELayout />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       )}
