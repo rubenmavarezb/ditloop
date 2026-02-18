@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvoke } from '../../lib/tauri.js';
 import { useWorkspaceTabsStore } from '../../store/workspace-tabs.js';
 import { useWorkspaces } from '../../hooks/useWorkspaces.js';
 import { useGitStatus } from '../../hooks/useLocalGit.js';
@@ -50,8 +50,8 @@ export function FileExplorerPanel() {
   const loadDirectory = useCallback(
     async (path: string): Promise<TreeNode[]> => {
       try {
-        const entries = await invoke<FileEntry[]>('list_directory', { path });
-        return entries
+        const entries = await safeInvoke<FileEntry[]>('list_directory', { path });
+        return (entries ?? [])
           .filter((e) => showHidden || !e.is_hidden)
           .map((e) => ({ ...e, children: e.is_dir ? undefined : undefined }));
       } catch {

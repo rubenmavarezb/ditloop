@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { isTauri } from '../lib/tauri.js';
 
 /** AI tool info from Rust backend. */
 interface AiToolInfo {
@@ -15,10 +15,14 @@ export function useAiTools() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!isTauri()) return;
+
     setLoading(true);
-    invoke<AiToolInfo[]>('detect_ai_tools')
-      .then(setTools)
-      .finally(() => setLoading(false));
+    import('@tauri-apps/api/core').then(({ invoke }) => {
+      invoke<AiToolInfo[]>('detect_ai_tools')
+        .then(setTools)
+        .finally(() => setLoading(false));
+    });
   }, []);
 
   return { tools, loading };
@@ -30,8 +34,10 @@ export function useLaunchAiCli() {
 
   const launch = useCallback(
     async (tool: string, workspacePath: string, args: string[] = []) => {
+      if (!isTauri()) return;
       setLaunching(true);
       try {
+        const { invoke } = await import('@tauri-apps/api/core');
         const pid = await invoke<number>('launch_ai_cli', {
           tool,
           workspacePath,

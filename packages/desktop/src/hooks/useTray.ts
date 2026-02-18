@@ -1,27 +1,29 @@
 import { useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
-import { listen } from '@tauri-apps/api/event';
 import { useNavigate } from 'react-router-dom';
+import { isTauri } from '../lib/tauri.js';
 
 /** Send tray count updates and handle tray navigation events. */
 export function useTray(workspaceCount: number) {
-  useEffect(() => {
-    invoke('update_tray_counts', {
-      workspaceCount,
-    }).catch(() => {
-      // Tray may not be available in dev mode
-    });
-  }, [workspaceCount]);
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unlisten = listen<string>('tray:navigate', (event) => {
-      navigate(event.payload);
+    if (!isTauri()) return;
+
+    import('@tauri-apps/api/core').then(({ invoke }) => {
+      invoke('update_tray_counts', { workspaceCount }).catch(() => {});
+    });
+  }, [workspaceCount]);
+
+  useEffect(() => {
+    if (!isTauri()) return;
+
+    let cleanup: (() => void) | undefined;
+    import('@tauri-apps/api/event').then(({ listen }) => {
+      listen<string>('tray:navigate', (event) => {
+        navigate(event.payload);
+      }).then((fn) => { cleanup = fn; });
     });
 
-    return () => {
-      unlisten.then((fn) => fn());
-    };
+    return () => { cleanup?.(); };
   }, [navigate]);
 }

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { invoke } from '@tauri-apps/api/core';
 import { ThemeProvider, LayoutEngine, type LayoutSlots } from '@ditloop/web-ui';
+import { isTauri } from './lib/tauri.js';
 import { DesktopShell } from './components/Layout/DesktopShell.js';
 import { CommandPalette } from './components/CommandPalette/CommandPalette.js';
 import { WorkspaceNavPanel } from './panels/WorkspaceNav/WorkspaceNavPanel.js';
@@ -83,7 +83,7 @@ function AppContent() {
         category: 'Profile',
         title: `Switch to ${name}`,
         keywords: [profiles[name].email, 'identity', 'git'],
-        action: () => invoke('switch_git_profile', { profileName: name }),
+        action: () => { if (isTauri()) import('@tauri-apps/api/core').then(({ invoke }) => invoke('switch_git_profile', { profileName: name })); },
       })),
 
       ...(activeWorkspace
@@ -92,10 +92,10 @@ function AppContent() {
               window.dispatchEvent(new CustomEvent('ditloop:refresh-git'));
             }},
             { id: 'git:terminal', category: 'Git', title: 'Open Terminal', keywords: ['shell', 'console'], action: () => {
-              invoke('open_in_terminal', { path: activeWorkspace.path });
+              if (isTauri()) import('@tauri-apps/api/core').then(({ invoke }) => invoke('open_in_terminal', { path: activeWorkspace.path }));
             }},
             { id: 'git:editor', category: 'Git', title: 'Open in Editor', keywords: ['code', 'vscode'], action: () => {
-              invoke('open_in_editor', { path: activeWorkspace.path, editor: null });
+              if (isTauri()) import('@tauri-apps/api/core').then(({ invoke }) => invoke('open_in_editor', { path: activeWorkspace.path, editor: null }));
             }},
             { id: 'git:browse', category: 'Git', title: 'Browse Files', keywords: ['filesystem'], action: () => {
               navigate(`/files?path=${encodeURIComponent(activeWorkspace.path)}`);

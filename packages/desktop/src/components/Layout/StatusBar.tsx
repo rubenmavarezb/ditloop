@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useWorkspaceTabsStore } from '../../store/workspace-tabs.js';
 import { useWorkspaces } from '../../hooks/useWorkspaces.js';
 import { useGitStatus } from '../../hooks/useLocalGit.js';
@@ -26,7 +27,11 @@ export function StatusBar() {
   const currentPreset = layoutPresets[preset];
 
   const contextSummary = useAidfContextStore((s) => s.getContextSummary(activeTabId ?? ''));
-  const runningTasks = useTaskExecutionStore((s) => Object.values(s.tasks).filter((t) => t.status === 'running' || t.status === 'awaiting-approval'));
+  const allTasks = useTaskExecutionStore((s) => s.tasks);
+  const runningTasks = useMemo(
+    () => Object.values(allTasks).filter((t) => t.status === 'running' || t.status === 'awaiting-approval'),
+    [allTasks],
+  );
 
   return (
     <footer

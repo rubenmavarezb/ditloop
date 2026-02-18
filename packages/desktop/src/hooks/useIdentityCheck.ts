@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvoke } from '../lib/tauri.js';
 
 /** Identity mismatch result. */
 export interface IdentityMismatch {
@@ -30,21 +30,21 @@ export function useIdentityCheck(
 
     try {
       // Get current git identity
-      const currentEmail = await invoke<string | null>('get_git_identity');
+      const currentEmail = await safeInvoke<string | null>('get_git_identity');
       if (!currentEmail) {
         setMismatch(null);
         return;
       }
 
       // Load config to get expected email
-      const config = await invoke<{
+      const config = await safeInvoke<{
         config: {
           profiles: Record<string, { name: string; email: string }>;
           workspaces: Array<{ name: string; profile: string }>;
         };
       }>('load_ditloop_config');
 
-      const profile = config.config.profiles[expectedProfile];
+      const profile = config?.config.profiles[expectedProfile];
       if (!profile) {
         setMismatch(null);
         return;
@@ -74,7 +74,7 @@ export function useIdentityCheck(
   const switchProfile = useCallback(async () => {
     if (!mismatch) return;
     try {
-      await invoke('switch_git_profile', { profileName: mismatch.expectedProfile });
+      await safeInvoke('switch_git_profile', { profileName: mismatch.expectedProfile });
       setMismatch(null);
     } catch (e) {
       console.error('Failed to switch profile:', e);

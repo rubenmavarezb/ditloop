@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvoke } from '../../lib/tauri.js';
 import { useAidfContextStore, type AidfFile } from '../../store/aidf-context.js';
 import { useWorkspaceTabsStore } from '../../store/workspace-tabs.js';
 import { useWorkspaces } from '../../hooks/useWorkspaces.js';
@@ -25,21 +25,21 @@ export function AidfContextPanel() {
     if (!workspacePath) return;
     try {
       const aiPath = `${workspacePath}/.ai`;
-      const exists = await invoke<boolean>('file_exists', { path: aiPath });
+      const exists = await safeInvoke<boolean>('file_exists', { path: aiPath });
       if (!exists) {
         setFiles(workspaceId, []);
         return;
       }
 
-      const entries = await invoke<Array<{ name: string; path: string; is_dir: boolean }>>('list_directory', { path: aiPath });
+      const entries = await safeInvoke<Array<{ name: string; path: string; is_dir: boolean }>>('list_directory', { path: aiPath });
       const aidfFiles: AidfFile[] = [];
 
-      for (const entry of entries) {
+      for (const entry of (entries ?? [])) {
         if (entry.is_dir) {
           // Scan subdirectories (roles/, tasks/, plans/)
-          const subEntries = await invoke<Array<{ name: string; path: string; is_dir: boolean }>>('list_directory', { path: entry.path });
+          const subEntries = await safeInvoke<Array<{ name: string; path: string; is_dir: boolean }>>('list_directory', { path: entry.path });
           const type = classifyAidfDir(entry.name);
-          for (const sub of subEntries) {
+          for (const sub of (subEntries ?? [])) {
             if (!sub.is_dir && (sub.name.endsWith('.md') || sub.name.endsWith('.yaml') || sub.name.endsWith('.yml'))) {
               aidfFiles.push({
                 path: sub.path.replace(workspacePath + '/', ''),
