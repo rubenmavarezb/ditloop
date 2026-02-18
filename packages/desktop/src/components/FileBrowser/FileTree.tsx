@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvoke } from '../../lib/tauri.js';
 
 /** File entry from Rust backend. */
 interface FileEntry {
@@ -62,10 +62,10 @@ function TreeNode({
     if (!expanded && children.length === 0) {
       setLoading(true);
       try {
-        const entries = await invoke<FileEntry[]>('list_directory', {
+        const entries = await safeInvoke<FileEntry[]>('list_directory', {
           path: entry.path,
         });
-        setChildren(entries.filter((e) => !e.is_hidden));
+        setChildren((entries ?? []).filter((e) => !e.is_hidden));
       } catch {
         // Directory may be inaccessible
       }

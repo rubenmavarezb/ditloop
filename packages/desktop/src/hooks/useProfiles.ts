@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
 import type { Profile } from '@ditloop/core';
 import { useConfig } from './useConfig.js';
+import { isTauri } from '../lib/tauri.js';
 
 /** Provide profile management from DitLoop config. */
 export function useProfiles() {
@@ -10,7 +10,12 @@ export function useProfiles() {
   const [loading, setLoading] = useState(true);
 
   const refreshCurrent = useCallback(async () => {
+    if (!isTauri()) {
+      setLoading(false);
+      return;
+    }
     try {
+      const { invoke } = await import('@tauri-apps/api/core');
       const email = await invoke<string | null>('get_git_identity');
       setCurrentEmail(email ?? undefined);
     } catch {

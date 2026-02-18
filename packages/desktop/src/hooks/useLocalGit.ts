@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvoke } from '../lib/tauri.js';
 
 /** Git status from Rust backend. */
 interface GitStatus {
@@ -37,8 +37,8 @@ export function useGitStatus(path: string | undefined) {
     if (!path) return;
     setLoading(true);
     try {
-      const result = await invoke<GitStatus>('git_status', { workspacePath: path });
-      setData(result);
+      const result = await safeInvoke<GitStatus>('git_status', { workspacePath: path });
+      setData(result ?? null);
       setError(null);
     } catch (e) {
       setError(String(e));
@@ -69,8 +69,8 @@ export function useGitLog(path: string | undefined, count = 20) {
   useEffect(() => {
     if (!path) return;
     setLoading(true);
-    invoke<GitCommit[]>('git_log', { workspacePath: path, count })
-      .then(setData)
+    safeInvoke<GitCommit[]>('git_log', { workspacePath: path, count })
+      .then((r) => { if (r) setData(r); })
       .finally(() => setLoading(false));
   }, [path, count]);
 
@@ -86,8 +86,8 @@ export function useGitDiff(path: string | undefined, staged = false) {
     if (!path) return;
     setLoading(true);
     try {
-      const result = await invoke<string>('git_diff', { workspacePath: path, staged });
-      setData(result);
+      const result = await safeInvoke<string>('git_diff', { workspacePath: path, staged });
+      setData(result ?? '');
     } finally {
       setLoading(false);
     }
@@ -100,6 +100,104 @@ export function useGitDiff(path: string | undefined, staged = false) {
   return { data, loading, refresh };
 }
 
+/** Git stash entry from Rust backend. */
+interface GitStash {
+  index: number;
+  message: string;
+}
+
+/** Hook for git operations (stage, unstage, commit, discard, push, stash). */
+export function useGitActions(path: string | undefined) {
+  const stageFiles = useCallback(
+    async (files: string[]) => {
+      if (!path) return;
+      await safeInvoke('git_add', { workspacePath: path, files });
+    },
+    [path],
+  );
+
+  const unstageFiles = useCallback(
+    async (files: string[]) => {
+      if (!path) return;
+      await safeInvoke('git_reset', { workspacePath: path, files });
+    },
+    [path],
+  );
+
+  const discardFile = useCallback(
+    async (file: string) => {
+      if (!path) return;
+      await safeInvoke('git_discard', { workspacePath: path, file });
+    },
+    [path],
+  );
+
+  const commit = useCallback(
+    async (message: string) => {
+      if (!path) return;
+      return safeInvoke<string>('git_commit', { workspacePath: path, message });
+    },
+    [path],
+  );
+
+  const push = useCallback(async () => {
+    if (!path) return;
+    return safeInvoke<string>('git_push', { workspacePath: path });
+  }, [path]);
+
+  return { stageFiles, unstageFiles, discardFile, commit, push };
+}
+
+/** Hook for git stash operations. */
+export function useGitStash(path: string | undefined) {
+  const [stashes, setStashes] = useState<GitStash[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const refresh = useCallback(async () => {
+    if (!path) return;
+    setLoading(true);
+    try {
+      const result = await safeInvoke<GitStash[]>('git_stash_list', { workspacePath: path });
+      setStashes(result ?? []);
+    } finally {
+      setLoading(false);
+    }
+  }, [path]);
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  const create = useCallback(
+    async (message?: string) => {
+      if (!path) return;
+      await safeInvoke('git_stash_push', { workspacePath: path, message: message || null });
+      await refresh();
+    },
+    [path, refresh],
+  );
+
+  const pop = useCallback(
+    async (index: number) => {
+      if (!path) return;
+      await safeInvoke('git_stash_pop', { workspacePath: path, index });
+      await refresh();
+    },
+    [path, refresh],
+  );
+
+  const drop = useCallback(
+    async (index: number) => {
+      if (!path) return;
+      await safeInvoke('git_stash_drop', { workspacePath: path, index });
+      await refresh();
+    },
+    [path, refresh],
+  );
+
+  return { stashes, loading, refresh, create, pop, drop };
+}
+
 /** Hook for git branches. */
 export function useGitBranches(path: string | undefined) {
   const [data, setData] = useState<GitBranch[]>([]);
@@ -108,8 +206,8 @@ export function useGitBranches(path: string | undefined) {
   useEffect(() => {
     if (!path) return;
     setLoading(true);
-    invoke<GitBranch[]>('git_branch_list', { workspacePath: path })
-      .then(setData)
+    safeInvoke<GitBranch[]>('git_branch_list', { workspacePath: path })
+      .then((r) => { if (r) setData(r); })
       .finally(() => setLoading(false));
   }, [path]);
 

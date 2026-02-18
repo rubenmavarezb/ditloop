@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
-import { open } from '@tauri-apps/plugin-dialog';
 import { useSearchParams } from 'react-router-dom';
+import { safeInvoke, isTauri } from '../../lib/tauri.js';
 import { FileTree } from './FileTree.js';
 
 /** File entry from Rust backend. */
@@ -37,8 +36,8 @@ export function FileBrowser() {
   // Load home directory on mount if no initial path
   useEffect(() => {
     if (!initialPath) {
-      invoke<string>('get_home_dir').then((home) => {
-        setCurrentPath(home);
+      safeInvoke<string>('get_home_dir').then((home) => {
+        if (home) setCurrentPath(home);
       });
     }
   }, [initialPath]);
@@ -47,8 +46,9 @@ export function FileBrowser() {
   useEffect(() => {
     if (!currentPath) return;
 
-    invoke<FileEntry[]>('list_directory', { path: currentPath })
+    safeInvoke<FileEntry[]>('list_directory', { path: currentPath })
       .then((result) => {
+        if (!result) return;
         setEntries(showHidden ? result : result.filter((e) => !e.is_hidden));
       })
       .catch(() => {
@@ -67,10 +67,10 @@ export function FileBrowser() {
     if (entry.is_dir) return;
 
     try {
-      const content = await invoke<FileContent>('read_file', {
+      const content = await safeInvoke<FileContent>('read_file', {
         path: entry.path,
       });
-      setSelectedFile(content);
+      setSelectedFile(content ?? null);
       setSelectedFileName(entry.name);
       setSelectedFilePath(entry.path);
     } catch {
@@ -84,6 +84,8 @@ export function FileBrowser() {
   }, []);
 
   const handleOpenFolder = useCallback(async () => {
+    if (!isTauri()) return;
+    const { open } = await import('@tauri-apps/plugin-dialog');
     const selected = await open({ directory: true, multiple: false });
     if (selected) {
       setCurrentPath(selected as string);
@@ -172,7 +174,7 @@ export function FileBrowser() {
                   Copy Path
                 </button>
                 <button
-                  onClick={() => invoke('open_in_editor', { path: selectedFilePath, editor: null })}
+                  onClick={() => safeInvoke('open_in_editor', { path: selectedFilePath, editor: null })}
                   className="text-[10px] text-slate-500 hover:text-white"
                 >
                   Open in Editor
@@ -198,7 +200,7 @@ export function FileBrowser() {
         >
           <button
             onClick={() => {
-              invoke('open_in_terminal', { path: contextMenu.isDir ? contextMenu.path : currentPath });
+              safeInvoke('open_in_terminal', { path: contextMenu.isDir ? contextMenu.path : currentPath });
               setContextMenu(null);
             }}
             className="block w-full px-3 py-1 text-left text-xs text-slate-300 hover:bg-slate-800"
@@ -207,7 +209,7 @@ export function FileBrowser() {
           </button>
           <button
             onClick={() => {
-              invoke('open_in_editor', { path: contextMenu.path, editor: null });
+              safeInvoke('open_in_editor', { path: contextMenu.path, editor: null });
               setContextMenu(null);
             }}
             className="block w-full px-3 py-1 text-left text-xs text-slate-300 hover:bg-slate-800"

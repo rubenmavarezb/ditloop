@@ -1,18 +1,21 @@
 import { useEffect } from 'react';
-import { listen } from '@tauri-apps/api/event';
 import { useNavigate } from 'react-router-dom';
+import { isTauri } from '../lib/tauri.js';
 
 /** Listen for deep link events from Tauri and navigate accordingly. */
 export function useDeepLink() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unlistenNav = listen<string>('deep-link:navigate', (event) => {
-      navigate(event.payload);
+    if (!isTauri()) return;
+
+    let cleanup: (() => void) | undefined;
+    import('@tauri-apps/api/event').then(({ listen }) => {
+      listen<string>('deep-link:navigate', (event) => {
+        navigate(event.payload);
+      }).then((fn) => { cleanup = fn; });
     });
 
-    return () => {
-      unlistenNav.then((fn) => fn());
-    };
+    return () => { cleanup?.(); };
   }, [navigate]);
 }

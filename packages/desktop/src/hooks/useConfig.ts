@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
 import type { Profile } from '@ditloop/core';
+import { isTauri } from '../lib/tauri.js';
 
 /** Config load result from Rust. */
 interface ConfigLoadResult {
@@ -37,8 +37,13 @@ export function useConfig() {
   const [error, setError] = useState<string | null>(null);
 
   const reload = useCallback(async () => {
+    if (!isTauri()) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
+      const { invoke } = await import('@tauri-apps/api/core');
       const result = await invoke<ConfigLoadResult>('load_ditloop_config');
       setConfig(result.config);
       setConfigPath(result.configPath);

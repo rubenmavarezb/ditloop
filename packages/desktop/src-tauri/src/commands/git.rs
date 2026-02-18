@@ -247,6 +247,181 @@ fn char_to_status(c: char) -> String {
     .to_string()
 }
 
+/// A git stash entry.
+#[derive(Debug, Serialize)]
+pub struct GitStash {
+    pub index: u32,
+    pub message: String,
+}
+
+/// Stage files for commit.
+#[tauri::command]
+pub async fn git_add(workspace_path: String, files: Vec<String>) -> Result<(), String> {
+    let mut args = vec!["add".to_string()];
+    args.extend(files);
+
+    let output = Command::new("git")
+        .args(&args)
+        .current_dir(&workspace_path)
+        .output()
+        .await
+        .map_err(|e| e.to_string())?;
+
+    if !output.status.success() {
+        return Err(String::from_utf8_lossy(&output.stderr).to_string());
+    }
+
+    Ok(())
+}
+
+/// Unstage files (git reset HEAD).
+#[tauri::command]
+pub async fn git_reset(workspace_path: String, files: Vec<String>) -> Result<(), String> {
+    let mut args = vec!["reset".to_string(), "HEAD".to_string(), "--".to_string()];
+    args.extend(files);
+
+    let output = Command::new("git")
+        .args(&args)
+        .current_dir(&workspace_path)
+        .output()
+        .await
+        .map_err(|e| e.to_string())?;
+
+    if !output.status.success() {
+        return Err(String::from_utf8_lossy(&output.stderr).to_string());
+    }
+
+    Ok(())
+}
+
+/// Discard changes in a working directory file.
+#[tauri::command]
+pub async fn git_discard(workspace_path: String, file: String) -> Result<(), String> {
+    let output = Command::new("git")
+        .args(["checkout", "--", &file])
+        .current_dir(&workspace_path)
+        .output()
+        .await
+        .map_err(|e| e.to_string())?;
+
+    if !output.status.success() {
+        return Err(String::from_utf8_lossy(&output.stderr).to_string());
+    }
+
+    Ok(())
+}
+
+/// Push to remote.
+#[tauri::command]
+pub async fn git_push(workspace_path: String) -> Result<String, String> {
+    let output = Command::new("git")
+        .args(["push"])
+        .current_dir(&workspace_path)
+        .output()
+        .await
+        .map_err(|e| e.to_string())?;
+
+    if !output.status.success() {
+        return Err(String::from_utf8_lossy(&output.stderr).to_string());
+    }
+
+    Ok(String::from_utf8_lossy(&output.stdout).to_string())
+}
+
+/// List stashes.
+#[tauri::command]
+pub async fn git_stash_list(workspace_path: String) -> Result<Vec<GitStash>, String> {
+    let output = Command::new("git")
+        .args(["stash", "list", "--format=%gd %gs"])
+        .current_dir(&workspace_path)
+        .output()
+        .await
+        .map_err(|e| e.to_string())?;
+
+    if !output.status.success() {
+        return Err(String::from_utf8_lossy(&output.stderr).to_string());
+    }
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let stashes = stdout
+        .lines()
+        .filter_map(|line| {
+            let parts: Vec<&str> = line.splitn(2, ' ').collect();
+            if parts.len() >= 2 {
+                let idx_str = parts[0].trim_start_matches("stash@{").trim_end_matches('}');
+                let index = idx_str.parse().unwrap_or(0);
+                Some(GitStash {
+                    index,
+                    message: parts[1].to_string(),
+                })
+            } else {
+                None
+            }
+        })
+        .collect();
+
+    Ok(stashes)
+}
+
+/// Create a stash.
+#[tauri::command]
+pub async fn git_stash_push(workspace_path: String, message: Option<String>) -> Result<(), String> {
+    let mut args = vec!["stash", "push"];
+    let msg;
+    if let Some(ref m) = message {
+        args.push("-m");
+        msg = m.clone();
+        args.push(&msg);
+    }
+
+    let output = Command::new("git")
+        .args(&args)
+        .current_dir(&workspace_path)
+        .output()
+        .await
+        .map_err(|e| e.to_string())?;
+
+    if !output.status.success() {
+        return Err(String::from_utf8_lossy(&output.stderr).to_string());
+    }
+
+    Ok(())
+}
+
+/// Pop a stash.
+#[tauri::command]
+pub async fn git_stash_pop(workspace_path: String, index: u32) -> Result<(), String> {
+    let output = Command::new("git")
+        .args(["stash", "pop", &format!("stash@{{{}}}", index)])
+        .current_dir(&workspace_path)
+        .output()
+        .await
+        .map_err(|e| e.to_string())?;
+
+    if !output.status.success() {
+        return Err(String::from_utf8_lossy(&output.stderr).to_string());
+    }
+
+    Ok(())
+}
+
+/// Drop a stash.
+#[tauri::command]
+pub async fn git_stash_drop(workspace_path: String, index: u32) -> Result<(), String> {
+    let output = Command::new("git")
+        .args(["stash", "drop", &format!("stash@{{{}}}", index)])
+        .current_dir(&workspace_path)
+        .output()
+        .await
+        .map_err(|e| e.to_string())?;
+
+    if !output.status.success() {
+        return Err(String::from_utf8_lossy(&output.stderr).to_string());
+    }
+
+    Ok(())
+}
+
 /// Parse git porcelain v2 output into GitStatus (extracted for testability).
 pub fn parse_porcelain_v2(output: &str) -> GitStatus {
     let mut branch = String::new();

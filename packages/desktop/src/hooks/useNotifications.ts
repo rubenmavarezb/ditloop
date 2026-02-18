@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { isTauri } from '../lib/tauri.js';
 
 /** Notification type matching Rust enum. */
 type NotificationType =
@@ -16,23 +16,23 @@ type NotificationType =
  */
 export function useNotifications(enabled: boolean) {
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !isTauri()) return;
 
-    invoke('request_notification_permission').catch(() => {
-      // Permission may already be granted
+    import('@tauri-apps/api/core').then(({ invoke }) => {
+      invoke('request_notification_permission').catch(() => {});
     });
   }, [enabled]);
 
   const notify = useCallback(
     (type: NotificationType, title: string, body: string) => {
-      if (!enabled) return;
+      if (!enabled || !isTauri()) return;
 
-      invoke('send_notification', {
-        notificationType: type,
-        title,
-        body,
-      }).catch(() => {
-        // Notification may fail silently
+      import('@tauri-apps/api/core').then(({ invoke }) => {
+        invoke('send_notification', {
+          notificationType: type,
+          title,
+          body,
+        }).catch(() => {});
       });
     },
     [enabled],

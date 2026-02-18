@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvoke } from '../../lib/tauri.js';
 import { useWorkspaces } from '../../hooks/useWorkspaces.js';
 import { useGitStatus, useGitLog } from '../../hooks/useLocalGit.js';
 import { useAiTools, useLaunchAiCli } from '../../hooks/useLocalAiCli.js';
@@ -65,13 +65,13 @@ export function WorkspaceDetail() {
       {/* Action Buttons */}
       <div className="mb-4 flex flex-wrap gap-2">
         <button
-          onClick={() => invoke('open_in_terminal', { path: workspace.path })}
+          onClick={() => safeInvoke('open_in_terminal', { path: workspace.path })}
           className="rounded border border-slate-700 px-3 py-1.5 text-xs text-slate-300 hover:border-slate-600 hover:text-white"
         >
           Open in Terminal
         </button>
         <button
-          onClick={() => invoke('open_in_editor', { path: workspace.path, editor: null })}
+          onClick={() => safeInvoke('open_in_editor', { path: workspace.path, editor: null })}
           className="rounded border border-slate-700 px-3 py-1.5 text-xs text-slate-300 hover:border-slate-600 hover:text-white"
         >
           Open in Editor
